@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7lbsaa Videos | منصة الفيديوهات</title>
+    
+    <link rel="icon" type="image/jpeg" href="logox.jpg">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            /* تعيين الخلفية وتوسيطها */
+            background: linear-gradient(rgba(15, 12, 27, 0.75), rgba(15, 12, 27, 0.85)), url('koko1.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding-bottom: 50px;
+        }
+
+        /* الشعار في أعلى اليمين */
+        .top-right-logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+
+        .top-right-logo img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* عنوان الموقع الرئيسي */
+        .main-header {
+            margin-top: 100px;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .main-header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ffffff, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        .main-header p {
+            color: #b3b3b3;
+            font-size: 16px;
+        }
+
+        /* حاوية البطاقات (Grid System) */
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            width: 90%;
+            max-width: 1000px;
+            padding: 10px;
+        }
+
+        /* تصميم البطاقات الزجاجي الحديث (Glassmorphism) */
+        .video-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* تأثير حركي عند الحوم فوق البطاقة */
+        .video-card:hover {
+            transform: translateY(-10px);
+            border-color: #00f2fe;
+            box-shadow: 0 20px 40px rgba(0, 242, 254, 0.2);
+        }
+
+        /* حاوية غلاف الفيديو */
+        .card-thumbnail {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .card-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* أيقونة تشغيل وهمية فوق الغلاف لجمال التصميم */
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+        }
+
+        .video-card:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .play-overlay i {
+            font-size: 45px;
+            color: #00f2fe;
+            text-shadow: 0 0 15px rgba(0, 242, 254, 0.8);
+            transform: scale(0.8);
+        }
+
+        .video-card:hover .play-overlay i {
+            transform: scale(1);
+        }
+
+        /* تفاصيل ومحتوى البطاقة */
+        .card-content {
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        /* زر المشاهدة الاحترافي */
+        .watch-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .watch-btn:hover {
+            background: #00f2fe;
+            color: #0f0c1b;
+            font-weight: 700;
+            border-color: #00f2fe;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+        }
+
+        /* لضمان التوافق التام مع الهواتف الذكية */
+        @media (max-width: 600px) {
+            .top-right-logo {
+                top: 15px;
+                right: 15px;
+            }
+            .top-right-logo img {
+                width: 55px;
+                height: 55px;
+            }
+            .main-header {
+                margin-top: 90px;
+            }
+            .main-header h1 {
+                font-size: 28px;
+            }
+            .videos-grid {
+                grid-template-columns: 1fr;
+                width: 92%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-right-logo">
+        <img src="toplogo.jpg" alt="Logo">
+    </div>
+
+    <header class="main-header">
+        <h1>مكتبة فيديوهات 7lbsaa</h1>
+        <p>اختر الفيديو وابدأ المشاهدة فوراً في مشغلاتنا الخاصة</p>
+    </header>
+
+    <main class="videos-grid">
+        
+        <div class="video-card">
+            <div class="card-thumbnail">
+                <img src="takhrog.jpg" alt="فيديو التخرج">
+                <div class="play-overlay">
+                    <i class="fas fa-circle-play"></i>
+                </div>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">أغنية تخرج دفعة 2019 طب قصر العيني جامعة القاهرة</h3>
+                <a href="https://7lbsaa1.github.io/viedotest1/" class="watch-btn" target="_blank">
+                    <i class="fas fa-eye"></i> مشاهدة الفيديو
+                </a>
+            </div>
+        </div>
+
+        <div class="video-card">
+            <div class="card-thumbnail">
+                <img src="triplz.jpg" alt="فيديو تريلز">
+                <div class="play-overlay">
+                    <i class="fas fa-circle-play"></i>
+                </div>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">فيديو تريلز (المقاطع الترويجية الرسمية)</h3>
+                <a href="https://7lbsaa1.github.io/viedotest/" class="watch-btn" target="_blank">
+                    <i class="fas fa-eye"></i> مشاهدة الفيديو
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
