@@ -14,7 +14,6 @@
         .avatar-wrapper { position: relative; width: 120px; height: 120px; margin: 0 auto 20px; cursor: pointer; }
         .profile-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #00f2fe; object-fit: cover; box-shadow: 0 0 20px rgba(0,242,254,0.3); }
         
-        /* تأثير مميز عند تمرير الماوس لاختيار صورة */
         .avatar-hint { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 12px; color: #00f2fe; opacity: 0; transition: opacity 0.3s; }
         .avatar-wrapper:hover .avatar-hint { opacity: 1; }
 
@@ -26,12 +25,15 @@
         .info-left { display: flex; align-items: center; gap: 12px; }
         .balance-value { font-size: 18px; font-weight: bold; color: #00f2fe; }
         
-        .edit-section { margin-top: 15px; }
-        /* إخفاء زرار الرفع الافتراضي الشين وعمل زرار فخم بديل */
+        .edit-section { margin-top: 15px; margin-bottom: 15px; }
         #file-input { display: none; }
         .upload-btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #00f2fe, #4facfe); border: none; border-radius: 12px; color: #000; font-weight: bold; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(0,242,254,0.2); }
         .upload-btn:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 6px 20px rgba(0,242,254,0.4); }
         
+        /* ستايل زرار تسجيل الخروج الاحترافي */
+        .logout-btn { width: 100%; padding: 12px; background: rgba(255, 51, 102, 0.1); border: 1px solid #ff3366; border-radius: 12px; color: #ff3366; font-weight: bold; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
+        .logout-btn:hover { background: #ff3366; color: #fff; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 51, 102, 0.3); }
+
         .back-link { display: inline-block; margin-top: 25px; color: #aaa; text-decoration: none; font-size: 14px; }
         .back-link:hover { color: #00f2fe; }
     </style>
@@ -42,7 +44,7 @@
         <div class="avatar-wrapper" onclick="triggerFileInput()">
             <img id="user-image" src="person.png" class="profile-img" alt="صورة المستخدم">
             <div class="avatar-hint">
-                <i class="fas fa-camera font-size: 18px; margin-bottom: 4px;"></i>
+                <i class="fas fa-camera" style="font-size: 18px; margin-bottom: 4px;"></i>
                 <span>تغيير الصورة</span>
             </div>
         </div>
@@ -62,6 +64,10 @@
             <input type="file" id="file-input" accept="image/*" onchange="handleFileSelect(event)">
             <button class="upload-btn" onclick="triggerFileInput()">
                 <i class="fas fa-upload"></i> اختر صورة من هاتفك الآن
+            </button>
+            
+            <button class="logout-btn" onclick="logoutUser()">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج من الحساب
             </button>
         </div>
 
@@ -85,7 +91,6 @@
         let userCode = localStorage.getItem('currentUserCode');
         if(!userCode) { window.location.href = 'login.html'; }
 
-        // قراءة البيانات لايف من السيرفر
         database.ref('users/' + userCode).on('value', (snapshot) => {
             if(snapshot.exists()) {
                 let data = snapshot.val();
@@ -105,12 +110,10 @@
             document.getElementById('file-input').click();
         }
 
-        // معالجة وتحويل الصورة المرفوعة من الهاتف وحفظها مباشرة بالسيرفر
         function handleFileSelect(event) {
             let file = event.target.files[0];
             if(!file) return;
 
-            // التحقق من أن حجم الصورة مناسب للحفظ في قاعدة البيانات بقيمة أقل من 1.5 ميجا لضمان سرعة التحميل
             if(file.size > 1500000) {
                 alert('عذراً! حجم الصورة كبير جداً، يرجى اختيار صورة بحجم أصغر للحفظ السريع.');
                 return;
@@ -120,7 +123,6 @@
             reader.onload = function(e) {
                 let base64Image = e.target.result;
                 
-                // تحديث الصورة في السيرفر لايف
                 database.ref('users/' + userCode).update({
                     profileImg: base64Image
                 }).then(() => {
@@ -130,6 +132,14 @@
                 });
             };
             reader.readAsDataURL(file);
+        }
+
+        /* دالة تسجيل الخروج ومسح التوكن */
+        function logoutUser() {
+            if(confirm('هل أنت متأكد من رغبتك في تسجيل الخروج؟')) {
+                localStorage.removeItem('currentUserCode'); // مسح كود المستخدم من المتصفح
+                window.location.href = 'login.html'; // التوجيه الفوري لصفحة الدخول
+            }
         }
     </script>
 </body>
