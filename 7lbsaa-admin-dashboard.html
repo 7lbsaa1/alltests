@@ -9,16 +9,21 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s; }
         body { background: #0b0914; color: #fff; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; margin: 0; }
         
+        /* واجهة الدخول برقم سري */
         .auth-container { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 51, 102, 0.3); padding: 40px 30px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; backdrop-filter: blur(15px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
         .lock-icon { font-size: 50px; color: #ff3366; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(255,51,102,0.3)); }
         .auth-container h2 { font-size: 20px; margin-bottom: 25px; color: #fff; letter-spacing: 1px; }
-        .auth-input { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: #000; color: #fff; text-align: center; font-size: 15px; }
+        .auth-input { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: #000; color: #fff; text-align: center; font-size: 18px; font-weight: bold; letter-spacing: 4px; }
         .auth-input:focus { border-color: #ff3366; outline: none; box-shadow: 0 0 10px rgba(255,51,102,0.2); }
         .auth-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #ff3366, #ff5e62); border: none; border-radius: 12px; color: #fff; font-weight: bold; cursor: pointer; font-size: 16px; }
         .auth-btn:hover { box-shadow: 0 0 15px rgba(255,51,102,0.4); transform: translateY(-1px); }
 
-        .dashboard-wrapper { display: none; width: 100%; max-width: 850px; flex-direction: column; align-items: center; gap: 30px; }
-        .admin-panel { background: rgba(255,255,255,0.03); border: 2px dashed #ff3366; padding: 30px; border-radius: 20px; width: 100%; max-width: 500px; text-align: center; backdrop-filter: blur(10px); }
+        /* حاوية لوحة التحكم الرئيسية */
+        .dashboard-wrapper { display: none; width: 100%; max-width: 900px; flex-direction: column; align-items: center; gap: 30px; }
+        
+        .admin-grid { display: flex; flex-wrap: wrap; gap: 20px; width: 100%; justify-content: center; }
+        
+        .admin-panel { background: rgba(255,255,255,0.03); border: 2px dashed #ff3366; padding: 30px; border-radius: 20px; flex: 1; min-width: 300px; text-align: center; backdrop-filter: blur(10px); }
         .admin-panel h2 { color: #ff3366; margin-bottom: 8px; font-size: 22px; }
         .subtitle { color: #aaa; font-size: 13px; margin-bottom: 25px; }
         
@@ -26,13 +31,18 @@
         .dash-btn { width: 100%; padding: 12px; background: #ff3366; border: none; border-radius: 10px; color: #fff; font-weight: bold; cursor: pointer; font-size: 15px; }
         .dash-btn:hover { background: #ff1a53; transform: translateY(-1px); }
 
-        .users-list-container { width: 100%; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 25px; border-radius: 20px; backdrop-filter: blur(10px); }
-        .users-list-container h3 { color: #00f2fe; margin-bottom: 20px; font-size: 18px; text-align: right; border-right: 3px solid #00f2fe; padding-right: 10px; }
+        .section-container { width: 100%; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 25px; border-radius: 20px; backdrop-filter: blur(10px); }
+        .section-container h3 { color: #00f2fe; margin-bottom: 20px; font-size: 18px; text-align: right; border-right: 3px solid #00f2fe; padding-right: 10px; }
         
+        /* ستايل الشات المباشر داخل الأدمن */
+        .chat-box { max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 10px; border-radius: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); }
+        .chat-message { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; border-right: 4px solid #22c55e; display: flex; flex-direction: column; gap: 5px; text-align: right; }
+        .chat-meta { font-size: 12px; color: #00f2fe; font-weight: bold; display: flex; justify-content: space-between; }
+        .chat-text { font-size: 14px; color: #fff; line-height: 1.4; }
+
         table { width: 100%; border-collapse: collapse; text-align: center; font-size: 14px; }
         th { background: rgba(0, 242, 254, 0.1); color: #00f2fe; padding: 12px; font-weight: bold; border-bottom: 2px solid rgba(0,242,254,0.2); }
         td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #e0e0e0; vertical-align: middle; }
-        
         .table-avatar { width: 35px; height: 35px; border-radius: 50%; border: 1px solid #00f2fe; object-fit: cover; }
         .balance-badge { background: rgba(0, 242, 254, 0.15); color: #00f2fe; padding: 3px 8px; border-radius: 6px; font-weight: bold; }
     </style>
@@ -40,25 +50,32 @@
 <body>
 
     <div id="auth-gate" class="auth-container">
-        <div class="lock-icon"><i class="fas fa-user-shield"></i></div>
-        <h2>نظام الإدارة المشفر | 7lbsaa</h2>
-        <input type="text" id="admin-user" class="auth-input" placeholder="اسم الأدمن">
-        <input type="password" id="admin-pass" class="auth-input" placeholder="كلمة المرور">
-        <button class="auth-btn" onclick="verifyAdminGate()">دخول آمن</button>
+        <div class="lock-icon"><i class="fas fa-key"></i></div>
+        <h2>الرمز السري للإدارة | 7lbsaa</h2>
+        <input type="password" id="admin-pass" class="auth-input" placeholder="•••••••••">
+        <button class="auth-btn" onclick="verifyAdminGate()">فتح اللوحة الآمنة</button>
     </div>
 
     <div id="main-dashboard" class="dashboard-wrapper">
-        <div class="admin-panel">
-            <h2>لوحة شحن الرصيد الفوري للأدمن عمر</h2>
-            <p class="subtitle">إرسال وتحديث الأرصدة أونلاين على سيرفر 7lbsaa</p>
-            
-            <input type="text" id="target-code" class="dash-input" placeholder="اكتب كود الطالب (مثال: 7L-1234)">
-            <input type="number" id="charge-amount-input" class="dash-input" placeholder="المبلغ المراد شحنه (ج.م)...">
-            <button class="dash-btn" onclick="executeCharging()">تأكيد وإرسال الرصيد فوراً</button>
+        <div class="admin-grid">
+            <div class="admin-panel">
+                <h2>لوحة شحن الرصيد الفوري</h2>
+                <p class="subtitle">إرسال وتحديث الأرصدة أونلاين على سيرفر 7lbsaa</p>
+                <input type="text" id="target-code" class="dash-input" placeholder="اكتب كود الطالب (مثال: 7L-1234)">
+                <input type="number" id="charge-amount-input" class="dash-input" placeholder="المبلغ المراد شحنه (ج.م)...">
+                <button class="dash-btn" onclick="executeCharging()">تأكيد وإرسال الرصيد فوراً</button>
+            </div>
         </div>
 
-        <div class="users-list-container">
-            <h3><i class="fas fa-users"></i> إحصائيات وقائمة طلاب المنصة المسجلين أونلاين</h3>
+        <div class="section-container">
+            <h3><i class="fas fa-comments"></i> مركز الدعم والشات المباشر (رسائل الطلاب الحالية)</h3>
+            <div class="chat-box" id="admin-chat-box">
+                <div style="color: #666; text-align: center; padding: 20px;">في انتظار استقبال رسائل جديدة من الطلاب...</div>
+            </div>
+        </div>
+
+        <div class="section-container">
+            <h3><i class="fas fa-users"></i> قائمة طلاب المنصة المسجلين أونلاين</h3>
             <table>
                 <thead>
                     <tr>
@@ -80,6 +97,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
+        // دالة تشفير النصوص
         async function sha256(message) {
             const msgBuffer = new TextEncoder().encode(message);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -87,22 +105,21 @@
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
+        // التحقق من الرقم السري المشفر
         async function verifyAdminGate() {
-            let userIn = document.getElementById('admin-user').value.trim();
             let passIn = document.getElementById('admin-pass').value.trim();
 
-            const hashedUserTarget = "2da67375da604af600ff50742d4a52ffbb18e3a24147eb866509f6b9c9f77f84"; 
-            const hashedPassTarget = "7c199dbb0cbda766468cf5b2d2dbcc93ec21867b7f83e8fa9f34a742886f7881"; 
+            // الهاش المشفر الخاص بالرقم السري "147258369"
+            const hashedPassTarget = "bc942b08fa111fb4af90069695663673f40075d9e262174d8ff21f3796ec72b4"; 
 
-            let hashedUserIn = await sha256(userIn);
             let hashedPassIn = await sha256(passIn);
 
-            if (hashedUserIn === hashedUserTarget && hashedPassIn === hashedPassTarget) {
+            if (hashedPassIn === hashedPassTarget) {
                 document.getElementById('auth-gate').style.display = 'none';
                 document.getElementById('main-dashboard').style.display = 'flex';
                 initializeFirebaseConnection(); 
             } else {
-                alert('خطأ في البيانات المدخلة! المحاولة مسجلة كتهديد أمني.');
+                alert('الرمز السري خطأ! تم رفض إذن الدخول.');
             }
         }
 
@@ -122,28 +139,48 @@
             }
             database = firebase.database();
 
+            // 1. جلب الطلاب لايف
             database.ref('users').on('value', (snapshot) => {
                 let tbody = document.getElementById('users-table-body');
                 tbody.innerHTML = '';
-
                 if(snapshot.exists()) {
                     let usersData = snapshot.val();
                     for(let code in usersData) {
                         let user = usersData[code];
                         let imgSrc = user.profileImg ? user.profileImg : "person.png";
-                        
-                        let row = `
-                            <tr>
-                                <td><img src="${imgSrc}" class="table-avatar" onerror="this.src='person.png'"></td>
-                                <td style="font-weight: 600; text-align: right; padding-right: 20px;">${user.username}</td>
-                                <td style="font-family: monospace; font-size: 15px; color: #00f2fe;">${code}</td>
-                                <td><span class="balance-badge">${user.balance} ج.م</span></td>
-                            </tr>
-                        `;
+                        let row = `<tr>
+                            <td><img src="${imgSrc}" class="table-avatar" onerror="this.src='person.png'"></td>
+                            <td style="font-weight: 600; text-align: right; padding-right: 20px;">${user.username}</td>
+                            <td style="font-family: monospace; font-size: 15px; color: #00f2fe;">${code}</td>
+                            <td><span class="balance-badge">${user.balance} ج.م</span></td>
+                        </tr>`;
                         tbody.innerHTML += row;
                     }
+                }
+            });
+
+            // 2. جلب رسائل الشات المباشر لايف من الطلاب فور إرسالها
+            database.ref('live_chats').on('value', (snapshot) => {
+                let chatBox = document.getElementById('admin-chat-box');
+                chatBox.innerHTML = '';
+                if(snapshot.exists()) {
+                    let chats = snapshot.val();
+                    for(let id in chats) {
+                        let msg = chats[id];
+                        let chatRow = `
+                            <div class="chat-message">
+                                <div class="chat-meta">
+                                    <span><i class="fas fa-user"></i> كود الطالب: ${msg.userCode}</span>
+                                    <span>${msg.time || ''}</span>
+                                </div>
+                                <div class="chat-text">${msg.text}</div>
+                            </div>
+                        `;
+                        chatBox.innerHTML += chatRow;
+                    }
+                    chatBox.scrollTop = chatBox.scrollHeight; // التمرير لآخر رسالة تلقائياً
                 } else {
-                    tbody.innerHTML = `<tr><td colspan="4" style="color: #666; padding: 20px;">لا يوجد مستخدمين مسجلين.</td></tr>`;
+                    chatBox.innerHTML = `<div style="color: #666; text-align: center; padding: 20px;">لا توجد رسائل دعم حالياً.</div>`;
                 }
             });
         }
@@ -159,7 +196,6 @@
                 if(snapshot.exists()) {
                     let userData = snapshot.val();
                     let newBalance = (parseFloat(userData.balance) || 0) + amount;
-                    
                     userRef.update({ balance: newBalance })
                     .then(() => {
                         alert(`تم بنجاح شحن رصيد بقيمة ${amount} ج.م للكود ${code}`);
