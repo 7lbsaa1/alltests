@@ -87,10 +87,6 @@
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        function getDeviceFingerprint() {
-            return btoa(navigator.userAgent + navigator.language + screen.width + "7lbsaa-secure-token");
-        }
-
         async function verifyAdminGate() {
             let userIn = document.getElementById('admin-user').value.trim();
             let passIn = document.getElementById('admin-pass').value.trim();
@@ -102,21 +98,9 @@
             let hashedPassIn = await sha256(passIn);
 
             if (hashedUserIn === hashedUserTarget && hashedPassIn === hashedPassTarget) {
-                let currentFingerprint = getDeviceFingerprint();
-                let savedFingerprint = localStorage.getItem('_adm_device_token');
-
-                if (!savedFingerprint) {
-                    localStorage.setItem('_adm_device_token', currentFingerprint);
-                    savedFingerprint = currentFingerprint;
-                }
-
-                if (currentFingerprint === savedFingerprint) {
-                    document.getElementById('auth-gate').style.display = 'none';
-                    document.getElementById('main-dashboard').style.display = 'flex';
-                    initializeFirebaseConnection(); 
-                } else {
-                    alert('عذراً! تم رصد محاولة دخول من جهاز آخر. ميزة جهازك الرئيسي نشطة وحظر الدخول المتعدد يعمل بذكاء!');
-                }
+                document.getElementById('auth-gate').style.display = 'none';
+                document.getElementById('main-dashboard').style.display = 'flex';
+                initializeFirebaseConnection(); 
             } else {
                 alert('خطأ في البيانات المدخلة! المحاولة مسجلة كتهديد أمني.');
             }
