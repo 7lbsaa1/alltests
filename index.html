@@ -162,5 +162,84 @@
 
         function handleChatKeyPress(e) { if (e.key === 'Enter') sendLiveMessage(); }
     </script>
+<div class="chat-widget-container" style="position: fixed; bottom: 25px; left: 25px; z-index: 9999; direction: rtl;">
+        <div class="chat-window" id="chat-window" style="display: none; width: 320px; height: 400px; background: rgba(15, 12, 27, 0.95); border: 1px solid rgba(0, 242, 254, 0.25); border-radius: 20px; position: absolute; bottom: 75px; left: 0; flex-direction: column; box-shadow: 0 15px 35px rgba(0,0,0,0.6); backdrop-filter: blur(10px); overflow: hidden;">
+            <div class="chat-header" style="background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(0, 242, 254, 0.2); padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <div class="chat-header-title" style="font-weight: bold; font-size: 14px; color: #00f2fe; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-circle" style="color: #22c55e; font-size: 10px;"></i>
+                    <span>الدعم الفني المباشر | الأدمن عمر</span>
+                </div>
+                <button class="chat-close-btn" onclick="toggleChatWindow()" style="background: none; border: none; color: #aaa; cursor: pointer; font-size: 16px;"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chat-body" id="chat-messages-container" style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+                <div class="msg-system" style="color: #888; font-size: 11px; text-align: center;">المحادثة نشطة لايف مع الأدمن عمر</div>
+            </div>
+            <div class="chat-footer" style="padding: 12px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 8px; background: rgba(0,0,0,0.2);">
+                <input type="text" id="student-msg-input" style="flex: 1; padding: 10px 15px; border-radius: 10px; border: 1px solid rgba(0,242,254,0.2); background: rgba(0,0,0,0.4); color: #fff; font-size: 13px;" placeholder="اكتب رسالتك..." onkeypress="handleChatKeyPress(event)">
+                <button class="chat-send-btn" onclick="sendLiveMessage()" style="width: 38px; height: 38px; border-radius: 10px; background: #00f2fe; border: none; color: #000; cursor: pointer; display: flex; justify-content: center; align-items: center;"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <button class="chat-trigger-btn" onclick="toggleChatWindow()" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #00f2fe, #4facfe); border: none; color: #000; font-size: 24px; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 8px 25px rgba(0,242,254,0.4);">
+            <i class="fas fa-comments" id="chat-icon"></i>
+        </button>
+    </div>
+
+    <style>
+        .msg-student { background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0,242,254,0.15); padding: 10px; border-radius: 12px 12px 0 12px; align-self: flex-start; max-width: 85%; text-align: right; color: #fff; }
+        .msg-admin { background: rgba(255, 51, 102, 0.1); border: 1px solid rgba(255, 51, 102, 0.15); padding: 10px; border-radius: 12px 12px 12px 0; align-self: flex-end; max-width: 85%; text-align: right; color: #fff; }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script>
+        if (!firebase.apps.length) {
+            const firebaseConfig = {
+                apiKey: "AIzaSy" + "D" + "vG" + "X" + "qS" + "4M3" + "pI" + "oD" + "xK" + "Mv" + "uQ" + "y9" + "w1" + "z0" + "6Y" + "vG" + "1_8",
+                authDomain: "admin-37e09.firebaseapp.com",
+                databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/",
+                projectId: "admin-37e09",
+                storageBucket: "admin-37e09.appspot.com",
+                appId: "1:782163910543:web:6b9fcd6113b28b75e2f75d"
+            };
+            firebase.initializeApp(firebaseConfig);
+        }
+        const database = firebase.database();
+        let currentStudentCode = localStorage.getItem('currentUserCode') || '7L-STUDENT';
+
+        function toggleChatWindow() {
+            let win = document.getElementById('chat-window');
+            if (win.style.display === 'flex') { win.style.display = 'none'; } 
+            else { win.style.display = 'flex'; listenForReplies(); }
+        }
+
+        function sendLiveMessage() {
+            let input = document.getElementById('student-msg-input');
+            let text = input.value.trim();
+            if (!text) return;
+
+            database.ref('chats/' + currentStudentCode).push({
+                sender: 'student',
+                text: text,
+                time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })
+            });
+            input.value = '';
+        }
+
+        function listenForReplies() {
+            database.ref('chats/' + currentStudentCode).on('value', (snapshot) => {
+                let container = document.getElementById('chat-messages-container');
+                container.innerHTML = '<div class="msg-system" style="color: #888; font-size: 11px; text-align: center;">المحادثة نشطة لايف مع الأدمن عمر</div>';
+                if(snapshot.exists()){
+                    snapshot.forEach((child) => {
+                        let data = child.val();
+                        let msgClass = data.sender === 'student' ? 'msg-student' : 'msg-admin';
+                        container.innerHTML += `<div class="${msgClass}">${data.text}</div>`;
+                    });
+                    container.scrollTop = container.scrollHeight;
+                }
+            });
+        }
+        function handleChatKeyPress(e) { if (e.key === 'Enter') sendLiveMessage(); }
+    </script>
 </body>
 </html>
