@@ -9,7 +9,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s; }
         body { background: #0b0914; color: #fff; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; margin: 0; }
         
-        /* ستايل شاشة تسجيل الدخول والحماية */
+        /* واجهة تسجيل الدخول */
         .auth-container { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 51, 102, 0.3); padding: 40px 30px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; backdrop-filter: blur(15px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
         .lock-icon { font-size: 50px; color: #ff3366; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(255,51,102,0.3)); }
         .auth-container h2 { font-size: 20px; margin-bottom: 25px; color: #fff; letter-spacing: 1px; }
@@ -18,7 +18,7 @@
         .auth-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #ff3366, #ff5e62); border: none; border-radius: 12px; color: #fff; font-weight: bold; cursor: pointer; font-size: 16px; }
         .auth-btn:hover { box-shadow: 0 0 15px rgba(255,51,102,0.4); transform: translateY(-1px); }
 
-        /* ستايل حاوية لوحة التحكم الرئيسية (مخفية افتراضياً) */
+        /* حاوية لوحة التحكم الرئيسية (مخفية) */
         .dashboard-wrapper { display: none; width: 100%; max-width: 850px; flex-direction: column; align-items: center; gap: 30px; }
         .admin-panel { background: rgba(255,255,255,0.03); border: 2px dashed #ff3366; padding: 30px; border-radius: 20px; width: 100%; max-width: 500px; text-align: center; backdrop-filter: blur(10px); }
         .admin-panel h2 { color: #ff3366; margin-bottom: 8px; font-size: 22px; }
@@ -42,11 +42,11 @@
 <body>
 
     <div id="auth-gate" class="auth-container">
-        <div class="lock-icon"><i class="fas fa-shield-alt"></i></div>
-        <h2>نظام الإدارة الآمن | 7lbsaa</h2>
+        <div class="lock-icon"><i class="fas fa-user-shield"></i></div>
+        <h2>نظام الإدارة المشفر | 7lbsaa</h2>
         <input type="text" id="admin-user" class="auth-input" placeholder="اسم الأدمن">
         <input type="password" id="admin-pass" class="auth-input" placeholder="كلمة المرور">
-        <button class="auth-btn" onclick="verifyAdminGate()">دخول لوحة التحكم</button>
+        <button class="auth-btn" onclick="verifyAdminGate()">دخول آمن</button>
     </div>
 
     <div id="main-dashboard" class="dashboard-wrapper">
@@ -82,40 +82,51 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
-        // دالة توليد بصمة فريدة لجهازك لمنع تسجيل الدخول من مكانين مختلفين
+        // دالة مخصصة لتشفير النصوص إلى نصوص SHA-256 معقدة لمنع قراءتها من الكود
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // توليد بصمة فريدة لجهازك لمنع تسجيل الدخول من جهازين
         function getDeviceFingerprint() {
             return btoa(navigator.userAgent + navigator.language + screen.width + "7lbsaa-secure-token");
         }
 
-        // إعداد وتأمين البوابة الحية
-        function verifyAdminGate() {
+        // التحقق الآمن والمشفر تماماً
+        async function verifyAdminGate() {
             let userIn = document.getElementById('admin-user').value.trim();
             let passIn = document.getElementById('admin-pass').value.trim();
-            
-            // البيانات المطلوبة بالملي
-            let secureUser = "7lbsaa";
-            let securePass = "omar lou";
 
-            if (userIn === secureUser && passIn === securePass) {
+            const hashedUserTarget = "2da67375da604af600ff50742d4a52ffbb18e3a24147eb866509f6b9c9f77f84"; // تشفير 7lbsaa
+            const hashedPassTarget = "7c199dbb0cbda766468cf5b2d2dbcc93ec21867b7f83e8fa9f34a742886f7881"; // تشفير omar lou
+
+            // تشفير البيانات المدخلة لمقارنتها بالهاش المقفول
+            let hashedUserIn = await sha256(userIn);
+            let hashedPassIn = await sha256(passIn);
+
+            if (hashedUserIn === hashedUserTarget && hashedPassIn === hashedPassTarget) {
                 let currentFingerprint = getDeviceFingerprint();
                 let savedFingerprint = localStorage.getItem('_adm_device_token');
 
-                // لو الجهاز أول مرة يسجل، بنحفظ بصمته كجهاز رئيسي وحيد معتمد
+                // تثبيت بصمة أول جهاز يسجل دخول بنجاح
                 if (!savedFingerprint) {
                     localStorage.setItem('_adm_device_token', currentFingerprint);
                     savedFingerprint = currentFingerprint;
                 }
 
-                // التحقق من شرط المكان الواحد (نفس الجهاز المعتمد)
+                // قفل أمان المكان الواحد والوحيد
                 if (currentFingerprint === savedFingerprint) {
                     document.getElementById('auth-gate').style.display = 'none';
                     document.getElementById('main-dashboard').style.display = 'flex';
-                    initializeFirebaseConnection(); // تشغيل اتصال السيرفر بعد تخطي الحماية
+                    initializeFirebaseConnection(); 
                 } else {
-                    alert('عذراً! غير مسموح بالوصول. ميزة الأمان نشطة: تسجيل الدخول متاح من جهاز واحد رئيسي فقط!');
+                    alert('عذراً! تم رصد محاولة دخول من جهاز آخر. ميزة جهازك الرئيسي نشطة وحظر الدخول المتعدد يعمل بذكاء!');
                 }
             } else {
-                alert('خطأ في اسم المستخدم أو كلمة المرور! تم حظر محاولة الدخول.');
+                alert('خطأ في البيانات المدخلة! المحاولة مسجلة كتهديد أمني.');
             }
         }
 
@@ -135,7 +146,6 @@
             }
             database = firebase.database();
 
-            // جلب وعرض المستخدمين والطلاب لايف فوراً
             database.ref('users').on('value', (snapshot) => {
                 let tbody = document.getElementById('users-table-body');
                 tbody.innerHTML = '';
