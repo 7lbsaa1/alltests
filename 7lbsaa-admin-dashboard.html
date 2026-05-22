@@ -3,27 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة الإدارة الآمنة | 7lbsaa</title>
+    <title>لوحة تحكم الإدارة | 7lbsaa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s; }
         body { background: #0b0914; color: #fff; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; margin: 0; }
         
-        /* واجهة الدخول برقم سري */
-        .auth-container { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 51, 102, 0.3); padding: 40px 30px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; backdrop-filter: blur(15px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-        .lock-icon { font-size: 50px; color: #ff3366; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(255,51,102,0.3)); }
-        .auth-container h2 { font-size: 20px; margin-bottom: 25px; color: #fff; letter-spacing: 1px; }
-        .auth-input { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: #000; color: #fff; text-align: center; font-size: 18px; font-weight: bold; letter-spacing: 4px; }
-        .auth-input:focus { border-color: #ff3366; outline: none; box-shadow: 0 0 10px rgba(255,51,102,0.2); }
-        .auth-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #ff3366, #ff5e62); border: none; border-radius: 12px; color: #fff; font-weight: bold; cursor: pointer; font-size: 16px; }
-        .auth-btn:hover { box-shadow: 0 0 15px rgba(255,51,102,0.4); transform: translateY(-1px); }
-
         /* حاوية لوحة التحكم الرئيسية */
-        .dashboard-wrapper { display: none; width: 100%; max-width: 900px; flex-direction: column; align-items: center; gap: 30px; }
+        .dashboard-wrapper { display: flex; width: 100%; max-width: 900px; flex-direction: column; align-items: center; gap: 30px; }
         
         .admin-grid { display: flex; flex-wrap: wrap; gap: 20px; width: 100%; justify-content: center; }
         
-        .admin-panel { background: rgba(255,255,255,0.03); border: 2px dashed #ff3366; padding: 30px; border-radius: 20px; flex: 1; min-width: 300px; text-align: center; backdrop-filter: blur(10px); }
+        .admin-panel { background: rgba(255, 255, 255, 0.03); border: 2px dashed #ff3366; padding: 30px; border-radius: 20px; flex: 1; min-width: 300px; text-align: center; backdrop-filter: blur(10px); }
         .admin-panel h2 { color: #ff3366; margin-bottom: 8px; font-size: 22px; }
         .subtitle { color: #aaa; font-size: 13px; margin-bottom: 25px; }
         
@@ -49,17 +40,10 @@
 </head>
 <body>
 
-    <div id="auth-gate" class="auth-container">
-        <div class="lock-icon"><i class="fas fa-key"></i></div>
-        <h2>الرمز السري للإدارة | 7lbsaa</h2>
-        <input type="password" id="admin-pass" class="auth-input" placeholder="•••••••••">
-        <button class="auth-btn" onclick="verifyAdminGate()">فتح اللوحة الآمنة</button>
-    </div>
-
-    <div id="main-dashboard" class="dashboard-wrapper">
+    <div class="dashboard-wrapper">
         <div class="admin-grid">
             <div class="admin-panel">
-                <h2>لوحة شحن الرصيد الفوري</h2>
+                <h2>لوحة شحن الرصيد الفوري للأدمن عمر</h2>
                 <p class="subtitle">إرسال وتحديث الأرصدة أونلاين على سيرفر 7lbsaa</p>
                 <input type="text" id="target-code" class="dash-input" placeholder="اكتب كود الطالب (مثال: 7L-1234)">
                 <input type="number" id="charge-amount-input" class="dash-input" placeholder="المبلغ المراد شحنه (ج.م)...">
@@ -97,31 +81,10 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
-        // دالة تشفير النصوص
-        async function sha256(message) {
-            const msgBuffer = new TextEncoder().encode(message);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        // التحقق من الرقم السري المشفر
-        async function verifyAdminGate() {
-            let passIn = document.getElementById('admin-pass').value.trim();
-
-            // الهاش المشفر الخاص بالرقم السري "147258369"
-            const hashedPassTarget = "bc942b08fa111fb4af90069695663673f40075d9e262174d8ff21f3796ec72b4"; 
-
-            let hashedPassIn = await sha256(passIn);
-
-            if (hashedPassIn === hashedPassTarget) {
-                document.getElementById('auth-gate').style.display = 'none';
-                document.getElementById('main-dashboard').style.display = 'flex';
-                initializeFirebaseConnection(); 
-            } else {
-                alert('الرمز السري خطأ! تم رفض إذن الدخول.');
-            }
-        }
+        // بدء الاتصال بالسيرفر تلقائياً فور فتح الصفحة
+        window.onload = function() {
+            initializeFirebaseConnection();
+        };
 
         let database;
         function initializeFirebaseConnection() {
@@ -139,7 +102,7 @@
             }
             database = firebase.database();
 
-            // 1. جلب الطلاب لايف
+            // 1. جلب بيانات الطلاب أونلاين لايف
             database.ref('users').on('value', (snapshot) => {
                 let tbody = document.getElementById('users-table-body');
                 tbody.innerHTML = '';
@@ -156,10 +119,12 @@
                         </tr>`;
                         tbody.innerHTML += row;
                     }
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="4" style="color: #666; padding: 20px;">لا يوجد مستخدمين مسجلين حالياً.</td></tr>`;
                 }
             });
 
-            // 2. جلب رسائل الشات المباشر لايف من الطلاب فور إرسالها
+            // 2. جلب رسائل الشات المباشر لايف من الطلاب
             database.ref('live_chats').on('value', (snapshot) => {
                 let chatBox = document.getElementById('admin-chat-box');
                 chatBox.innerHTML = '';
@@ -178,13 +143,14 @@
                         `;
                         chatBox.innerHTML += chatRow;
                     }
-                    chatBox.scrollTop = chatBox.scrollHeight; // التمرير لآخر رسالة تلقائياً
+                    chatBox.scrollTop = chatBox.scrollHeight;
                 } else {
                     chatBox.innerHTML = `<div style="color: #666; text-align: center; padding: 20px;">لا توجد رسائل دعم حالياً.</div>`;
                 }
             });
         }
 
+        // دالة تنفيذ الشحن السريع
         function executeCharging() {
             let code = document.getElementById('target-code').value.trim();
             let amount = parseFloat(document.getElementById('charge-amount-input').value.trim());
