@@ -2,16 +2,11 @@ let player;
 let isMuted = false;
 let controlsTimeout;
 let lastTap = 0; 
-let currentVideoId = 'BrDHsQyhQQE'; // الفيديو الافتراضي الأول عند فتح الصفحة
 
-// تهيئة المشغل لأول مرة
+// تهيئة مشغل YouTube بناءً على الـ ID الممرر من صفحة الـ HTML المفتوحة حالياً
 function onYouTubeIframeAPIReady() {
-    initPlayer(currentVideoId);
-}
-
-function initPlayer(videoId) {
     player = new YT.Player('youtube-player', {
-        videoId: videoId,
+        videoId: currentVideoId,
         playerVars: {
             'autoplay': 0, 'controls': 0, 'rel': 0, 'showinfo': 0,
             'modestbranding': 1, 'iv_load_policy': 3, 'disablekb': 1, 'fs': 0, 'playsinline': 1
@@ -23,44 +18,6 @@ function initPlayer(videoId) {
     });
 }
 
-// دالة سحرية لتغيير الفيديو داخل نفس المشغل والانتقال لـ قسم السينما تلقائياً
-function loadVideoInCinema(videoId) {
-    currentVideoId = videoId;
-    
-    // إظهار البوستر مجدداً للفيديو الجديد
-    customPoster.classList.remove('video-started');
-    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-    
-    if (player && typeof player.loadVideoById === 'function') {
-        player.loadVideoById(videoId);
-        player.pauseVideo();
-    }
-    
-    // التمرير التلقائي (Scroll) لقسم السينما
-    document.getElementById('cinema').scrollIntoView({ behavior: 'smooth' });
-}
-
-// تنوير التاب النشط في الناف بار أثناء عمل سكرول
-const sections = document.querySelectorAll('section');
-const navLinks = document.querySelectorAll('.nav-links a');
-
-window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        if (pageYOffset >= sectionTop - 150) {
-            current = section.getAttribute('id');
-        }
-    });
-    navLinks.forEach(a => {
-        a.classList.remove('active');
-        if (a.getAttribute('href').includes(current)) {
-            a.classList.add('active');
-        }
-    });
-});
-
-// بقية أكواد التحكم الاحترافية للمشغل (الصوت، السرعة، الجودة، والنقر المزدوج) كما هي تماماً:
 const mainContainer = document.getElementById('main-player-container');
 const customPoster = document.getElementById('custom-poster');
 const vidMask = document.getElementById('vid-mask');
@@ -75,7 +32,7 @@ const volumeTimeline = document.getElementById('volume-timeline');
 const volumeCurrent = document.getElementById('volume-current');
 const controlsLeft = document.querySelector('.controls-left');
 
-// إضافة السرعة ديناميكياً
+// إنشاء أزرار السرعة والجودة ديناميكياً
 const speedBtn = document.createElement('button');
 speedBtn.className = 'control-btn';
 speedBtn.innerHTML = '<i class="fas fa-gauge-high"></i>';
@@ -92,7 +49,6 @@ speedBtn.appendChild(speedMenu);
 speedBtn.onclick = (e) => { e.stopPropagation(); qualityMenu.style.display = 'none'; speedMenu.style.display = speedMenu.style.display === 'flex' ? 'none' : 'flex'; };
 controlsLeft.insertBefore(speedBtn, fullscreenBtn);
 
-// إضافة الجودة ديناميكياً
 const qualityBtn = document.createElement('button');
 qualityBtn.className = 'control-btn';
 qualityBtn.innerHTML = '<i class="fas fa-sliders"></i>';
@@ -167,7 +123,6 @@ function setVolumeFromEvent(e) {
 }
 volumeTimeline.addEventListener('click', setVolumeFromEvent);
 
-// النقر المزدوج للتكبير
 vidMask.addEventListener('click', (e) => {
     const currentTime = new Date().getTime();
     if ((currentTime - lastTap) < 300 && (currentTime - lastTap) > 0) { toggleFullscreen(); e.preventDefault(); }
