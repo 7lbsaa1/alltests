@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark-mode">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مشغل فيديو التخرج | 7lbsaa</title>
+    <link rel="icon" type="image/jpeg" href="logox.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* نفس ستايل المشغل الاحترافي الزجاجي المعتاد */
+        :root { --bg-gradient: linear-gradient(135deg, #0f0c1b, #201a30, #0f0c1b); --panel-bg: rgba(255, 255, 255, 0.06); --panel-border: rgba(255, 255, 255, 0.1); --text-main: #ffffff; --accent-color: #00f2fe; --accent-glow: rgba(0, 242, 254, 0.4); --control-btn-bg: rgba(255, 255, 255, 0.1); }
+        body { background: var(--bg-gradient); display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; color: #fff; overflow: hidden; }
+        .back-btn { position: absolute; top: 20px; right: 20px; background: var(--panel-bg); border: 1px solid var(--panel-border); color: #fff; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .back-btn:hover { background: var(--accent-color); color: #000; }
+        .video-title { font-size: 22px; font-weight: 800; margin-bottom: 20px; text-align: center; background: linear-gradient(45deg, #fff, var(--accent-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .player-container { position: relative; width: 90%; max-width: 850px; aspect-ratio: 16 / 9; background: #000; border-radius: 20px; overflow: hidden; border: 1px solid var(--panel-border); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .player-container.hide-controls { cursor: none; }
+        .iframe-wrapper { position: absolute; top: -12%; left: 0; width: 100%; height: 124%; pointer-events: none; }
+        #youtube-player { width: 100%; height: 100%; }
+        .video-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; cursor: pointer; }
+        .custom-poster-cover { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 15; display: flex; justify-content: center; align-items: center; }
+        .custom-poster-cover.video-started { opacity: 0; visibility: hidden; pointer-events: none; }
+        .play-image-trigger { width: 80px; height: 80px; cursor: pointer; }
+        .custom-controls { position: absolute; bottom: 0; left: 0; width: 100%; height: 65px; background: var(--panel-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid var(--panel-border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 20; transition: all 0.3s; }
+        .player-container.hide-controls .custom-controls { opacity: 0; transform: translateY(15px); pointer-events: none; }
+        .controls-right, .controls-left { display: flex; align-items: center; gap: 10px; }
+        .volume-container { display: flex; align-items: center; gap: 5px; position: relative; }
+        .volume-slider-wrapper { width: 0px; overflow: hidden; transition: width 0.3s; display: flex; align-items: center; height: 20px; direction: ltr!important; }
+        .volume-container:hover .volume-slider-wrapper, .volume-container.active .volume-slider-wrapper { width: 70px; margin-left: 5px; }
+        .volume-slider { width: 100%; height: 5px; background: var(--control-btn-bg); border-radius: 5px; cursor: pointer; position: relative; }
+        .volume-filled { height: 100%; background: var(--accent-color); width: 100%; border-radius: 5px; }
+        .control-btn { background: var(--control-btn-bg); border: 1px solid var(--panel-border); color: var(--text-main); font-size: 14px; width: 38px; height: 38px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .control-btn:hover { background: var(--accent-color); color: #000; box-shadow: 0 0 15px var(--accent-glow); }
+        .progress-container { flex-grow: 1; margin: 0 15px; display: flex; align-items: center; position: relative; cursor: pointer; height: 20px; direction: ltr!important; }
+        .progress-bar { width: 100%; height: 5px; background: var(--control-btn-bg); border-radius: 10px; position: relative; }
+        .progress-filled { height: 100%; background: var(--accent-color); width: 0%; border-radius: 10px; }
+        .dropdown-menu-panel { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); background: rgba(15, 12, 27, 0.95); border: 1px solid var(--panel-border); border-radius: 8px; display: none; flex-direction: column; padding: 5px; z-index: 100; backdrop-filter: blur(10px); min-width: 95px; }
+        .dropdown-menu-panel button { background: none; border: none; color: #fff; padding: 6px 10px; cursor: pointer; font-size: 12px; text-align: center; border-radius: 4px; width: 100%; }
+        .dropdown-menu-panel button:hover { background: var(--accent-color); color: #000; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> العودة للمكتبة</a>
+    <div class="video-title">أغنية تخرج دفعة 2019 طب قصر العيني جامعة القاهرة</div>
+    <div class="player-container" id="main-player-container">
+        <div class="custom-poster-cover" id="custom-poster"><img src="play.png" alt="Play" class="play-image-trigger" id="img-start-trigger" /></div>
+        <div class="video-overlay" id="vid-mask"></div>
+        <div class="iframe-wrapper"><div id="youtube-player"></div></div>
+        <div class="custom-controls" id="controls-panel">
+            <div class="controls-right">
+                <button class="control-btn" id="play-pause-btn"><i class="fas fa-play"></i></button>
+                <div class="volume-container" id="vol-zone">
+                    <button class="control-btn" id="mute-btn"><i class="fas fa-volume-up"></i></button>
+                    <div class="volume-slider-wrapper"><div class="volume-slider" id="volume-timeline"><div class="volume-filled" id="volume-current"></div></div></div>
+                </div>
+            </div>
+            <div class="progress-container" id="progress-timeline"><div class="progress-bar"><div class="progress-filled" id="progress-current"></div></div></div>
+            <div class="controls-left"><button class="control-btn" id="fullscreen-btn"><i class="fas fa-expand"></i></button></div>
+        </div>
+    </div>
+    <script>const currentVideoId = 'BrDHsQyhQQE';</script> <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="secure-player.js"></script>
+</body>
+</html>
