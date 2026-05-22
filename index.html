@@ -3,61 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الرئيسية | 7lbsaa</title>
+    <title>الرئيسية | منصة 7lbsaa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s ease; }
-        body { background: #0f0c1b; color: #fff; min-height: 100vh; position: relative; padding-bottom: 60px; }
+        body { background: #0f0c1b; color: #fff; min-height: 100vh; position: relative; padding-bottom: 80px; }
         
-        /* تنسيق المحتوى الرئيسي للمنصة */
-        .main-content { text-align: center; padding: 50px 20px; }
+        /* الهيدر والمحتوى */
+        .main-content { text-align: center; padding: 40px 20px; }
         .main-content h1 { font-size: 32px; color: #00f2fe; margin-bottom: 10px; text-shadow: 0 0 15px rgba(0,242,254,0.3); }
         .main-content p { color: #aaa; margin-bottom: 30px; }
-        .nav-links { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-        .nav-links a { padding: 12px 25px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,242,254,0.15); border-radius: 12px; color: #fff; text-decoration: none; font-weight: bold; backdrop-filter: blur(5px); }
-        .nav-links a:hover { background: #00f2fe; color: #000; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,242,254,0.3); }
 
-        /* --------- ستايل نافذة الشات العائمة الاحترافية --------- */
+        /* قسم الفيديوهات المحمي بستايل زجاجي */
+        .video-section { max-width: 1000px; margin: 0 auto 50px auto; padding: 20px; }
+        .video-section h2 { color: #ff3366; margin-bottom: 20px; text-align: right; border-right: 3px solid #ff3366; padding-right: 10px; font-size: 20px; }
+        .video-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .video-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; width: 100%; max-width: 450px; backdrop-filter: blur(10px); }
+        .video-card:hover { transform: translateY(-5px); border-color: #00f2fe; box-shadow: 0 10px 20px rgba(0,242,254,0.1); }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .video-info { padding: 15px; text-align: right; }
+        .video-info h3 { font-size: 16px; color: #fff; margin-bottom: 5px; }
+        .video-info p { font-size: 13px; color: #888; }
+
+        /* الفوتر (Footer) */
+        footer { background: rgba(0, 0, 0, 0.4); border-top: 1px solid rgba(255,255,255,0.05); text-align: center; padding: 20px; position: absolute; bottom: 0; width: 100%; backdrop-filter: blur(5px); }
+        footer p { font-size: 13px; color: #666; }
+        footer p span { color: #00f2fe; font-weight: bold; }
+
+        /* --------- ستايل الشات العائم --------- */
         .chat-widget-container { position: fixed; bottom: 25px; left: 25px; z-index: 9999; direction: rtl; }
-        
-        /* زرار الشات العائم */
         .chat-trigger-btn { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #00f2fe, #4facfe); border: none; color: #000; font-size: 24px; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 8px 25px rgba(0,242,254,0.4); }
-        .chat-trigger-btn:hover { transform: scale(1.1) rotate(5deg); box-shadow: 0 10px 30px rgba(0,242,254,0.6); }
-        
-        /* صندوق محادثة الشات الزجاجي */
-        .chat-window { display: none; width: 320px; height: 400px; background: rgba(15, 12, 27, 0.95); border: 1px solid rgba(0, 242, 254, 0.25); border-radius: 20px; position: absolute; bottom: 75px; left: 0; flex-direction: column; box-shadow: 0 15px 35px rgba(0,0,0,0.6); backdrop-filter: blur(10px); overflow: hidden; animation: fadeInUp 0.3s ease; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* هيدر الشات */
-        .chat-header { background: linear-gradient(135deg, rgba(0,242,254,0.1), rgba(79,172,254,0.1)); border-bottom: 1px solid rgba(0, 242, 254, 0.2); padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .chat-window { display: none; width: 320px; height: 400px; background: rgba(15, 12, 27, 0.95); border: 1px solid rgba(0, 242, 254, 0.25); border-radius: 20px; position: absolute; bottom: 75px; left: 0; flex-direction: column; box-shadow: 0 15px 35px rgba(0,0,0,0.6); backdrop-filter: blur(10px); overflow: hidden; }
+        .chat-header { background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(0, 242, 254, 0.2); padding: 15px; display: flex; justify-content: space-between; align-items: center; }
         .chat-header-title { font-weight: bold; font-size: 14px; color: #00f2fe; display: flex; align-items: center; gap: 8px; }
         .chat-close-btn { background: none; border: none; color: #aaa; cursor: pointer; font-size: 16px; }
-        .chat-close-btn:hover { color: #ff3366; }
-        
-        /* منطقة الرسائل */
         .chat-body { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 13px; }
-        .msg-student { background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0,242,254,0.15); padding: 10px; border-radius: 12px 12px 0 12px; align-self: flex-start; max-width: 85%; color: #fff; text-align: right; }
-        .msg-system { color: #888; font-size: 11px; text-align: center; margin: 5px 0; }
         
-        /* فورمة إرسال الرسالة */
+        /* تمييز رسالة الطالب ورسالة الأدمن */
+        .msg-student { background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0,242,254,0.15); padding: 10px; border-radius: 12px 12px 0 12px; align-self: flex-start; max-width: 85%; text-align: right; }
+        .msg-admin { background: rgba(255, 51, 102, 0.1); border: 1px solid rgba(255, 51, 102, 0.15); padding: 10px; border-radius: 12px 12px 12px 0; align-self: flex-end; max-width: 85%; text-align: right; }
+        .msg-system { color: #888; font-size: 11px; text-align: center; }
+        
         .chat-footer { padding: 12px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; gap: 8px; background: rgba(0,0,0,0.2); }
         .chat-input { flex: 1; padding: 10px 15px; border-radius: 10px; border: 1px solid rgba(0,242,254,0.2); background: rgba(0,0,0,0.4); color: #fff; font-size: 13px; }
-        .chat-input:focus { outline: none; border-color: #00f2fe; }
-        .chat-send-btn { width: 38px; height: 38px; border-radius: 10px; background: #00f2fe; border: none; color: #000; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 14px; }
-        .chat-send-btn:hover { background: #4facfe; transform: scale(1.05); }
+        .chat-send-btn { width: 38px; height: 38px; border-radius: 10px; background: #00f2fe; border: none; color: #000; cursor: pointer; display: flex; justify-content: center; align-items: center; }
     </style>
 </head>
 <body>
 
     <div class="main-content">
         <h1>منصة 7lbsaa التعليمية</h1>
-        <p>مرحباً بك في لوحة التحكم الرئيسية الخاصة بالطلاب</p>
-        
-        <div class="nav-links">
-            <a href="profile.html"><i class="fas fa-user"></i> الملف الشخصي</a>
-            <a href="wallet.html"><i class="fas fa-wallet"></i> شحن المحفظة</a>
+        <p>مرحباً بك في لوحة الشرح والمحاضرات أونلاين</p>
+    </div>
+
+    <div class="video-section">
+        <h2><i class="fas fa-play-circle"></i> المحاضرات المتاحة حالياً</h2>
+        <div class="video-grid">
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>المحاضرة الأولى: مقدمة وتأسيس</h3>
+                    <p>مدة الفيديو: 45 دقيقة - مراجعة شاملة للأدمن عمر</p>
+                </div>
+            </div>
+            <div class="video-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>المحاضرة الثانية: حل وتطبيقات مكثفة</h3>
+                    <p>مدة الفيديو: 60 دقيقة - أسئلة ومسائل هامة</p>
+                </div>
+            </div>
         </div>
     </div>
+
+    <footer>
+        <p>جميع الحقوق محفوظة © 2026 لـ منصة <b>7lbsaa</b> | تم التطوير بواسطة <span>عمر & عماد</span></p>
+    </footer>
 
     <div class="chat-widget-container">
         <div class="chat-window" id="chat-window">
@@ -68,17 +94,14 @@
                 </div>
                 <button class="chat-close-btn" onclick="toggleChatWindow()"><i class="fas fa-times"></i></button>
             </div>
-            
             <div class="chat-body" id="chat-messages-container">
-                <div class="msg-system">مرحباً بك! اكتب مشكلتك أو استفسارك هنا وسيتم الرد عليك فوراً من الإدارة.</div>
+                <div class="msg-system">مرحباً بك! اكتب استفسارك وسيتم الرد عليك فوراً من الأدمن.</div>
             </div>
-            
             <div class="chat-footer">
-                <input type="text" id="student-msg-input" class="chat-input" placeholder="اكتب رسالتك هنا..." onkeypress="handleChatKeyPress(event)">
+                <input type="text" id="student-msg-input" class="chat-input" placeholder="اكتب رسالتك..." onkeypress="handleChatKeyPress(event)">
                 <button class="chat-send-btn" onclick="sendLiveMessage()"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
-
         <button class="chat-trigger-btn" onclick="toggleChatWindow()">
             <i class="fas fa-comments" id="chat-icon"></i>
         </button>
@@ -87,7 +110,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
-        // إعدادات قاعدة بيانات الفايربيز
         const firebaseConfig = {
             apiKey: "AIzaSy" + "D" + "vG" + "X" + "qS" + "4M3" + "pI" + "oD" + "xK" + "Mv" + "uQ" + "y9" + "w1" + "z0" + "6Y" + "vG" + "1_8",
             authDomain: "admin-37e09.firebaseapp.com",
@@ -99,53 +121,46 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // جلب كود الطالب الحالي من المتصفح
-        let currentStudentCode = localStorage.getItem('currentUserCode') || 'زائر غير مسجل';
+        // كود الطالب المؤقت (تلقائي أو من الـ LocalStorage)
+        let currentStudentCode = localStorage.getItem('currentUserCode') || '7L-STUDENT';
 
-        // فتح وقفل نافذة الشات
         function toggleChatWindow() {
             let win = document.getElementById('chat-window');
-            let icon = document.getElementById('chat-icon');
-            if (win.style.display === 'flex') {
-                win.style.display = 'none';
-                icon.className = 'fas fa-comments';
-            } else {
-                win.style.display = 'flex';
-                icon.className = 'fas fa-chevron-down';
-                document.getElementById('student-msg-input').focus();
-            }
+            if (win.style.display === 'flex') { win.style.display = 'none'; } 
+            else { win.style.display = 'flex'; listenForReplies(); }
         }
 
-        // إرسال الرسالة لايف إلى السيرفر
         function sendLiveMessage() {
-            let inputField = document.getElementById('student-msg-input');
-            let text = inputField.value.trim();
+            let input = document.getElementById('student-msg-input');
+            let text = input.value.trim();
             if (!text) return;
 
-            let now = new Date();
-            let timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
-
-            database.ref('live_chats').push({
-                userCode: currentStudentCode,
+            // إرسال الرسالة إلى السيرفر تحت مسار كود الطالب ده بالذات
+            database.ref('chats/' + currentStudentCode).push({
+                sender: 'student',
                 text: text,
-                time: timeStr
-            }).then(() => {
+                time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })
+            });
+            input.value = '';
+        }
+
+        // الاستماع لردود الأدمن وعرضها داخل شات الطالب لايف
+        function listenForReplies() {
+            database.ref('chats/' + currentStudentCode).on('value', (snapshot) => {
                 let container = document.getElementById('chat-messages-container');
-                let userMsgHtml = `<div class="msg-student">${text}</div>`;
-                container.innerHTML += userMsgHtml;
-                container.scrollTop = container.scrollHeight;
-                inputField.value = ''; 
-            }).catch(() => {
-                alert('فشل إرسال الرسالة، يرجى التحقق من اتصال الإنترنت.');
+                container.innerHTML = '<div class="msg-system">المحادثة نشطة لايف مع الأدمن عمر</div>';
+                if(snapshot.exists()){
+                    snapshot.forEach((child) => {
+                        let data = child.val();
+                        let msgClass = data.sender === 'student' ? 'msg-student' : 'msg-admin';
+                        container.innerHTML += `<div class="${msgClass}">${data.text}</div>`;
+                    });
+                    container.scrollTop = container.scrollHeight;
+                }
             });
         }
 
-        // دعم زر Enter للإرسال السريع
-        function handleChatKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendLiveMessage();
-            }
-        }
+        function handleChatKeyPress(e) { if (e.key === 'Enter') sendLiveMessage(); }
     </script>
 </body>
 </html>
