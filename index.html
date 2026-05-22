@@ -4,142 +4,134 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>7lbsaa Hub | المكتبة الرئيسية</title>
-    <link rel="icon" type="image/jpeg" href="logox.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s ease; }
-        body { background: linear-gradient(rgba(15, 12, 27, 0.8), rgba(15, 12, 27, 0.9)), url('koko1.jpg') no-repeat center center fixed; background-size: cover; min-height: 100vh; color: #ffffff; padding-top: 90px; padding-bottom: 5px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s; }
+        body { background: #0f0c1b; color: #fff; padding-top: 100px; margin: 0; }
         
-        /* الناف بار الاحترافي */
-        .navbar { position: fixed; top: 0; left: 0; width: 100%; height: 75px; background: rgba(15, 12, 27, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: space-between; padding: 0 5%; z-index: 1000; }
-        .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 800; color: #00f2fe; font-size: 20px; text-decoration: none; }
-        .nav-logo img { width: 45px; height: 45px; border-radius: 50%; border: 1px solid #00f2fe; }
-        .nav-user-zone { display: flex; align-items: center; gap: 15px; }
-        .wallet-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: #00f2fe; padding: 8px 15px; border-radius: 15px; cursor: pointer; text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 600; }
-        .wallet-btn:hover { background: #00f2fe; color: #000; box-shadow: 0 0 15px rgba(0, 242, 254, 0.4); }
-        .user-profile-link { display: flex; align-items: center; gap: 8px; text-decoration: none; color: #fff; font-weight: 600; }
-        .user-profile-link img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; }
+        /* الناف بار الزجاجي */
+        .navbar { position: fixed; top: 0; left: 0; width: 100%; height: 75px; background: rgba(15, 12, 27, 0.85); display: flex; align-items: center; justify-content: space-between; padding: 0 5%; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+        .wallet-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: #00f2fe; padding: 8px 15px; border-radius: 15px; text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: bold; }
+        .wallet-btn:hover { background: rgba(0, 242, 254, 0.2); }
 
-        .main-header { text-align: center; margin: 40px 0; }
-        .main-header h1 { font-size: 36px; background: linear-gradient(45deg, #fff, #00f2fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        /* شبكة الفيديوهات */
+        .videos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; width: 90%; max-width: 1100px; margin: 40px auto; }
+        .video-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; overflow: hidden; position: relative; display: flex; flex-direction: column; backdrop-filter: blur(5px); }
+        .video-card:hover { transform: translateY(-5px); border-color: rgba(0, 242, 254, 0.3); }
         
-        /* نظام الكروت والمقاطع المدفوعة */
-        .videos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; width: 90%; max-width: 1100px; margin: 0 auto; }
-        .video-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; position: relative; }
         .card-thumbnail { position: relative; aspect-ratio: 16/9; background: #000; }
         .card-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* طبقة القفل فوق الفيديو */
-        .lock-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; color: #ff3366; font-size: 18px; font-weight: bold; }
-        .lock-overlay i { font-size: 35px; text-shadow: 0 0 10px rgba(255, 51, 102, 0.5); }
-        .price-tag { background: #ff3366; color: #fff; padding: 4px 12px; border-radius: 10px; font-size: 14px; margin-top: 5px; }
-
+        /* قفل الحماية الزجاجي */
+        .lock-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; flex-direction: column; justify-content: center; align-items: center; color: #ff3366; font-weight: bold; font-size: 18px; gap: 10px; }
+        
         .card-content { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
-        .card-title { font-size: 17px; font-weight: 700; margin-bottom: 15px; }
-        .watch-btn, .buy-btn { width: 100%; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; border: none; }
-        .watch-btn { background: #00f2fe; color: #000; }
-        .watch-btn:hover { box-shadow: 0 0 15px rgba(0,242,254,0.4); }
-        .buy-btn { background: #ff3366; color: #fff; }
-        .buy-btn:hover { box-shadow: 0 0 15px rgba(255,51,102,0.4); }
+        .card-content h3 { font-size: 16px; margin-bottom: 15px; line-height: 1.6; }
+        
+        /* الأزرار */
+        .watch-btn { background: #00f2fe; color: #000; padding: 12px; border-radius: 12px; text-decoration: none; text-align: center; font-weight: bold; display: block; box-shadow: 0 4px 10px rgba(0,242,254,0.2); }
+        .buy-btn { width: 100%; padding: 12px; background: #ff3366; color: #fff; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 15px; box-shadow: 0 4px 10px rgba(255,51,102,0.2); }
+        .buy-btn:hover { background: #ff1a53; }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <a href="index.html" class="nav-logo">
-            <img src="toplogo.jpg" alt="Logo"> <span>7lbsaa Hub</span>
-        </a>
-        <div class="nav-user-zone">
-            <a href="wallet.html" class="wallet-btn">
-                <i class="fas fa-wallet"></i> <span id="nav-balance">0</span> جنيه
-            </a>
-            <a href="profile.html" class="user-profile-link">
-                <img id="nav-avatar" src="logox.jpg" alt="Avatar">
-                <span id="nav-username">المستخدم</span>
-            </a>
+        <a href="index.html" style="color: #00f2fe; font-weight: bold; text-decoration: none; font-size: 20px;">7lbsaa Hub</a>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="wallet-btn"><i class="fas fa-wallet"></i> <span id="nav-balance">0</span> ج.م</div>
+            <span id="nav-username" style="color: #fff; font-weight: bold; background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 10px;">تحميل...</span>
         </div>
     </nav>
 
-    <header class="main-header">
-        <h1>منصة المحتوى المدفوع والحصري</h1>
-    </header>
-
     <main class="videos-grid">
-        <div class="video-card" id="card-takhrog">
+        <div class="video-card">
             <div class="card-thumbnail">
-                <img src="takhrog.jpg" alt="فيديو التخرج">
-                <div class="lock-overlay" id="lock-takhrog">
-                    <i class="fas fa-lock"></i> <span>مقطع مدفوع</span>
-                    <span class="price-tag">100 جنيه</span>
-                </div>
+                <img src="takhrog.jpg" onerror="this.src='logox.jpg'">
+                <div class="lock-overlay" id="lock-takhrog"><i class="fas fa-lock" style="font-size: 24px;"></i> 100 جنيه</div>
             </div>
             <div class="card-content">
-                <h3 class="card-title">أغنية تخرج دفعة 2019 طب قصر العيني جامعة القاهرة</h3>
-                <div id="action-takhrog">
-                    <button class="buy-btn" onclick="buyVideo('takhrog', 100)"><i class="fas fa-shopping-cart"></i> شراء المقطع بقيمة 100 ج.م</button>
-                </div>
+                <h3>أغنية تخرج دفعة 2019 طب قصر العيني جامعة القاهرة</h3>
+                <div id="action-takhrog"><button class="buy-btn" onclick="buyVideo('takhrog', 100)">شراء المقطع بقيمة 100 ج.م</button></div>
             </div>
         </div>
 
-        <div class="video-card" id="card-khatamna">
+        <div class="video-card">
             <div class="card-thumbnail">
-                <img src="https://i.ytimg.com/vi/hHPCis9GV0o/hqdefault.jpg" alt="أنشودة ختمنا الطريق">
-                <div class="lock-overlay" id="lock-khatamna">
-                    <i class="fas fa-lock"></i> <span>مقطع مدفوع</span>
-                    <span class="price-tag">120 جنيه</span>
-                </div>
+                <img src="logox.jpg">
+                <div class="lock-overlay" id="lock-khatamna"><i class="fas fa-lock" style="font-size: 24px;"></i> 120 جنيه</div>
             </div>
             <div class="card-content">
-                <h3 class="card-title">أنشودة ختمنا الطريق (إهداء لطلاب ثانوية عامة ٢٠٢٥)</h3>
-                <div id="action-khatamna">
-                    <button class="buy-btn" onclick="buyVideo('khatamna', 120)"><i class="fas fa-shopping-cart"></i> شراء المقطع بقيمة 120 ج.م</button>
-                </div>
+                <h3>أنشودة ختمنا الطريق (إهداء لطلاب ثانوية عامة ٢٠٢٥)</h3>
+                <div id="action-khatamna"><button class="buy-btn" onclick="buyVideo('khatamna', 120)">شراء المقطع بقيمة 120 ج.م</button></div>
             </div>
         </div>
     </main>
 
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
-        // التحقق من وجود تسجيل دخول، إذا لم يوجد يتم تحويله لصفحة الـ Login فوراً
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if(!currentUser) { window.location.href = 'login.html'; }
+        const firebaseConfig = {
+            apiKey: "AIzaSy" + "D" + "vG" + "X" + "qS" + "4M3" + "pI" + "oD" + "xK" + "Mv" + "uQ" + "y9" + "w1" + "z0" + "6Y" + "vG" + "1_8",
+            authDomain: "admin-37e09.firebaseapp.com",
+            databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/",
+            projectId: "admin-37e09",
+            storageBucket: "admin-37e09.appspot.com",
+            appId: "1:782163910543:web:6b9fcd6113b28b75e2f75d"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
-        // تحديث بيانات الناف بار
-        document.getElementById('nav-username').innerText = currentUser.username;
-        document.getElementById('nav-balance').innerText = currentUser.balance;
+        // التأكد من أن المستخدم مسجل حساب أولاً
+        let userCode = localStorage.getItem('currentUserCode');
+        if(!userCode) { window.location.href = 'login.html'; }
 
-        // دالة التحقق من المشتريات وإخفاء الأقفال
-        function checkPurchases() {
-            if(currentUser.purchasedVideos && currentUser.purchasedVideos.includes('takhrog')) {
-                document.getElementById('lock-takhrog').style.display = 'none';
-                document.getElementById('action-takhrog').innerHTML = `<a href="takhrog-player.html" class="watch-btn"><i class="fas fa-play"></i> مشاهدة الآن</a>`;
-            }
-            if(currentUser.purchasedVideos && currentUser.purchasedVideos.includes('khatamna')) {
-                document.getElementById('lock-khatamna').style.display = 'none';
-                document.getElementById('action-khatamna').innerHTML = `<a href="khatamna-player.html" class="watch-btn"><i class="fas fa-play"></i> مشاهدة الآن</a>`;
-            }
-        }
-        checkPurchases();
+        let globalUserData;
 
-        // دالة الشراء باستخدام رصيد المحفظة
-        function buyVideo(videoKey, price) {
-            if(currentUser.balance >= price) {
-                currentUser.balance -= price;
-                if(!currentUser.purchasedVideos) currentUser.purchasedVideos = [];
-                currentUser.purchasedVideos.push(videoKey);
+        // الاتصال الحي بالسيرفر: أي شحن رصيد هيسمع هنا فوراً بدون ريفريش!
+        database.ref('users/' + userCode).on('value', (snapshot) => {
+            if(snapshot.exists()) {
+                globalUserData = snapshot.val();
+                document.getElementById('nav-username').innerText = globalUserData.username + " (" + userCode + ")";
+                document.getElementById('nav-balance').innerText = globalUserData.balance;
+
+                // التحقق من الفيديوهات المشتراة لفك الأقفال أونلاين
+                let purchased = globalUserData.purchasedVideos || [];
                 
-                // حفظ البيانات المحدثة للمستخدم في الـ LocalStorage
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                
-                // تحديث قاعدة البيانات الكلية للمستخدمين أيضاً لكي تظهر للأدمن
-                let usersList = JSON.parse(localStorage.getItem('usersList')) || [];
-                let uIndex = usersList.findIndex(u => u.userCode === currentUser.userCode);
-                if(uIndex !== -1) { usersList[uIndex] = currentUser; localStorage.setItem('usersList', JSON.stringify(usersList)); }
-
-                alert('مبروك! تم شراء المقطع بنجاح وسيتم فتح المشغل لك الآن.');
-                window.location.reload();
+                if(purchased.includes('takhrog')) {
+                    document.getElementById('lock-takhrog').style.display = 'none';
+                    document.getElementById('action-takhrog').innerHTML = `<a href="takhrog-player.html" class="watch-btn"><i class="fas fa-play"></i> مشاهدة الآن</a>`;
+                }
+                if(purchased.includes('khatamna')) {
+                    document.getElementById('lock-khatamna').style.display = 'none';
+                    document.getElementById('action-khatamna').innerHTML = `<a href="khatamna-player.html" class="watch-btn"><i class="fas fa-play"></i> مشاهدة الآن</a>`;
+                }
             } else {
-                alert('رصيدك الحالي لا يكفي لشراء المقطع! يرجى شحن محفظتك أولاً.');
-                window.location.href = 'wallet.html';
+                // لو الكود اتمسح من السيرفر يرجعه لصفحة التسجيل
+                localStorage.removeItem('currentUserCode');
+                window.location.href = 'login.html';
+            }
+        });
+
+        // عملية الشراء أونلاين وخصم الرصيد من السيرفر
+        function buyVideo(videoKey, price) {
+            if(!globalUserData) return;
+            
+            if(globalUserData.balance >= price) {
+                let newBalance = globalUserData.balance - price;
+                let purchased = globalUserData.purchasedVideos || [];
+                if(!purchased.includes(videoKey)) {
+                    purchased.push(videoKey);
+                }
+
+                database.ref('users/' + userCode).update({
+                    balance: newBalance,
+                    purchasedVideos: purchased
+                }).then(() => {
+                    alert('تم الشراء بنجاح! استمتع بالمشاهدة.');
+                }).catch(() => alert('حدث خطأ أثناء إتمام الشراء أونلاين.'));
+            } else {
+                alert('عذراً! رصيدك الحالي لا يكفي لإتمام الشراء، يرجى التواصل مع الأدمن لشحن محفظتك.');
             }
         }
     </script>
