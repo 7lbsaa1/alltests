@@ -11,9 +11,13 @@
         
         .profile-container { background: rgba(255,255,255,0.04); border: 1px solid rgba(0,242,254,0.15); padding: 40px; border-radius: 24px; width: 90%; max-width: 450px; text-align: center; backdrop-filter: blur(15px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
         
-        .avatar-wrapper { position: relative; width: 120px; height: 120px; margin: 0 auto 20px; }
+        .avatar-wrapper { position: relative; width: 120px; height: 120px; margin: 0 auto 20px; cursor: pointer; }
         .profile-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #00f2fe; object-fit: cover; box-shadow: 0 0 20px rgba(0,242,254,0.3); }
         
+        /* تأثير مميز عند تمرير الماوس لاختيار صورة */
+        .avatar-hint { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 12px; color: #00f2fe; opacity: 0; transition: opacity 0.3s; }
+        .avatar-wrapper:hover .avatar-hint { opacity: 1; }
+
         h2 { font-size: 22px; margin-bottom: 5px; color: #fff; }
         .user-code-badge { display: inline-block; background: rgba(0,242,254,0.1); border: 1px solid #00f2fe; color: #00f2fe; padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: bold; margin-bottom: 25px; }
         
@@ -22,21 +26,25 @@
         .info-left { display: flex; align-items: center; gap: 12px; }
         .balance-value { font-size: 18px; font-weight: bold; color: #00f2fe; }
         
-        .edit-section { margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: right; }
-        .edit-section label { display: block; font-size: 13px; color: #aaa; margin-bottom: 8px; }
-        .edit-section input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(0,242,254,0.3); background: #000; color: #fff; font-size: 14px; text-align: left; direction: ltr; margin-bottom: 12px; }
+        .edit-section { margin-top: 15px; }
+        /* إخفاء زرار الرفع الافتراضي الشين وعمل زرار فخم بديل */
+        #file-input { display: none; }
+        .upload-btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #00f2fe, #4facfe); border: none; border-radius: 12px; color: #000; font-weight: bold; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(0,242,254,0.2); }
+        .upload-btn:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 6px 20px rgba(0,242,254,0.4); }
         
-        .btn-save { width: 100%; padding: 12px; background: #00f2fe; border: none; border-radius: 10px; color: #000; font-weight: bold; cursor: pointer; font-size: 15px; }
-        .btn-save:hover { box-shadow: 0 0 15px rgba(0,242,254,0.4); transform: translateY(-1px); }
-        .back-link { display: inline-block; margin-top: 20px; color: #aaa; text-decoration: none; font-size: 14px; }
+        .back-link { display: inline-block; margin-top: 25px; color: #aaa; text-decoration: none; font-size: 14px; }
         .back-link:hover { color: #00f2fe; }
     </style>
 </head>
 <body>
 
     <div class="profile-container">
-        <div class="avatar-wrapper">
+        <div class="avatar-wrapper" onclick="triggerFileInput()">
             <img id="user-image" src="person.png" class="profile-img" alt="صورة المستخدم">
+            <div class="avatar-hint">
+                <i class="fas fa-camera font-size: 18px; margin-bottom: 4px;"></i>
+                <span>تغيير الصورة</span>
+            </div>
         </div>
         
         <h2 id="user-name">تحميل الاسم...</h2>
@@ -51,9 +59,10 @@
         </div>
 
         <div class="edit-section">
-            <label><i class="fas fa-link"></i> تغيير رابط الصورة الشخصية (URL):</label>
-            <input type="text" id="avatar-url-input" placeholder="https://example.com/image.png">
-            <button class="btn-save" onclick="updateProfileImage()">حفظ وتحديث الصورة أونلاين</button>
+            <input type="file" id="file-input" accept="image/*" onchange="handleFileSelect(event)">
+            <button class="upload-btn" onclick="triggerFileInput()">
+                <i class="fas fa-upload"></i> اختر صورة من هاتفك الآن
+            </button>
         </div>
 
         <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> العودة للمكتبة الرئيسية</a>
@@ -76,7 +85,7 @@
         let userCode = localStorage.getItem('currentUserCode');
         if(!userCode) { window.location.href = 'login.html'; }
 
-        // قراءة وحفظ بيانات البروفايل لايف من السيرفر
+        // قراءة البيانات لايف من السيرفر
         database.ref('users/' + userCode).on('value', (snapshot) => {
             if(snapshot.exists()) {
                 let data = snapshot.val();
@@ -86,28 +95,41 @@
                 
                 if(data.profileImg) {
                     document.getElementById('user-image').src = data.profileImg;
-                    document.getElementById('avatar-url-input').value = data.profileImg;
                 } else {
                     document.getElementById('user-image').src = "person.png";
                 }
             }
         });
 
-        // تحديث وحفظ رابط الصورة على السيرفر
-        function updateProfileImage() {
-            let newUrl = document.getElementById('avatar-url-input').value.trim();
-            if(!newUrl) {
-                alert('من فضلك أدخل رابط صورة صحيح أولاً!');
+        function triggerFileInput() {
+            document.getElementById('file-input').click();
+        }
+
+        // معالجة وتحويل الصورة المرفوعة من الهاتف وحفظها مباشرة بالسيرفر
+        function handleFileSelect(event) {
+            let file = event.target.files[0];
+            if(!file) return;
+
+            // التحقق من أن حجم الصورة مناسب للحفظ في قاعدة البيانات بقيمة أقل من 1.5 ميجا لضمان سرعة التحميل
+            if(file.size > 1500000) {
+                alert('عذراً! حجم الصورة كبير جداً، يرجى اختيار صورة بحجم أصغر للحفظ السريع.');
                 return;
             }
-            
-            database.ref('users/' + userCode).update({
-                profileImg: newUrl
-            }).then(() => {
-                alert('تم حفظ وتحديث صورتك الشخصية أونلاين بنجاح!');
-            }).catch(() => {
-                alert('حدث خطأ أثناء الحفظ.');
-            });
+
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let base64Image = e.target.result;
+                
+                // تحديث الصورة في السيرفر لايف
+                database.ref('users/' + userCode).update({
+                    profileImg: base64Image
+                }).then(() => {
+                    alert('تم بنجاح رفع وحفظ صورتك الشخصية الجديدة من الهاتف! 🎉');
+                }).catch(() => {
+                    alert('حدث خطأ أثناء حفظ الصورة أونلاين.');
+                });
+            };
+            reader.readAsDataURL(file);
         }
     </script>
 </body>
