@@ -9,7 +9,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s ease; }
         body { background: #0f0c1b; color: #fff; min-height: 100vh; position: relative; padding-bottom: 60px; }
         
-        /* تنسيق المحتوى الرئيسي للمنصة (تقدر تبدله بستايل صفحتك الحالي) */
+        /* تنسيق المحتوى الرئيسي للمنصة */
         .main-content { text-align: center; padding: 50px 20px; }
         .main-content h1 { font-size: 32px; color: #00f2fe; margin-bottom: 10px; text-shadow: 0 0 15px rgba(0,242,254,0.3); }
         .main-content p { color: #aaa; margin-bottom: 30px; }
@@ -29,7 +29,7 @@
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
         /* هيدر الشات */
-        .chat-header { background: linear-gradient(135deg, rgba(0,242,254,0.1), rgba(4facfe,0.1)); border-bottom: 1px solid rgba(0, 242, 254, 0.2); padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .chat-header { background: linear-gradient(135deg, rgba(0,242,254,0.1), rgba(79,172,254,0.1)); border-bottom: 1px solid rgba(0, 242, 254, 0.2); padding: 15px; display: flex; justify-content: space-between; align-items: center; }
         .chat-header-title { font-weight: bold; font-size: 14px; color: #00f2fe; display: flex; align-items: center; gap: 8px; }
         .chat-close-btn { background: none; border: none; color: #aaa; cursor: pointer; font-size: 16px; }
         .chat-close-btn:hover { color: #ff3366; }
@@ -87,7 +87,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
-        // إعدادات قاعدة بيانات الفايربيز الخاصة بك بالملي
+        // إعدادات قاعدة بيانات الفايربيز
         const firebaseConfig = {
             apiKey: "AIzaSy" + "D" + "vG" + "X" + "qS" + "4M3" + "pI" + "oD" + "xK" + "Mv" + "uQ" + "y9" + "w1" + "z0" + "6Y" + "vG" + "1_8",
             authDomain: "admin-37e09.firebaseapp.com",
@@ -99,10 +99,10 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // جلب كود الطالب المسجل حالياً في المتصفح
+        // جلب كود الطالب الحالي من المتصفح
         let currentStudentCode = localStorage.getItem('currentUserCode') || 'زائر غير مسجل';
 
-        // فتح وقفل نافذة الشات عند الضغط على الأيقونة
+        // فتح وقفل نافذة الشات
         function toggleChatWindow() {
             let win = document.getElementById('chat-window');
             let icon = document.getElementById('chat-icon');
@@ -116,7 +116,7 @@
             }
         }
 
-        // إرسال الرسالة لايف إلى السيرفر لتظهر فوراً في لوحة الأدمن
+        // إرسال الرسالة لايف إلى السيرفر
         function sendLiveMessage() {
             let inputField = document.getElementById('student-msg-input');
             let text = inputField.value.trim();
@@ -125,24 +125,22 @@
             let now = new Date();
             let timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
 
-            // إرسال كود الطالب والرسالة والتوقيت أونلاين
             database.ref('live_chats').push({
                 userCode: currentStudentCode,
                 text: text,
                 time: timeStr
             }).then(() => {
-                // عرض الرسالة محلياً في شاشة الطالب فوراً بعد الإرسال
                 let container = document.getElementById('chat-messages-container');
                 let userMsgHtml = `<div class="msg-student">${text}</div>`;
                 container.innerHTML += userMsgHtml;
                 container.scrollTop = container.scrollHeight;
-                inputField.value = ''; // تفريغ الخانة
+                inputField.value = ''; 
             }).catch(() => {
                 alert('فشل إرسال الرسالة، يرجى التحقق من اتصال الإنترنت.');
             });
         }
 
-        // دعم الإرسال عند الضغط على زرار Enter في لوحة مفاتيح الهاتف أو الكمبيوتر
+        // دعم زر Enter للإرسال السريع
         function handleChatKeyPress(event) {
             if (event.key === 'Enter') {
                 sendLiveMessage();
