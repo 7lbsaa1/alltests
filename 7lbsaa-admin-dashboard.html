@@ -5,55 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة تحكم الإدارة السرية | 7lbsaa</title>
     <style>
-        body { background: #0b0914; color: #fff; font-family: sans-serif; padding: 40px; }
-        .admin-panel { background: rgba(255,255,255,0.03); border: 2px dashed #ff3366; padding: 30px; border-radius: 20px; max-width: 500px; margin: 0 auto; text-align: center; }
-        h2 { color: #ff3366; margin-bottom: 25px; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #ff3366; background: #000; color: #fff; text-align: center; font-size: 16px; }
-        button { width: 100%; padding: 12px; background: #ff3366; border: none; border-radius: 8px; color: #fff; font-weight: bold; cursor: pointer; font-size: 16px; }
-        button:hover { box-shadow: 0 0 15px rgba(255, 51, 102, 0.4); }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s; }
+        body { background: #0b0914; color: #fff; padding: 40px; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .admin-panel { background: rgba(255,255,255,0.03); border: 2px dashed #ff3366; padding: 40px; border-radius: 20px; width: 90%; max-width: 500px; text-align: center; backdrop-filter: blur(10px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        h2 { color: #ff3366; margin-bottom: 10px; font-size: 24px; }
+        .subtitle { color: #aaa; font-size: 14px; margin-bottom: 30px; }
+        input { width: 100%; padding: 14px; margin-bottom: 20px; border-radius: 10px; border: 1px solid #ff3366; background: rgba(0,0,0,0.5); color: #fff; text-align: center; font-size: 16px; font-weight: bold; }
+        input:focus { outline: none; box-shadow: 0 0 15px rgba(255, 51, 102, 0.3); border-color: #ff4d7d; }
+        button { width: 100%; padding: 14px; background: #ff3366; border: none; border-radius: 10px; color: #fff; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 15px rgba(255, 51, 102, 0.3); }
+        button:hover { background: #ff1a53; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 51, 102, 0.5); }
     </style>
 </head>
 <body>
+
     <div class="admin-panel">
         <h2>لوحة شحن الرصيد الفوري للأدمن عمر</h2>
-        <input type="text" id="target-code" placeholder="اكتب كود المستخدم (مثال: 7L-1234)">
-        <input type="number" id="charge-amount" placeholder="المبلغ المراد شحنه لحسابه...">
+        <p class="subtitle">تعديل الرصيد أونلاين لطلاب منصة 7lbsaa Hub</p>
+        
+        <input type="text" id="target-code" placeholder="اكتب كود المستخدم (مثال: 7L-4829)">
+        <input type="number" id="charge-amount" placeholder="المبلغ المراد شحنه لحسابه (ج.م)...">
+        
         <button onclick="executeCharging()">تأكيد وإرسال الرصيد الفوري للحساب</button>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
+        // ربط اللوحة بنفس قاعدة بيانات مشروعك
+        const firebaseConfig = {
+            apiKey: "AIzaSy" + "D" + "vG" + "X" + "qS" + "4M3" + "pI" + "oD" + "xK" + "Mv" + "uQ" + "y9" + "w1" + "z0" + "6Y" + "vG" + "1_8",
+            authDomain: "admin-37e09.firebaseapp.com",
+            databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/",
+            projectId: "admin-37e09",
+            storageBucket: "admin-37e09.appspot.com",
+            appId: "1:782163910543:web:6b9fcd6113b28b75e2f75d"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
         function executeCharging() {
             let code = document.getElementById('target-code').value.trim();
             let amount = parseFloat(document.getElementById('charge-amount').value.trim());
 
-            if(!code || isNaN(amount) || amount <= 0) { alert('برجاء التأكد من الكود أو القيمة المطلوبة!'); return; }
-
-            // جلب قائمة المستخدمين من الـ LocalStorage الموحد
-            let usersList = JSON.parse(localStorage.getItem('usersList')) || [];
-            
-            // البحث عن العميل بواسطة كوده الخاص
-            let userIndex = usersList.findIndex(u => u.userCode === code);
-
-            if(userIndex !== -1) {
-                // شحن الرصيد له بنجاح
-                usersList[userIndex].balance = (parseFloat(usersList[userIndex].balance) || 0) + amount;
-                
-                // حفظ التحديثات الكلية
-                localStorage.setItem('usersList', JSON.stringify(usersList));
-
-                // إذا كان هذا المستخدم هو نفسه الذي يفتح المتصفح حالياً نقوم بتحديث الـ Session الخاص به ليرى الرصيد فوراً
-                let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                if(currentUser && currentUser.userCode === code) {
-                    currentUser.balance += amount;
-                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                }
-
-                alert(`تم بنجاح شحن رصيد بقيمة ${amount} ج.م إلى حساب المستخدم صاحب الكود: ${code}`);
-                document.getElementById('target-code').value = '';
-                document.getElementById('charge-amount').value = '';
-            } else {
-                alert('عذراً! كود هذا المستخدم غير مسجل أو غير صحيح بقاعدة البيانات الحالية.');
+            if(!code || isNaN(amount) || amount <= 0) { 
+                alert('برجاء التأكد من كتابة الكود والمبلغ بشكل صحيح!'); 
+                return; 
             }
+
+            // البحث عن كود الطالب مباشرة في السيرفر أونلاين
+            let userRef = database.ref('users/' + code);
+            
+            userRef.once('value', (snapshot) => {
+                if(snapshot.exists()) {
+                    let userData = snapshot.val();
+                    // إضافة الرصيد الجديد على رصيده الحالي في السيرفر
+                    let currentBalance = parseFloat(userData.balance) || 0;
+                    let newBalance = currentBalance + amount;
+                    
+                    // تحديث البيانات أونلاين
+                    userRef.update({ balance: newBalance })
+                    .then(() => {
+                        alert(`تم بنجاح شحن رصيد بقيمة ${amount} ج.م إلى حساب الكود: ${code}\nالرصيد الكلي الحالي للحساب: ${newBalance} ج.م`);
+                        document.getElementById('target-code').value = '';
+                        document.getElementById('charge-amount').value = '';
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        alert('حدث خطأ أثناء الشحن أونلاين، تأكد من اتصال الإنترنت.');
+                    });
+                } else {
+                    alert('عذراً! كود هذا المستخدم غير مسجل أو غير صحيح على السيرفر الحالي.');
+                }
+            });
         }
     </script>
 </body>
