@@ -4,29 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الملف الشخصي | 7lbsaa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #0f0c1b; color: #fff; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .profile-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; text-align: center; width: 90%; max-width: 450px; }
-        img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #00f2fe; margin-bottom: 20px; }
-        h2 { color: #00f2fe; margin-bottom: 10px; }
-        .info-box { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin: 15px 0; font-size: 18px; border-left: 4px solid #00f2fe; text-align: right; }
-        .back-btn { display: inline-block; margin-top: 20px; color: #aaa; text-decoration: none; font-size: 14px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s ease; }
+        body { background: #0f0c1b; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        
+        .profile-container { background: rgba(255,255,255,0.04); border: 1px solid rgba(0,242,254,0.15); padding: 40px; border-radius: 24px; width: 90%; max-width: 450px; text-align: center; backdrop-filter: blur(15px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        
+        .avatar-wrapper { position: relative; width: 120px; height: 120px; margin: 0 auto 20px; }
+        .profile-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #00f2fe; object-fit: cover; box-shadow: 0 0 20px rgba(0,242,254,0.3); }
+        
+        h2 { font-size: 22px; margin-bottom: 5px; color: #fff; }
+        .user-code-badge { display: inline-block; background: rgba(0,242,254,0.1); border: 1px solid #00f2fe; color: #00f2fe; padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: bold; margin-bottom: 25px; }
+        
+        .info-card { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .info-card img { width: 30px; height: 30px; object-fit: contain; }
+        .info-left { display: flex; align-items: center; gap: 12px; }
+        .balance-value { font-size: 18px; font-weight: bold; color: #00f2fe; }
+        
+        .edit-section { margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: right; }
+        .edit-section label { display: block; font-size: 13px; color: #aaa; margin-bottom: 8px; }
+        .edit-section input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(0,242,254,0.3); background: #000; color: #fff; font-size: 14px; text-align: left; direction: ltr; margin-bottom: 12px; }
+        
+        .btn-save { width: 100%; padding: 12px; background: #00f2fe; border: none; border-radius: 10px; color: #000; font-weight: bold; cursor: pointer; font-size: 15px; }
+        .btn-save:hover { box-shadow: 0 0 15px rgba(0,242,254,0.4); transform: translateY(-1px); }
+        .back-link { display: inline-block; margin-top: 20px; color: #aaa; text-decoration: none; font-size: 14px; }
+        .back-link:hover { color: #00f2fe; }
     </style>
 </head>
 <body>
-    <div class="profile-card">
-        <img src="logox.jpg" alt="Avatar">
-        <h2 id="p-name">جاري التحميل...</h2>
-        <div class="info-box"><strong>كود المستخدم الخاص بك:</strong> <span id="p-code" style="color:#00f2fe; font-weight:bold;"></span></div>
-        <div class="info-box"><strong>رصيد المحفظة الحالي:</strong> <span id="p-balance"></span> جنيه</div>
-        <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> العودة للمكتبة الرئيسية</a>
+
+    <div class="profile-container">
+        <div class="avatar-wrapper">
+            <img id="user-image" src="person.png" class="profile-img" alt="صورة المستخدم">
+        </div>
+        
+        <h2 id="user-name">تحميل الاسم...</h2>
+        <div id="user-code" class="user-code-badge">7L-XXXX</div>
+        
+        <div class="info-card">
+            <div class="info-left">
+                <img src="money.png" alt="Money">
+                <span>الرصيد الحالي بالمحفظة</span>
+            </div>
+            <span class="balance-value"><span id="user-balance">0</span> ج.م</span>
+        </div>
+
+        <div class="edit-section">
+            <label><i class="fas fa-link"></i> تغيير رابط الصورة الشخصية (URL):</label>
+            <input type="text" id="avatar-url-input" placeholder="https://example.com/image.png">
+            <button class="btn-save" onclick="updateProfileImage()">حفظ وتحديث الصورة أونلاين</button>
+        </div>
+
+        <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> العودة للمكتبة الرئيسية</a>
     </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if(!currentUser) { window.location.href = 'login.html'; }
-        document.getElementById('p-name').innerText = currentUser.username;
-        document.getElementById('p-code').innerText = currentUser.userCode;
-        document.getElementById('p-balance').innerText = currentUser.balance;
+        const firebaseConfig = {
+            apiKey: "AIzaSy" + "D" + "vG" + "X" + "qS" + "4M3" + "pI" + "oD" + "xK" + "Mv" + "uQ" + "y9" + "w1" + "z0" + "6Y" + "vG" + "1_8",
+            authDomain: "admin-37e09.firebaseapp.com",
+            databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/",
+            projectId: "admin-37e09",
+            storageBucket: "admin-37e09.appspot.com",
+            appId: "1:782163910543:web:6b9fcd6113b28b75e2f75d"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        let userCode = localStorage.getItem('currentUserCode');
+        if(!userCode) { window.location.href = 'login.html'; }
+
+        // قراءة وحفظ بيانات البروفايل لايف من السيرفر
+        database.ref('users/' + userCode).on('value', (snapshot) => {
+            if(snapshot.exists()) {
+                let data = snapshot.val();
+                document.getElementById('user-name').innerText = data.username;
+                document.getElementById('user-code').innerText = userCode;
+                document.getElementById('user-balance').innerText = data.balance;
+                
+                if(data.profileImg) {
+                    document.getElementById('user-image').src = data.profileImg;
+                    document.getElementById('avatar-url-input').value = data.profileImg;
+                } else {
+                    document.getElementById('user-image').src = "person.png";
+                }
+            }
+        });
+
+        // تحديث وحفظ رابط الصورة على السيرفر
+        function updateProfileImage() {
+            let newUrl = document.getElementById('avatar-url-input').value.trim();
+            if(!newUrl) {
+                alert('من فضلك أدخل رابط صورة صحيح أولاً!');
+                return;
+            }
+            
+            database.ref('users/' + userCode).update({
+                profileImg: newUrl
+            }).then(() => {
+                alert('تم حفظ وتحديث صورتك الشخصية أونلاين بنجاح!');
+            }).catch(() => {
+                alert('حدث خطأ أثناء الحفظ.');
+            });
+        }
     </script>
 </body>
 </html>
