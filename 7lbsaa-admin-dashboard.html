@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الإدارة السرية | 7lbsaa</title>
+    <style>
+        body { background: #0b0914; color: #fff; font-family: sans-serif; padding: 40px; }
+        .admin-panel { background: rgba(255,255,255,0.03); border: 2px dashed #ff3366; padding: 30px; border-radius: 20px; max-width: 500px; margin: 0 auto; text-align: center; }
+        h2 { color: #ff3366; margin-bottom: 25px; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #ff3366; background: #000; color: #fff; text-align: center; font-size: 16px; }
+        button { width: 100%; padding: 12px; background: #ff3366; border: none; border-radius: 8px; color: #fff; font-weight: bold; cursor: pointer; font-size: 16px; }
+        button:hover { box-shadow: 0 0 15px rgba(255, 51, 102, 0.4); }
+    </style>
+</head>
+<body>
+    <div class="admin-panel">
+        <h2>لوحة شحن الرصيد الفوري للأدمن عمر</h2>
+        <input type="text" id="target-code" placeholder="اكتب كود المستخدم (مثال: 7L-1234)">
+        <input type="number" id="charge-amount" placeholder="المبلغ المراد شحنه لحسابه...">
+        <button onclick="executeCharging()">تأكيد وإرسال الرصيد الفوري للحساب</button>
+    </div>
+
+    <script>
+        function executeCharging() {
+            let code = document.getElementById('target-code').value.trim();
+            let amount = parseFloat(document.getElementById('charge-amount').value.trim());
+
+            if(!code || isNaN(amount) || amount <= 0) { alert('برجاء التأكد من الكود أو القيمة المطلوبة!'); return; }
+
+            // جلب قائمة المستخدمين من الـ LocalStorage الموحد
+            let usersList = JSON.parse(localStorage.getItem('usersList')) || [];
+            
+            // البحث عن العميل بواسطة كوده الخاص
+            let userIndex = usersList.findIndex(u => u.userCode === code);
+
+            if(userIndex !== -1) {
+                // شحن الرصيد له بنجاح
+                usersList[userIndex].balance = (parseFloat(usersList[userIndex].balance) || 0) + amount;
+                
+                // حفظ التحديثات الكلية
+                localStorage.setItem('usersList', JSON.stringify(usersList));
+
+                // إذا كان هذا المستخدم هو نفسه الذي يفتح المتصفح حالياً نقوم بتحديث الـ Session الخاص به ليرى الرصيد فوراً
+                let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if(currentUser && currentUser.userCode === code) {
+                    currentUser.balance += amount;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                }
+
+                alert(`تم بنجاح شحن رصيد بقيمة ${amount} ج.م إلى حساب المستخدم صاحب الكود: ${code}`);
+                document.getElementById('target-code').value = '';
+                document.getElementById('charge-amount').value = '';
+            } else {
+                alert('عذراً! كود هذا المستخدم غير مسجل أو غير صحيح بقاعدة البيانات الحالية.');
+            }
+        }
+    </script>
+</body>
+</html>
