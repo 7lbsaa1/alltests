@@ -7,37 +7,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s ease; }
-        body { background: #0b0813; color: #fff; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        body { background: #f4f6f9; color: #1c2434; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
         
-        /* نفس أبعاد وشكل تصميم الصورة المرفقة */
-        .wallet-card { background: #ffffff; color: #1c2434; padding: 40px 30px; border-radius: 24px; width: 100%; max-width: 550px; text-align: center; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); }
+        .wallet-card { background: #ffffff; padding: 40px 30px; border-radius: 24px; width: 100%; max-width: 500px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; }
         
-        h2 { font-size: 28px; font-weight: 700; margin-bottom: 15px; color: #131d33; }
-        .subtitle { color: #5e6b85; font-size: 16px; margin-bottom: 25px; font-weight: 500; }
+        h2 { font-size: 26px; font-weight: 700; margin-bottom: 10px; color: #1e293b; }
+        .subtitle { color: #64748b; font-size: 15px; margin-bottom: 30px; font-weight: 500; }
         
-        /* محاذاة وتنسيق حقل الإدخال بالملي */
         .input-wrapper { position: relative; width: 100%; margin-bottom: 20px; }
-        .input-wrapper i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #8a99b5; font-size: 18px; }
+        .input-wrapper i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 18px; }
         
-        input { width: 100%; padding: 15px 50px 15px 15px; border-radius: 12px; border: 1.5px solid #22c55e; background: #fff; color: #1c2434; font-size: 16px; font-weight: 600; text-align: left; direction: ltr; }
-        input::placeholder { color: #a3b1cc; font-weight: normal; text-align: right; }
-        input:focus { outline: none; border-color: #16a34a; box-shadow: 0 0 10px rgba(34, 197, 94, 0.2); }
+        input { width: 100%; padding: 15px 50px 15px 15px; border-radius: 12px; border: 1.5px solid #22c55e; background: #fff; color: #1e293b; font-size: 16px; font-weight: 600; text-align: left; direction: ltr; }
+        input::placeholder { color: #94a3b8; font-weight: normal; text-align: right; }
+        input:focus { outline: none; border-color: #16a34a; box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15); }
         
-        /* زرار الواتساب المطابق للصورة */
-        .whatsapp-btn { width: 100%; padding: 15px; background: #22c55e; border: none; border-radius: 12px; color: #fff; font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; text-decoration: none; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3); margin-bottom: 25px; }
-        .whatsapp-btn:hover { background: #16a34a; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(34, 197, 94, 0.4); }
-        .whatsapp-btn i { font-size: 24px; }
+        .whatsapp-btn { width: 100%; padding: 15px; background: #22c55e; border: none; border-radius: 12px; color: #fff; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2); margin-bottom: 25px; }
+        .whatsapp-btn:hover { background: #16a34a; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(34, 197, 94, 0.3); }
+        .whatsapp-btn i { font-size: 22px; }
         
-        .footer-note { font-size: 14px; color: #64748b; font-weight: 500; line-height: 1.6; }
-        .back-btn { display: inline-block; margin-top: 25px; color: #64748b; text-decoration: none; font-size: 14px; font-weight: 600; }
-        .back-btn:hover { color: #131d33; }
+        .footer-note-container { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 15px; }
+        .whatsapp-icon-large { font-size: 45px; color: #22c55e; }
+        .footer-note { font-size: 13px; color: #64748b; font-weight: 500; line-height: 1.6; padding: 0 10px; }
+        
+        .back-btn { display: inline-block; margin-top: 20px; color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 600; }
+        .back-btn:hover { color: #1e293b; }
     </style>
 </head>
 <body>
 
     <div class="wallet-card">
         <h2>شحن الرصيد</h2>
-        <p class="subtitle">أدخل الرقم المراد شحنه في الخانة أدناه</p>
+        <p class="subtitle">أدخل الرقم المراد شحنه في خانه</p>
         
         <div class="input-wrapper">
             <i class="fas fa-phone-alt"></i>
@@ -49,9 +49,9 @@
             <span>عن طريق واتساب</span>
         </a>
         
-        <div class="footer-note">
-            <i class="fab fa-whatsapp" style="color: #22c55e; font-size: 20px; margin-bottom: 5px; display: block;"></i>
-            سيتم فتح محادثة واتساب مع خدمة العملاء لـ 7lbsaa لإتمام عملية الشحن الفوري وتأكيد الكود.
+        <div class="footer-note-container">
+            <i class="fab fa-whatsapp whatsapp-icon-large"></i>
+            <p class="footer-note">سيتم فتح محادثة واتساب مع خدمة العملاء لإتمام عملية الشحن</p>
         </div>
         
         <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> العودة للمنصة الرئيسية</a>
@@ -63,15 +63,14 @@
             let userCode = localStorage.getItem('currentUserCode') || 'غير معروف';
 
             if(!phone) {
-                alert('برجاء إدخال رقم الهاتف المراد شحنه أولاً!');
+                alert('برجاء إدخل الرقم المراد شحنه أولاً!');
                 event.preventDefault();
                 return;
             }
 
-            // كتابة رسالة تلقائية مجهزة تتبعت على الواتساب بتاعك كأدمن فوراً فيها كود الطالب ورقم تليفونه
-            let message = encodeURIComponent(`مرحباً منصة 7lbsaa، أريد شحن حسابي.\nكود المستخدم الخاص بي: ${userCode}\nالرقم المراد شحنه: ${phone}`);
+            let message = encodeURIComponent(`مرحباً منصة 7lbsaa، أريد شحن رصيد لحسابي.\nكود حسابي: ${userCode}\nالرقم المراد شحنه: ${phone}`);
             
-            // هنا تضع رقم الواتساب الخاص بك المخصص لاستقبال طلبات الشحن بدلاً من الرقم التجريبي أدناه
+            // يمكنك تغيير الرقم التجريبي بالأسفل برقم الواتساب الخاص بك لاستلام طلبات الشحن مباشرة
             let adminWhatsappNumber = "201000000000"; 
             
             document.getElementById('wa-link').href = `https://wa.me/${adminWhatsappNumber}?text=${message}`;
