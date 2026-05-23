@@ -6,46 +6,70 @@
     <title>لوحة الإدارة الكاملة | 7lbsaa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s; }
-        body { background: #0b0914; color: #fff; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; gap: 25px; }
-        .dashboard-wrapper { width: 100%; max-width: 1000px; display: flex; flex-direction: column; gap: 25px; }
-        
-        .admin-panel { background: rgba(255, 255, 255, 0.03); border: 2px dashed #ff3366; padding: 25px; border-radius: 20px; text-align: center; backdrop-filter: blur(10px); }
-        .admin-panel h2 { color: #ff3366; font-size: 22px; margin-bottom: 15px; }
-        .dash-input { width: 100%; max-width: 300px; padding: 12px; margin: 5px; border-radius: 10px; border: 1px solid #ff3366; background: #000; color: #fff; text-align: center; font-weight: bold; }
-        .dash-btn { padding: 12px 25px; background: #ff3366; border: none; border-radius: 10px; color: #fff; font-weight: bold; cursor: pointer; }
+        /* نظام ألوان متناسق وفخم لمنصة 7lbsaa */
+        :root {
+            --bg-main: #0b0813;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(0, 242, 254, 0.2);
+            --primary: #00f2fe;
+            --secondary: #ff3366;
+            --text-main: #ffffff;
+            --text-sub: #b1afcd;
+        }
 
-        .section-container { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 20px; border-radius: 20px; backdrop-filter: blur(10px); }
-        .section-container h3 { color: #00f2fe; margin-bottom: 15px; border-right: 3px solid #00f2fe; padding-right: 10px; font-size: 18px; text-align: right; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s ease; }
+        body { background: var(--bg-main); color: var(--text-main); padding: 30px 20px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; gap: 25px; }
+        
+        .dashboard-wrapper { width: 100%; max-width: 1050px; display: flex; flex-direction: column; gap: 25px; }
+        
+        /* بانل الشحن الفوري */
+        .admin-panel { background: var(--bg-card); border: 2px dashed var(--secondary); padding: 30px; border-radius: 24px; text-align: center; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(255, 51, 102, 0.05); }
+        .admin-panel h2 { color: var(--secondary); font-size: 24px; margin-bottom: 20px; font-weight: 800; }
+        .dash-input { width: 100%; max-width: 280px; padding: 13px; margin: 8px; border-radius: 12px; border: 1px solid var(--secondary); background: #05040a; color: #fff; text-align: center; font-weight: bold; font-size: 14px; }
+        .dash-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 10px rgba(0,242,254,0.2); }
+        .dash-btn { padding: 13px 35px; background: var(--secondary); border: none; border-radius: 12px; color: #fff; font-weight: bold; cursor: pointer; font-size: 14px; box-shadow: 0 4px 15px rgba(255, 51, 102, 0.3); }
+        .dash-btn:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 6px 20px rgba(255, 51, 102, 0.5); }
 
-        /* تقسيم واجهة الشات التفاعلية داخل الأدمن */
-        .chat-system-grid { display: flex; gap: 20px; height: 350px; }
-        .students-chat-list { width: 30%; background: rgba(0,0,0,0.3); border-radius: 12px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.05); padding: 10px; display: flex; flex-direction: column; gap: 8px; }
-        .student-tab { padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px; text-align: right; cursor: pointer; font-size: 13px; border-right: 3px solid #666; }
-        .student-tab.active { background: rgba(0,242,254,0.1); border-color: #00f2fe; color: #00f2fe; font-weight: bold; }
-        
-        .chat-window-area { width: 70%; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; overflow: hidden; }
-        .chat-messages-display { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        
-        .adm-msg-in { background: rgba(0, 242, 254, 0.1); padding: 8px 12px; border-radius: 12px 12px 0 12px; align-self: flex-start; max-width: 80%; text-align: right; font-size: 13px; }
-        .adm-msg-out { background: rgba(255, 51, 102, 0.1); padding: 8px 12px; border-radius: 12px 12px 12px 0; align-self: flex-end; max-width: 80%; text-align: right; font-size: 13px; }
-        
-        .chat-reply-form { padding: 10px; background: rgba(0,0,0,0.4); display: flex; gap: 8px; border-top: 1px solid rgba(255,255,255,0.05); }
-        .reply-input { flex: 1; padding: 10px; background: #000; border: 1px solid #00f2fe; border-radius: 8px; color: #fff; }
-        .reply-btn { padding: 10px 20px; background: #00f2fe; border: none; color: #000; font-weight: bold; border-radius: 8px; cursor: pointer; }
+        /* حاويات السيكشنز */
+        .section-container { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); padding: 25px; border-radius: 24px; backdrop-filter: blur(10px); }
+        .section-container h3 { color: var(--primary); margin-bottom: 20px; border-right: 4px solid var(--primary); padding-right: 12px; font-size: 19px; text-align: right; font-weight: 700; }
 
-        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 14px; }
-        th { background: rgba(0, 242, 254, 0.1); color: #00f2fe; padding: 12px; border-bottom: 2px solid rgba(0,242,254,0.2); }
-        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #e0e0e0; }
-        .balance-badge { background: rgba(0, 242, 254, 0.15); color: #00f2fe; padding: 3px 8px; border-radius: 6px; font-weight: bold; }
+        /* شبكة نظام الشات المطور */
+        .chat-system-grid { display: flex; gap: 20px; height: 400px; }
+        .students-chat-list { width: 32%; background: rgba(0,0,0,0.4); border-radius: 16px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.05); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+        
+        .student-tab { padding: 12px 15px; background: rgba(255,255,255,0.03); border-radius: 12px; text-align: right; cursor: pointer; font-size: 13px; border-right: 3px solid #444; display: flex; align-items: center; gap: 10px; color: var(--text-sub); }
+        .student-tab:hover { background: rgba(255,255,255,0.06); color: #fff; }
+        .student-tab.active { background: rgba(0,242,254,0.08); border-color: var(--primary); color: var(--primary); font-weight: bold; }
+        
+        .chat-window-area { width: 68%; background: rgba(0,0,0,0.25); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; overflow: hidden; }
+        .chat-messages-display { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: rgba(0,0,0,0.1); }
+        
+        /* فقاعات رسايل الشات داخل الإدارة */
+        .adm-msg-in { background: rgba(0, 242, 254, 0.08); border: 1px solid rgba(0, 242, 254, 0.15); padding: 10px 14px; border-radius: 14px 14px 0 14px; align-self: flex-start; max-width: 80%; text-align: right; font-size: 13px; line-height: 1.5; color: #fff; }
+        .adm-msg-out { background: rgba(255, 51, 102, 0.08); border: 1px solid rgba(255, 51, 102, 0.15); padding: 10px 14px; border-radius: 14px 14px 14px 0; align-self: flex-end; max-width: 80%; text-align: right; font-size: 13px; line-height: 1.5; color: #fff; }
+        
+        .chat-reply-form { padding: 12px; background: rgba(5, 4, 10, 0.8); display: flex; gap: 10px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .reply-input { flex: 1; padding: 12px 18px; background: #05040a; border: 1px solid var(--border-color); border-radius: 12px; color: #fff; font-size: 13px; }
+        .reply-input:focus { outline: none; border-color: var(--primary); }
+        .reply-btn { padding: 0 25px; background: linear-gradient(135deg, var(--primary), #00b4db); border: none; color: #000; font-weight: bold; border-radius: 12px; cursor: pointer; font-size: 13px; }
+        .reply-btn:hover { filter: brightness(1.1); }
+
+        /* جداول الطلاب المسجلين */
+        .table-responsive { overflow-x: auto; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 14px; background: rgba(0,0,0,0.15); }
+        th { background: rgba(0, 242, 254, 0.06); color: var(--primary); padding: 15px; border-bottom: 2px solid rgba(0,242,254,0.15); font-weight: 700; }
+        td { padding: 14px; border-bottom: 1px solid rgba(255,255,255,0.03); color: #e0e0e0; }
+        tr:hover td { background: rgba(255,255,255,0.01); }
+        .balance-badge { background: rgba(0, 242, 254, 0.12); border: 1px solid rgba(0,242,254,0.2); color: var(--primary); padding: 4px 10px; border-radius: 8px; font-weight: bold; font-family: monospace; }
     </style>
 </head>
 <body>
 
     <div class="dashboard-wrapper">
         <div class="admin-panel">
-            <h2>لوحة شحن الرصيد الفوري للأدمن عمر</h2>
-            <input type="text" id="target-code" class="dash-input" placeholder="كود الطالب">
+            <h2><i class="fas fa-bolt"></i> لوحة شحن الرصيد الفوري للأدمن عمر</h2>
+            <input type="text" id="target-code" class="dash-input" placeholder="أدخل كود حساب الطالب">
             <input type="number" id="charge-amount-input" class="dash-input" placeholder="المبلغ المراد شحنه (ج.م)">
             <button class="dash-btn" onclick="executeCharging()">تأكيد الشحن الفوري</button>
         </div>
@@ -54,15 +78,18 @@
             <h3><i class="fas fa-comments"></i> مركز دعم الطلاب والرد المباشر لايف</h3>
             <div class="chat-system-grid">
                 <div class="students-chat-list" id="students-list-ui">
-                    <div style="color:#555; text-align:center; font-size:12px; padding:20px;">لا يوجد محادثات نشطة.</div>
+                    <div style="color:#555; text-align:center; font-size:12px; padding:20px;">جاري تحميل غرف المحادثات...</div>
                 </div>
                 <div class="chat-window-area">
                     <div class="chat-messages-display" id="admin-messages-box">
-                        <div style="color:#555; text-align:center; padding:50px;">اختر طالب من القائمة الجانبية لبدء الشات والرد عليه</div>
+                        <div style="color:#666; text-align:center; padding:50px; font-size:14px;">
+                            <i class="fas fa-arrow-right" style="margin-left: 8px; color: var(--primary);"></i> 
+                            اختر طالب من القائمة الجانبية لبدء الشات والرد عليه لايف
+                        </div>
                     </div>
                     <div class="chat-reply-form">
                         <input type="text" id="admin-reply-input" class="reply-input" placeholder="اكتب رد الأدمن هنا..." onkeypress="handleReplyKeyPress(event)">
-                        <button class="reply-btn" onclick="sendAdminReply()">إرسال الرد</button>
+                        <button class="reply-btn" onclick="sendAdminReply()">إرسال الرد <i class="fas fa-paper-plane" style="margin-right:5px;"></i></button>
                     </div>
                 </div>
             </div>
@@ -70,14 +97,20 @@
 
         <div class="section-container">
             <h3><i class="fas fa-users"></i> قائمة طلاب المنصة المسجلين</h3>
-            <table>
-                <thead>
-                    <tr><th>اسم الطالب</th><th>كود الحساب</th><th>الرصيد الحالي</th></tr>
-                </thead>
-                <tbody id="users-table-body">
-                    <tr><td colspan="3" style="color: #666; padding: 20px;">جاري الاتصال بالسيرفر...</td></tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>اسم الطالب الحقيقي</th>
+                            <th>كود الحساب (الكود السري)</th>
+                            <th>الرصيد الحالي بالمحفظة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                        <tr><td colspan="3" style="color: #666; padding: 25px;">جاري الاتصال بالسيرفر وجلب البيانات لايف...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -96,48 +129,68 @@
         const database = firebase.database();
 
         let selectedStudentCode = '';
+        let allUsersData = {}; // لحفظ بيانات وأسماء الطلاب لتسهيل جلب الأسماء في الشات
 
         window.onload = function() {
-            // جلب قائمة الطلاب
+            // 1. جلب ومراقبة قائمة الطلاب والتحكم في حفظ البيانات كاش محلياً
             database.ref('users').on('value', (snapshot) => {
                 let tbody = document.getElementById('users-table-body');
                 tbody.innerHTML = '';
                 if(snapshot.exists()) {
+                    allUsersData = snapshot.val(); // حفظ نسخة من بيانات المستخدمين
                     snapshot.forEach((child) => {
                         let user = child.val();
+                        let displayBalance = (parseFloat(user.balance) || 0).toFixed(2);
                         tbody.innerHTML += `<tr>
-                            <td style="font-weight:600;">${user.username}</td>
-                            <td style="color:#00f2fe; font-family:monospace;">${child.key}</td>
-                            <td><span class="balance-badge">${user.balance} ج.م</span></td>
+                            <td style="font-weight:600; color:#fff;">${user.username || 'طالب بدون اسم'}</td>
+                            <td style="color:var(--primary); font-family:monospace; font-weight:bold;">${child.key}</td>
+                            <td><span class="balance-badge">${displayBalance} ج.م</span></td>
                         </tr>`;
                     });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="3" style="color: #666; padding: 25px;">لا يوجد طلاب مسجلين حالياً.</td></tr>`;
                 }
             });
 
-            // مراقبة جميع غرف الشات المفتوحة من الطلاب لايف
+            // 2. مراقبة غرف الشات وجلب اسم الطالب الحقيقي بدلاً من الكود الجامد
             database.ref('chats').on('value', (snapshot) => {
                 let listUi = document.getElementById('students-list-ui');
                 listUi.innerHTML = '';
                 if(snapshot.exists()) {
                     snapshot.forEach((child) => {
                         let studentCode = child.key;
+                        // محاولة مطابقة الكود مع اسم الطالب الفعلي المسجل في الداتا بيز
+                        let studentName = allUsersData[studentCode] ? allUsersData[studentCode].username : studentCode;
                         let activeClass = studentCode === selectedStudentCode ? 'active' : '';
-                        listUi.innerHTML += `<div class="student-tab ${activeClass}" onclick="openStudentChat('${studentCode}')"><i class="fas fa-user-graduate"></i> طالب: ${studentCode}</div>`;
+                        
+                        listUi.innerHTML += `
+                            <div class="student-tab ${activeClass}" id="tab-${studentCode}" onclick="openStudentChat('${studentCode}')">
+                                <i class="fas fa-user-graduate" style="font-size:14px;"></i>
+                                <span>${studentName}</span>
+                            </div>`;
                     });
                 } else {
-                    listUi.innerHTML = `<div style="color:#555; text-align:center; font-size:12px; padding:20px;">لا يوجد شات حالي</div>`;
+                    listUi.innerHTML = `<div style="color:#555; text-align:center; font-size:12px; padding:20px;">لا يوجد محادثات نشطة حالياً.</div>`;
                 }
             });
         };
 
-        // فتح محادثة طالب معين والاتصال بها لايف
+        // فتح شات الطالب والاتصال بالغرفة لايف والـ Auto scroll لأسفل شاشة المحادثة
         function openStudentChat(studentCode) {
+            // إغلاق الاستماع للغرفة السابقة لمنع التداخل والتعليق
+            if(selectedStudentCode) {
+                database.ref('chats/' + selectedStudentCode).off();
+            }
+            
             selectedStudentCode = studentCode;
             
-            // تحديث تصميم التابات النشطة
+            // إدارة الـ Active class بصرياً في القائمة
             let tabs = document.querySelectorAll('.student-tab');
             tabs.forEach(t => t.classList.remove('active'));
+            let activeTab = document.getElementById('tab-' + studentCode);
+            if(activeTab) activeTab.classList.add('active');
             
+            // فتح الاستماع الحي لرسائل الطالب المحدد
             database.ref('chats/' + studentCode).on('value', (snapshot) => {
                 let msgBox = document.getElementById('admin-messages-box');
                 msgBox.innerHTML = '';
@@ -145,14 +198,18 @@
                     snapshot.forEach((child) => {
                         let msg = child.val();
                         let msgClass = msg.sender === 'student' ? 'adm-msg-in' : 'adm-msg-out';
-                        msgBox.innerHTML += `<div class="${msgClass}"><b>${msg.sender === 'student' ? 'الطالب' : 'أنا'}:</b> ${msg.text}</div>`;
+                        let senderName = msg.sender === 'student' ? 'الطالب' : 'أنا';
+                        
+                        msgBox.innerHTML += `<div class="${msgClass}"><b>${senderName}:</b> ${msg.text}</div>`;
                     });
-                    msgBox.scrollTop = msgBox.scrollHeight;
+                    msgBox.scrollTop = msgBox.scrollHeight; // النزول لآخر رسالة تلقائياً
+                } else {
+                    msgBox.innerHTML = `<div style="color:#555; text-align:center; padding:50px;">المحادثة فارغة تماماً.</div>`;
                 }
             });
         }
 
-        // إرسال رد الأدمن إلى الطالب المحدد
+        // إرسال رد الأدمن
         function sendAdminReply() {
             let input = document.getElementById('admin-reply-input');
             let text = input.value.trim();
@@ -162,18 +219,33 @@
                 sender: 'admin',
                 text: text,
                 time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })
+            }).then(() => {
+                // عمل Scroll تلقائي بعد الإرسال لضمان تتابع الرؤية
+                let msgBox = document.getElementById('admin-messages-box');
+                msgBox.scrollTop = msgBox.scrollHeight;
             });
             input.value = '';
         }
 
+        // تنفيذ عملية الشحن الفوري مع مراجعة الحساب الحالية
         function executeCharging() {
             let code = document.getElementById('target-code').value.trim();
             let amount = parseFloat(document.getElementById('charge-amount-input').value.trim());
-            if(!code || isNaN(amount)) return;
+            if(!code || isNaN(amount)) {
+                alert('الرجاء كتابة كود الطالب والمبلغ بشكل صحيح.');
+                return;
+            }
+            
             database.ref('users/' + code).once('value', (s) => {
                 if(s.exists()) {
-                    let b = (parseFloat(s.val().balance) || 0) + amount;
-                    database.ref('users/' + code).update({ balance: b }).then(() => alert('تم الشحن'));
+                    let currentB = parseFloat(s.val().balance) || 0;
+                    let newB = currentB + amount;
+                    database.ref('users/' + code).update({ balance: newB }).then(() => {
+                        alert(`🚀 تم بنجاح شحن مبلغ ${amount} ج.م لحساب الطالب بنجاح! الرصيد الجديد: ${newB} ج.م`);
+                        document.getElementById('charge-amount-input').value = '';
+                    });
+                } else {
+                    alert('❌ خطأ: كود هذا الطالب غير مسجل في السيرفر أو غير صحيح، يرجى التثبت منه.');
                 }
             });
         }
