@@ -58,7 +58,25 @@
             <div class="controls-left"><button class="control-btn" id="fullscreen-btn"><i class="fas fa-expand"></i></button></div>
         </div>
     </div>
-    <script>const currentVideoId = 'BrDHsQyhQQE';</script> <script src="https://www.youtube.com/iframe_api"></script>
+<script>
+        // 1. جلب بيانات الطالب والتوكن
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        
+        // 2. قراءة اسم الملف تلقائياً عشان يطابق المشتريات (سواء takhrog أو khatamna)
+        const videoId = window.location.pathname.split('/').pop().replace('-player.html', '');
+        const isAllowedLocally = sessionStorage.getItem('allow_' + videoId);
+
+        // 3. فحص الأمان: لو مش شاري أو داخل برابط مباشر.. اطرد فوراً للرئيسية
+        if (!isAllowedLocally && (!currentUser || !currentUser.purchasedVideos || !currentUser.purchasedVideos.includes(videoId))) { 
+            alert('❌ عذراً! لم تقم بشراء هذا المقطع بعد أو غير مسموح لك بالفتح المباشر!'); 
+            window.location.href = 'index.html'; 
+        }
+
+        // معرف فيديو اليوتيوب الخاص بالصفحة دي
+        const currentVideoId = 'BrDHsQyhQQE';
+    </script>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script src="secure-player.js"></script>
 </body>
 </html>
