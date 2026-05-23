@@ -6,76 +6,106 @@
     <title>الرئيسية | منصة 7lbsaa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* المتغيرات للألوان الاحترافية */
+        /* نظام الألوان والمتغيرات مع إضافة أنيميشن التبديل */
         :root {
-            --bg-gradient: linear-gradient(135deg, #0b0813 0%, #1a1636 100%);
+            --bg-gradient: linear-gradient(135deg, #0b0813 0%, #161233 100%);
             --card-bg: rgba(255, 255, 255, 0.03);
-            --card-border: rgba(0, 242, 254, 0.2);
+            --card-border: rgba(0, 242, 254, 0.15);
             --text-main: #ffffff;
-            --text-sub: #b1afcd;
+            --text-sub: #a5a1ca;
             --primary: #00f2fe;
             --secondary: #ff3366;
-            --footer-bg: rgba(5, 4, 10, 0.9);
+            --footer-bg: rgba(5, 4, 10, 0.95);
+            --switch-btn-bg: rgba(255,255,255,0.05);
         }
 
         [data-theme="light"] {
-            --bg-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            --card-bg: rgba(255, 255, 255, 0.9);
-            --card-border: rgba(0, 123, 255, 0.2);
+            --bg-gradient: linear-gradient(135deg, #f0f2f5 0%, #dee2e6 100%);
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(13, 110, 253, 0.15);
             --text-main: #1a1d23;
-            --text-sub: #6c757d;
+            --text-sub: #5c636a;
             --primary: #0d6efd;
             --secondary: #d63384;
-            --footer-bg: rgba(255, 255, 255, 0.95);
+            --footer-bg: rgba(255, 255, 255, 0.9);
+            --switch-btn-bg: rgba(0,0,0,0.05);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s ease; }
+        /* أنيميشن ناعم جداً لتبديل ألوان الصفحة بالكامل */
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            transition: background 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                        color 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                        border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.3s ease, 
+                        box-shadow 0.3s ease; 
+        }
+
         body { background: var(--bg-gradient); color: var(--text-main); min-height: 100vh; position: relative; padding-bottom: 100px; overflow-x: hidden; }
 
-        /* الهيدر العلوي - المحفظة والملف الشخصي */
-        .top-navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: rgba(0,0,0,0.2); backdrop-filter: blur(10px); border-bottom: 1px solid var(--card-border); }
+        /* الهيدر العلوي */
+        .top-navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: rgba(0,0,0,0.15); backdrop-filter: blur(12px); border-bottom: 1px solid var(--card-border); }
         .nav-tools { display: flex; gap: 15px; align-items: center; }
         
-        .top-card { display: flex; align-items: center; gap: 10px; background: var(--card-bg); border: 1px solid var(--card-border); padding: 8px 15px; border-radius: 12px; text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 14px; }
-        .top-card:hover { transform: translateY(-2px); border-color: var(--primary); }
-        .top-card img { width: 28px; height: 28px; object-fit: contain; }
+        .top-card { display: flex; align-items: center; gap: 10px; background: var(--card-bg); border: 1px solid var(--card-border); padding: 8px 18px; border-radius: 14px; text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .top-card:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 6px 15px rgba(0,242,254,0.15); }
+        .top-card img { width: 26px; height: 26px; object-fit: contain; }
+
+        /* زر تبديل الثيم الاحترافي */
+        .theme-toggle-btn { background: var(--switch-btn-bg); border: 1px solid var(--card-border); color: var(--primary); cursor: pointer; padding: 8px 16px; border-radius: 14px; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; position: relative; overflow: hidden; }
+        .theme-toggle-btn i { font-size: 16px; transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        .theme-toggle-btn:hover i { transform: rotate(45deg) scale(1.1); }
 
         /* المحتوى الرئيسي */
         .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
-        .welcome-text { text-align: center; margin-bottom: 50px; }
-        .welcome-text h1 { font-size: 38px; font-weight: 800; margin-bottom: 10px; }
+        .welcome-text { text-align: center; margin-bottom: 40px; }
+        .welcome-text h1 { font-size: 36px; font-weight: 800; margin-bottom: 10px; }
         .welcome-text h1 span { color: var(--primary); }
+        .welcome-text p { color: var(--text-sub); }
         
-        /* الرصيد */
-        .balance-bar { background: var(--card-bg); border: 1px dashed var(--primary); border-radius: 20px; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .balance-amount { font-size: 28px; font-weight: bold; color: var(--primary); font-family: monospace; }
+        /* شريط الرصيد */
+        .balance-bar { background: var(--card-bg); border: 1px dashed var(--card-border); border-radius: 20px; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; backdrop-filter: blur(10px); }
+        .balance-amount { font-size: 26px; font-weight: bold; color: var(--primary); font-family: monospace; }
 
-        /* شبكة الفيديوهات - مقسمة جنب بعض */
+        /* شبكة الفيديوهات جنب بعض */
         .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 30px; }
-        .video-item { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px; overflow: hidden; position: relative; }
-        .video-item:hover { transform: translateY(-5px); border-color: var(--secondary); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .video-item { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; backdrop-filter: blur(10px); }
+        .video-item:hover { transform: translateY(-5px); border-color: var(--secondary); box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
         
-        .thumb-area { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; overflow: hidden; }
-        .thumb-area img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
-        .play-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; font-size: 50px; color: var(--primary); cursor: pointer; }
+        .thumb-area { position: relative; width: 100%; aspect-ratio: 16/9; background: #05040a; overflow: hidden; }
+        .thumb-area img { width: 100%; height: 100%; object-fit: cover; opacity: 0.65; }
+        .play-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; font-size: 55px; color: var(--primary); cursor: pointer; opacity: 0.8; }
+        .play-overlay:hover { opacity: 1; transform: scale(1.05); }
 
-        .item-info { padding: 20px; text-align: right; }
-        .item-info h3 { font-size: 18px; margin-bottom: 15px; min-height: 48px; }
-        .watch-btn { width: 100%; padding: 12px; background: var(--primary); color: #000; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .watch-btn:hover { filter: brightness(1.1); box-shadow: 0 5px 15px rgba(0,242,254,0.3); }
+        .price-tag { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.75); border: 1px solid var(--primary); color: var(--primary); padding: 5px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; backdrop-filter: blur(5px); }
 
-        /* سيكشن المشاهدة الجديد (Section/Overlay) */
-        .video-overlay-section { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
-        .player-container { width: 90%; max-width: 900px; aspect-ratio: 16/9; background: #000; border-radius: 20px; overflow: hidden; border: 2px solid var(--primary); position: relative; }
-        .close-player { position: absolute; top: -50px; left: 0; color: #fff; font-size: 30px; cursor: pointer; }
+        .item-info { padding: 20px; text-align: right; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
+        .item-info h3 { font-size: 17px; margin-bottom: 15px; font-weight: 700; line-height: 1.5; }
+        
+        .watch-btn { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--primary), #00b4db); color: #000; border: none; border-radius: 14px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(0,242,254,0.2); }
+        .watch-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,242,254,0.35); }
+
+        /* سيكشن المشاهدة الكامل (Overlay Section) */
+        .video-overlay-section { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #07050f; z-index: 10000; justify-content: center; align-items: center; }
+        .player-container { width: 92%; max-width: 950px; aspect-ratio: 16/9; background: #000; border-radius: 24px; overflow: hidden; border: 1px solid var(--primary); position: relative; box-shadow: 0 0 50px rgba(0,242,254,0.15); animation: sectionFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        
+        @keyframes sectionFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .close-player { position: absolute; top: -50px; left: 0; color: #fff; font-size: 16px; cursor: pointer; background: rgba(255,255,255,0.07); padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); }
+        .close-player:hover { background: var(--secondary); border-color: var(--secondary); }
 
         /* الفوتر المحدث */
-        footer { background: var(--footer-bg); border-top: 1px solid var(--card-border); text-align: center; padding: 30px; position: absolute; bottom: 0; width: 100%; }
+        footer { background: var(--footer-bg); border-top: 1px solid var(--card-border); text-align: center; padding: 30px; position: absolute; bottom: 0; width: 100%; backdrop-filter: blur(10px); }
         footer p { font-size: 14px; color: var(--text-sub); }
-        footer p b { color: var(--primary); }
 
-        /* الشات العائم */
-        .chat-btn { position: fixed; bottom: 25px; left: 25px; width: 60px; height: 60px; border-radius: 50%; background: var(--primary); color: #000; border: none; font-size: 24px; cursor: pointer; box-shadow: 0 5px 20px rgba(0,242,254,0.4); z-index: 999; }
+        /* زر الشات الدعم */
+        .chat-btn { position: fixed; bottom: 25px; left: 25px; width: 60px; height: 60px; border-radius: 50%; background: var(--primary); color: #000; border: none; font-size: 24px; cursor: pointer; box-shadow: 0 5px 20px rgba(0,242,254,0.3); z-index: 999; }
     </style>
 </head>
 <body data-theme="dark">
@@ -91,46 +121,49 @@
                 <span>المحفظة الرقمية</span>
             </a>
         </div>
-        <button onclick="toggleTheme()" class="top-card" style="cursor: pointer;">
-            <i class="fas fa-adjust"></i>
-            <span>الوضع الليلي/النهاري</span>
+        
+        <button onclick="toggleTheme()" class="theme-toggle-btn">
+            <i class="fas fa-sun" id="theme-icon"></i>
+            <span id="theme-text">الوضع النهاري</span>
         </button>
     </nav>
 
     <div class="container">
         <div class="welcome-text">
             <h1>منصة <span>7lbsaa</span> التعليمية</h1>
-            <p>أهلاً بك يا بطل في مكتبة محاضراتك المجمعة</p>
+            <p>أهلاً بك يا بطل في مكتبة المحاضرات المجمعة</p>
         </div>
 
         <div class="balance-bar">
-            <span style="color: var(--text-sub);"><i class="fas fa-wallet"></i> رصيدك الحالي في السيرفر:</span>
+            <span style="color: var(--text-sub);"><i class="fas fa-shield-alt"></i> رصيدك الحالي في السيرفر:</span>
             <span class="balance-amount" id="user-balance">0.00 ج.م</span>
         </div>
 
         <div class="video-grid">
             <div class="video-item">
                 <div class="thumb-area">
-                    <img src="takhrog.jpg" onerror="this.src='logox.jpg'">
-                    <div class="play-overlay" onclick="openPlayer('takhrog-player.html')"><i class="fas fa-play-circle"></i></div>
+                    <span class="price-tag">السعر: 120 ج.م</span>
+                    <img src="logox.jpg">
+                    <div class="play-overlay" onclick="handleVideoAccess('takhrog-player.html')"><i class="fas fa-play-circle"></i></div>
                 </div>
                 <div class="item-info">
-                    <h3>فيديو احتفالية تخرج دفعة الثانوية العامة 🎓</h3>
-                    <button class="watch-btn" onclick="openPlayer('takhrog-player.html')">
-                        <i class="fas fa-tv"></i> مشاهدة الآن كـ سيكشن جديد
+                    <h3>فيديو احتفالية تخرج دفعة الثانوية العامة الأبطال 🎓</h3>
+                    <button class="watch-btn" onclick="handleVideoAccess('takhrog-player.html')">
+                        <i class="fas fa-tv"></i> مشاهدة المحاضرة
                     </button>
                 </div>
             </div>
 
             <div class="video-item">
                 <div class="thumb-area">
+                    <span class="price-tag">السعر: 120 ج.م</span>
                     <img src="logox.jpg">
-                    <div class="play-overlay" onclick="openPlayer('khatamna-player.html')"><i class="fas fa-play-circle"></i></div>
+                    <div class="play-overlay" onclick="handleVideoAccess('khatamna-player.html')"><i class="fas fa-play-circle"></i></div>
                 </div>
                 <div class="item-info">
-                    <h3>أنشودة "ختمنا الطريق" الرسمية للمنصة 🎵</h3>
-                    <button class="watch-btn" onclick="openPlayer('khatamna-player.html')">
-                        <i class="fas fa-tv"></i> مشاهدة الآن كـ سيكشن جديد
+                    <h3>أنشودة "ختمنا الطريق" الرسمية والخاصة بالمنصة 🎵</h3>
+                    <button class="watch-btn" onclick="handleVideoAccess('khatamna-player.html')">
+                        <i class="fas fa-tv"></i> مشاهدة المحاضرة
                     </button>
                 </div>
             </div>
@@ -139,12 +172,12 @@
 
     <div id="videoSection" class="video-overlay-section">
         <div class="player-container">
-            <div class="close-player" onclick="closePlayer()">إغلاق ✕</div>
+            <div class="close-player" onclick="backToMain()">العودة للرئيسية ✕</div>
             <iframe id="mainPlayer" src="" style="width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
         </div>
     </div>
 
-    <button class="chat-btn" onclick="window.location.href='#'"><i class="fas fa-comments"></i></button>
+    <button class="chat-btn"><i class="fas fa-comments"></i></button>
 
     <footer>
         <p>جميع الحقوق محفوظة © 2026 لـ منصة <b>7lbsaa</b> | تم التطوير بواسطة <b>7lbsaa</b></p>
@@ -153,7 +186,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
-        // إعدادات الفايربيز
         const firebaseConfig = {
             apiKey: "AIzaSy" + "D" + "vG" + "X" + "qS" + "4M3" + "pI" + "oD" + "xK" + "Mv" + "uQ" + "y9" + "w1" + "z0" + "6Y" + "vG" + "1_8",
             authDomain: "admin-37e09.firebaseapp.com",
@@ -165,32 +197,100 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         let userCode = localStorage.getItem('currentUserCode') || '7L-STUDENT';
+        let currentBalance = 0;
 
-        // جلب الرصيد لايف
+        // جلب الرصيد لايف وحفظه
         database.ref('users/' + userCode).on('value', (s) => {
             if(s.exists()) {
-                document.getElementById('user-balance').innerText = (parseFloat(s.val().balance) || 0).toFixed(2) + " ج.م";
+                currentBalance = parseFloat(s.val().balance) || 0;
+                document.getElementById('user-balance').innerText = currentBalance.toFixed(2) + " ج.م";
             }
         });
 
-        // وظائف سيكشن المشاهدة
-        function openPlayer(file) {
-            document.getElementById('mainPlayer').src = file;
-            document.getElementById('videoSection').style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // منع التمرير في الخلفية
+        // فحص الشراء والدفع قبل الفتح
+        function handleVideoAccess(videoFile) {
+            const videoId = videoFile.replace('-player.html', ''); // يعطينا اسم فريد لكل فيديو
+            
+            // فحص من الفايربيز لو الطالب مشتري الفيديو ده قبل كده
+            database.ref('users/' + userCode + '/purchased_videos/' + videoId).once('value', (snapshot) => {
+                if (snapshot.exists() && snapshot.val() === true) {
+                    // شاريها فعلاً -> افتح السيكشن فوراً بـ الهاش
+                    window.location.hash = '/' + videoFile;
+                } else {
+                    // مش شاريها -> اطلب منه تأكيد الخصم
+                    if (currentBalance >= 120) {
+                        if (confirm("هذه المحاضرة مدفوعة، هل تريد تأكيد شراء واشتراك الفيديو بـ 120 ج.م؟")) {
+                            let newBalance = currentBalance - 120;
+                            
+                            // تحديث الرصيد وإضافة الفيديو لقائمة المشتريات
+                            database.ref('users/' + userCode).update({
+                                balance: newBalance
+                            });
+                            database.ref('users/' + userCode + '/purchased_videos/' + videoId).set(true).then(() => {
+                                alert("تم الشراء بنجاح! مشاهدة ممتعة.");
+                                window.location.hash = '/' + videoFile;
+                            });
+                        }
+                    } else {
+                        alert("عذراً! رصيد محفظتك غير كافٍ لشراء هذا الفيديو، يرجى التوجه لصفحة المحفظة للشحن.");
+                    }
+                }
+            });
         }
 
-        function closePlayer() {
-            document.getElementById('videoSection').style.display = 'none';
-            document.getElementById('mainPlayer').src = '';
-            document.body.style.overflow = 'auto';
+        // نظام الـ Routing الذكي لمراقبة الروابط والـ Hash أونلاين
+        function checkRoute() {
+            const currentHash = window.location.hash;
+            if (currentHash.startsWith('#/')) {
+                const targetFile = currentHash.replace('#/', '');
+                
+                // فحص حماية سريع للتأكد من الشراء لو دخل عبر الرابط مباشرة
+                const videoId = targetFile.replace('-player.html', '');
+                database.ref('users/' + userCode + '/purchased_videos/' + videoId).once('value', (snapshot) => {
+                    if (snapshot.exists() && snapshot.val() === true) {
+                        document.getElementById('mainPlayer').src = targetFile;
+                        document.getElementById('videoSection').style.display = 'flex';
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        alert("يجب شراء هذا الفيديو أولاً لتتمكن من تصفح الرابط المباشر.");
+                        backToMain();
+                    }
+                });
+            } else {
+                // إغلاق السيكشن والعودة للرئيسية
+                document.getElementById('videoSection').style.display = 'none';
+                document.getElementById('mainPlayer').src = '';
+                document.body.style.overflow = 'auto';
+            }
         }
 
-        // تبديل الثيم
+        // مراقبة تغيير المسار في المتصفح تلقائياً
+        window.addEventListener('hashchange', checkRoute);
+        window.addEventListener('load', checkRoute);
+
+        function backToMain() {
+            window.location.hash = ''; // تصفير الهاش يرجعك تلقائياً للرئيسية
+        }
+
+        // تبديل الثيم المطور (أنيميشن لطيف)
         function toggleTheme() {
             const body = document.body;
-            const current = body.getAttribute('data-theme');
-            body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // تغيير النص والأيقونة بالتوافق مع الأنيميشن
+            document.getElementById('theme-icon').className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            document.getElementById('theme-text').innerText = newTheme === 'dark' ? 'الوضع النهاري' : 'الوضع الليلي';
+        }
+
+        // استرجاع الثيم المفضل عند التحميل
+        if(localStorage.getItem('theme') === 'light') {
+            document.body.setAttribute('data-theme', 'light');
+            document.getElementById('theme-icon').className = 'fas fa-moon';
+            document.getElementById('theme-text').innerText = 'الوضع الليلي';
         }
     </script>
 </body>
