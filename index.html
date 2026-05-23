@@ -45,28 +45,32 @@
                         box-shadow 0.3s ease; 
         }
 
-        body { background: var(--bg-gradient); color: var(--text-main); min-height: 100vh; position: relative; padding-bottom: 100px; overflow-x: hidden; }
+        body { background: var(--bg-gradient); color: var(--text-main); min-height: 100vh; position: relative; padding-bottom: 220px; overflow-x: hidden; }
 
-        /* الهيدر العلوي */
-        .top-navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: rgba(0,0,0,0.15); backdrop-filter: blur(12px); border-bottom: 1px solid var(--card-border); }
-        .nav-tools { display: flex; gap: 15px; align-items: center; }
+        /* الهيدر العلوي المطور والمجمع */
+        .top-navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: rgba(0,0,0,0.15); backdrop-filter: blur(12px); border-bottom: 1px solid var(--card-border); flex-wrap: wrap; gap: 15px; }
+        .nav-tools { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
         
-        .top-card { display: flex; align-items: center; gap: 10px; background: var(--card-bg); border: 1px solid var(--card-border); padding: 8px 18px; border-radius: 14px; text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .top-card { display: flex; align-items: center; gap: 8px; background: var(--card-bg); border: 1px solid var(--card-border); padding: 8px 16px; border-radius: 14px; text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 13px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .top-card:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 6px 15px rgba(0,242,254,0.15); }
-        .top-card img { width: 26px; height: 26px; object-fit: contain; }
+        .top-card img { width: 24px; height: 24px; object-fit: contain; }
 
-        .theme-toggle-btn { background: var(--switch-btn-bg); border: 1px solid var(--card-border); color: var(--primary); cursor: pointer; padding: 8px 16px; border-radius: 14px; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; }
+        /* كارت الرصيد الجديد في الهيدر */
+        .balance-top-card { background: rgba(0, 242, 254, 0.06); border: 1px solid var(--primary); color: var(--primary); }
+        .balance-top-card:hover { box-shadow: 0 6px 15px rgba(0,242,254,0.25); }
+        .balance-amount { font-family: monospace; font-weight: bold; font-size: 14px; }
 
-        /* المحتوى */
+        .theme-toggle-btn { background: var(--switch-btn-bg); border: 1px solid var(--card-border); color: var(--primary); cursor: pointer; padding: 8px 16px; border-radius: 14px; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13px; }
+
+        /* المحتوى والترحيب */
         .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
-        .welcome-text { text-align: center; margin-bottom: 40px; }
-        .welcome-text h1 { font-size: 36px; font-weight: 800; margin-bottom: 10px; }
-        .welcome-text h1 span { color: var(--primary); }
-        .welcome-text p { color: var(--text-sub); }
+        .welcome-text { text-align: center; margin-bottom: 50px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         
-        .balance-bar { background: var(--card-bg); border: 1px dashed var(--card-border); border-radius: 20px; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; backdrop-filter: blur(10px); }
-        .balance-amount { font-size: 26px; font-weight: bold; color: var(--primary); font-family: monospace; }
-
+        /* شعار المنصة بدلاً من الكلمة */
+        .brand-logo { width: 180px; height: auto; object-fit: contain; filter: drop-shadow(0 0 15px rgba(0,242,254,0.2)); }
+        .welcome-text h1 { font-size: 28px; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .welcome-text p { color: var(--text-sub); font-size: 15px; }
+        
         /* شبكة الفيديوهات */
         .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 30px; }
         .video-item { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; backdrop-filter: blur(10px); }
@@ -84,11 +88,18 @@
         .watch-btn { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--primary), #00b4db); color: #000; border: none; border-radius: 14px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(0,242,254,0.2); }
         .watch-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,242,254,0.35); }
 
-        /* الفوتر */
-        footer { background: var(--footer-bg); border-top: 1px solid var(--card-border); text-align: center; padding: 30px; position: absolute; bottom: 0; width: 100%; backdrop-filter: blur(10px); }
-        footer p { font-size: 14px; color: var(--text-sub); }
+        /* الفوتر المطور مع السوشيال ميديا بالصور */
+        footer { background: var(--footer-bg); border-top: 1px solid var(--card-border); text-align: center; padding: 35px 20px; position: absolute; bottom: 0; width: 100%; backdrop-filter: blur(10px); z-index: 10; }
+        .footer-container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; align-items: center; }
+        .social-section { display: flex; flex-direction: column; gap: 12px; }
+        .social-section h4 { color: var(--primary); font-size: 15px; font-weight: 700; }
+        .social-icons { display: flex; gap: 20px; justify-content: center; margin-top: 5px; }
+        
+        .social-icons a { width: 45px; height: 45px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 50%; display: flex; justify-content: center; align-items: center; text-decoration: none; }
+        .social-icons a:hover { transform: translateY(-4px); border-color: var(--primary); background: rgba(0, 242, 254, 0.05); box-shadow: 0 5px 15px rgba(0,242,254,0.2); }
+        .social-icons img { width: 24px; height: 24px; object-fit: contain; }
 
-        /* --------- ستايل الشات العائم المصلح والمثبت --------- */
+        /* شات الدعم */
         .chat-widget-container { position: fixed; bottom: 25px; left: 25px; z-index: 9999; direction: rtl; }
         .chat-trigger-btn { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), #4facfe); border: none; color: #000; font-size: 26px; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 8px 25px rgba(0,242,254,0.3); }
         .chat-trigger-btn:hover { transform: scale(1.1) rotate(5deg); }
@@ -121,6 +132,10 @@
                 <img src="wallet.png" alt="Wallet">
                 <span>المحفظة الرقمية</span>
             </a>
+            <div class="top-card balance-top-card">
+                <img src="money.png" alt="Money">
+                <span>الرصيد: <span id="user-balance" class="balance-amount">0.00 ج.م</span></span>
+            </div>
         </div>
         <button onclick="toggleTheme()" class="theme-toggle-btn">
             <i class="fas fa-sun" id="theme-icon"></i>
@@ -130,13 +145,9 @@
 
     <div class="container">
         <div class="welcome-text">
+            <img src="7lbsaa7.png" alt="منصة 7lbsaa التعليمية" class="brand-logo">
             <h1>منصة <span>7lbsaa</span> التعليمية</h1>
             <p>أهلاً بك يا بطل في مكتبة المحاضرات المجمعة</p>
-        </div>
-
-        <div class="balance-bar">
-            <span style="color: var(--text-sub);"><i class="fas fa-shield-alt"></i> رصيدك الحالي في السيرفر:</span>
-            <span class="balance-amount" id="user-balance">0.00 ج.م</span>
         </div>
 
         <div class="video-grid">
@@ -193,7 +204,24 @@
     </div>
 
     <footer>
-        <p>جميع الحقوق محفوظة © 2026 لـ منصة <b>7lbsaa</b> | تم التطوير بواسطة <b>7lbsaa</b></p>
+        <div class="footer-container">
+            <div class="social-section">
+                <h4>تواصل معنا عبر منصاتنا الرسمية</h4>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/profile.php?id=61584178882412&locale=ar_AR" target="_blank" title="فيسبوك">
+                        <img src="facebook.png" alt="Facebook">
+                    </a>
+                    <a href="https://www.tiktok.com/@7lbsaa1" target="_blank" title="تيك توك">
+                        <img src="tik-tok.png" alt="TikTok">
+                    </a>
+                    <a href="https://x.com/7lbsaa1" target="_blank" title="تويتر / إكس">
+                        <img src="twitter.png" alt="Twitter">
+                    </a>
+                </div>
+            </div>
+            <hr style="width: 50%; border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 5px 0;">
+            <p>جميع الحقوق محفوظة © 2026 لـ منصة <b>7lbsaa</b> | تم التطوير بواسطة <b>7lbsaa</b></p>
+        </div>
     </footer>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -212,7 +240,7 @@
         let userCode = localStorage.getItem('currentUserCode') || '7L-STUDENT';
         let currentBalance = 0;
 
-        // جلب الرصيد
+        // جلب ومراقبة الرصيد لايف
         database.ref('users/' + userCode).on('value', (s) => {
             if(s.exists()) {
                 currentBalance = parseFloat(s.val().balance) || 0;
@@ -226,11 +254,9 @@
             
             database.ref('users/' + userCode + '/purchased_videos/' + videoId).once('value', (snapshot) => {
                 if (snapshot.exists() && snapshot.val() === true) {
-                    // شاريها -> افتح الصفحة المنفصلة مع إرسال توكن إذن الدخول المؤقت
                     sessionStorage.setItem('allow_' + videoId, 'true');
                     window.location.href = videoFile;
                 } else {
-                    // مش شاريها -> اطلب الدفع
                     if (currentBalance >= 120) {
                         if (confirm("هذه المحاضرة مدفوعة، هل تريد تأكيد شراء واشتراك الفيديو بـ 120 ج.م؟")) {
                             let newBalance = currentBalance - 120;
@@ -248,7 +274,7 @@
             });
         }
 
-        // --- كود الشات لايف المصلح بالكامل ---
+        // كود الشات لايف
         function toggleChatWindow() {
             let win = document.getElementById('chat-window');
             if (win.style.display === 'flex') {
