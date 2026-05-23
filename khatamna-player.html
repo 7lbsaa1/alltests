@@ -52,15 +52,30 @@
             </div>
             <div class="progress-container" id="progress-timeline"><div class="progress-bar"><div class="progress-filled" id="progress-current"></div></div></div>
             <div class="controls-left"><button class="control-btn" id="fullscreen-btn"><i class="fas fa-expand"></i></button></div>
-        </div>
+        </div>                
     </div>
-    <script>
+<script>
+        // 1. جلب بيانات المستخدم الحالية
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if(!currentUser || !currentUser.purchasedVideos || !currentUser.purchasedVideos.includes('khatamna')) { 
-            alert('لم تقم بشراء هذا المقطع بعد!'); window.location.href = 'index.html'; 
+        let userCode = localStorage.getItem('currentUserCode') || '7L-STUDENT';
+        
+        // 2. تحديد اسم الفيديو الحالي بناءً على اسم الملف تلقائياً
+        const videoId = window.location.pathname.split('/').pop().replace('-player.html', '');
+        const isAllowedLocally = sessionStorage.getItem('allow_' + videoId);
+
+        // 3. فحص الحماية الشامل (المحلي والـ LocalStorage)
+        // لو الطالب مش معاه التوكن المؤقت، ومش متسجل في المتصفح إنه شاري الفيديو.. اطرده فوراً
+        if (!isAllowedLocally && (!currentUser || !currentUser.purchasedVideos || !currentUser.purchasedVideos.includes(videoId))) { 
+            alert('❌ عذراً! لم تقم بشراء هذا المقطع بعد أو غير مسموح لك بالفتح المباشر!'); 
+            window.location.href = 'index.html'; 
         }
+
+        // معرف فيديو اليوتيوب الخاص بك
         const currentVideoId = 'hHPCis9GV0o';
     </script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="secure-player.js"></script>
 </body>
