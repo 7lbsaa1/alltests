@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب جديد | lbsaa7</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0; padding: 0; box-sizing: border-box;
+            background: radial-gradient(circle at center, #0e1630 0%, #050814 100%);
+            min-height: 100vh; display: flex; justify-content: center; align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px;
+        }
+        .login-card {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px; padding: 40px 30px; width: 100%; max-width: 480px;
+            backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); text-align: center; box-sizing: border-box;
+        }
+        .logo-area { font-size: 42px; font-weight: 800; color: #fff; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 5px; direction: ltr; }
+        .logo-area span { color: #2563eb; }
+        p.welcome-txt { color: #fff; font-size: 16px; margin-bottom: 5px; font-weight: 500; }
+        p.sub-txt { color: #a5a1ca; font-size: 13px; margin-bottom: 30px; }
+        .input-wrapper { text-align: right; margin-bottom: 25px; width: 100%; }
+        .input-wrapper label { display: block; color: #fff; font-size: 14px; margin-bottom: 8px; font-weight: 600; }
+        .input-box { position: relative; width: 100%; }
+        .input-box i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #a5a1ca; font-size: 16px; z-index: 1; }
+        .input-box input { width: 100%; box-sizing: border-box; padding: 14px 45px 14px 15px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(0, 0, 0, 0.2); color: #fff; font-size: 15px; outline: none; transition: all 0.3s ease; text-align: right; }
+        .input-box input:focus { border-color: #2563eb; box-shadow: 0 0 15px rgba(37, 99, 235, 0.25); }
+        .login-btn { width: 100%; padding: 14px; background: #2563eb; color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); box-sizing: border-box; }
+        .login-btn:hover { background: #1d4ed8; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5); }
+        .divider { margin: 25px 0; display: flex; align-items: center; color: #a5a1ca; font-size: 13px; }
+        .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1); }
+        .divider:not(:empty)::before { margin-left: .5em; } .divider:not(:empty)::after { margin-right: .5em; }
+        .signup-link { color: #a5a1ca; font-size: 14px; text-decoration: none; }
+        .signup-link a { color: #2563eb; text-decoration: none; font-weight: bold; margin-right: 5px; }
+        .signup-link a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="logo-area">lbsaa<span>7</span></div>
+        <p class="welcome-txt">إنشاء حساب جديد</p>
+        <p class="sub-txt">سجل اسمك المميز (عربي أو إنجليزي أو أرقام) للانضمام إلينا</p>
+
+        <div class="input-wrapper">
+            <label>اسم المستخدم / الكود الخاص بك</label>
+            <div class="input-box">
+                <i class="far fa-user"></i>
+                <input type="text" id="student-reg-input" placeholder="اكتب اسمك أو كودك (مثال: عمر2026)">
+            </div>
+        </div>
+
+        <button class="login-btn" onclick="executeRegister()">إنشاء الحساب والتحميل</button>
+
+        <div class="divider">أو</div>
+        <div class="signup-link">
+            لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script>
+        const firebaseConfig = { databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        function executeRegister() {
+            let userInput = document.getElementById('student-reg-input').value.trim();
+            if(!userInput) return alert('برجاء كتابة الاسم المطلوب أولاً!');
+
+            // تنظيف الحروف وضمان دمج البادئة الاحترافية الخاصة بك
+            let studentCode = "7L-" + userInput;
+
+            // التأكد أولاً إن الاسم مش متكرر على السيرفر
+            database.ref('users/' + studentCode).once('value', (snapshot) => {
+                if(snapshot.exists()) {
+                    alert('عذراً، هذا الاسم مسجل مسبقاً بطالب آخر، اختر اسماً مختلفاً أو أضف أرقاماً!');
+                } else {
+                    // إنشاء الحساب الجديد بالداتا الأساسية
+                    database.ref('users/' + studentCode).set({
+                        username: userInput,
+                        balance: 0,
+                        isBlocked: false,
+                        profile_pic: 'person.png',
+                        createdAt: new Date().toLocaleString('ar-EG')
+                    }).then(() => {
+                        localStorage.setItem('currentUserCode', studentCode);
+                        alert('تم إنشاء حسابك بنجاح يا بطل! جارٍ توجيهك للمنصة...');
+                        window.location.href = "index.html";
+                    }).catch(err => alert('حدث خطأ: ' + err.message));
+                }
+            });
+        }
+    </script>
+</body>
+</html>
