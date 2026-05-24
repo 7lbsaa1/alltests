@@ -13,11 +13,12 @@
         h2 { color: #00a4ff; font-size: 20px; margin-bottom: 20px; border-right: 4px solid #00a4ff; padding-right: 10px; }
         .flex-inputs { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
         .dash-input { flex: 1; min-width: 200px; padding: 13px; border-radius: 12px; border: 1px solid rgba(0, 164, 255, 0.4); background: #00021a; color: #fff; text-align: center; font-weight: bold; }
-        .dash-input:focus { outline: none; border-color: #00a4ff; box-shadow: 0 0 10px rgba(0,164,255,0.3); }
         .dash-btn { padding: 13px 30px; background: linear-gradient(135deg, #00a4ff, #007acc); border: none; border-radius: 12px; color: #fff; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; }
         .dash-btn:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 5px 15px rgba(0, 164, 255, 0.4); }
-        .code-list { background: #00021a; border-radius: 12px; padding: 15px; max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 14px; color: #00a4ff; border: 1px solid rgba(0,164,255,0.1); }
-        .code-item { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; }
+        .code-list { background: #00021a; border-radius: 12px; padding: 15px; max-height: 250px; overflow-y: auto; font-family: monospace; font-size: 14px; border: 1px solid rgba(0,164,255,0.1); }
+        .code-item { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .status-active { color: #22c55e; font-weight: bold; }
+        .status-used { color: #ff3366; text-decoration: line-through; }
     </style>
 </head>
 <body>
@@ -38,16 +39,37 @@
                 <input type="number" id="card-count" class="dash-input" placeholder="عدد الكروت المطلوبة">
                 <button class="dash-btn" onclick="generateScratchCards()"><i class="fas fa-cog"></i> توليد الكروت</button>
             </div>
-            <div class="code-list" id="generated-codes-box">الأكواد المستخرجة ستظهر هنا...</div>
+            
+            <h3 style="font-size: 14px; color:#a5a1ca; margin: 15px 0 8px 0;"><i class="fas fa-list"></i> جميع الأكواد المتوفرة حالياً على السيرفر:</h3>
+            <div class="code-list" id="generated-codes-box">جاري جلب الكروت من السيرفر...</div>
         </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
-        const firebaseConfig = { databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/" }; // حط هنا الكونفيج الكامل بتاعك
+        const firebaseConfig = { databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+
+        // جلب وعرض الكروت لايف فوراً ومعرفة حالتها
+        database.ref('scratch_cards').on('value', (snapshot) => {
+            let box = document.getElementById('generated-codes-box');
+            box.innerHTML = '';
+            if(snapshot.exists()) {
+                snapshot.forEach((child) => {
+                    let card = child.val();
+                    let cls = card.status === 'مستعمل' ? 'status-used' : 'status-active';
+                    let textStatus = card.status === 'مستعمل' ? `مستعمل بواسطة (${card.usedBy || 'طالب'})` : 'نشط وجاهز';
+                    
+                    box.innerHTML += `<div class="code-item">
+                        <span style="color:#00a4ff; font-weight:bold;">${child.key}</span>
+                        <span>${card.amount} ج.م</span>
+                        <span class="${cls}">${textStatus}</span>
+                    </div>`;
+                });
+            } else { box.innerHTML = 'لا يوجد أي كروت تم توليدها حتى الآن.'; }
+        });
 
         function executeCharging() {
             let code = document.getElementById('target-code').value.trim();
@@ -58,7 +80,6 @@
                 if(s.exists()) {
                     let newB = (parseFloat(s.val().balance) || 0) + amount;
                     database.ref('users/' + code).update({ balance: newB });
-                    // تسجيل العملية في السجل للـ history
                     database.ref('history').push({
                         studentCode: code, studentName: s.val().username, amount: amount, type: 'شحن مباشر', date: new Date().toLocaleString('ar-EG')
                     });
@@ -72,15 +93,11 @@
             let count = parseInt(document.getElementById('card-count').value);
             if(isNaN(amount) || isNaN(count)) return alert('أدخل أرقام صحيحة');
             
-            let box = document.getElementById('generated-codes-box');
-            box.innerHTML = '';
-            
             for(let i=0; i<count; i++) {
                 let randomCode = '7L-' + Math.random().toString(36).substr(2, 9).toUpperCase();
                 database.ref('scratch_cards/' + randomCode).set({ amount: amount, status: 'نشط' });
-                box.innerHTML += `<div class="code-item"><span>${randomCode}</span> <span>${amount} ج.م</span></div>`;
             }
-            alert('تم توليد الكروت بنجاح وحفظها بالسيرفر!');
+            alert('تم توليد الكروت وحفظها في السيرفر بنجاح!');
         }
     </script>
 </body>
