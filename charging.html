@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الشحن وتوليد الكروت | 7lbsaa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; transition: all 0.3s ease; }
+        body { background: #000330; color: #fff; padding: 25px; }
+        .container { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 25px; }
+        .card { background: #000675; border: 1px solid rgba(0, 164, 255, 0.2); padding: 25px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+        h2 { color: #00a4ff; font-size: 20px; margin-bottom: 20px; border-right: 4px solid #00a4ff; padding-right: 10px; }
+        .flex-inputs { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+        .dash-input { flex: 1; min-width: 200px; padding: 13px; border-radius: 12px; border: 1px solid rgba(0, 164, 255, 0.4); background: #00021a; color: #fff; text-align: center; font-weight: bold; }
+        .dash-input:focus { outline: none; border-color: #00a4ff; box-shadow: 0 0 10px rgba(0,164,255,0.3); }
+        .dash-btn { padding: 13px 30px; background: linear-gradient(135deg, #00a4ff, #007acc); border: none; border-radius: 12px; color: #fff; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .dash-btn:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 5px 15px rgba(0, 164, 255, 0.4); }
+        .code-list { background: #00021a; border-radius: 12px; padding: 15px; max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 14px; color: #00a4ff; border: 1px solid rgba(0,164,255,0.1); }
+        .code-item { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h2><i class="fas fa-bolt"></i> الشحن الفوري المباشر للطلاب</h2>
+            <div class="flex-inputs">
+                <input type="text" id="target-code" class="dash-input" placeholder="كود حساب الطالب">
+                <input type="number" id="charge-amount-input" class="dash-input" placeholder="المبلغ (ج.م)">
+                <button class="dash-btn" onclick="executeCharging()"><i class="fas fa-check"></i> شحن الآن</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><i class="fas fa-ticket-alt"></i> توليد كروت شحن المنصة مسبقة الدفع</h2>
+            <div class="flex-inputs">
+                <input type="number" id="card-amount" class="dash-input" placeholder="قيمة الكارت (مثلا 120)">
+                <input type="number" id="card-count" class="dash-input" placeholder="عدد الكروت المطلوبة">
+                <button class="dash-btn" onclick="generateScratchCards()"><i class="fas fa-cog"></i> توليد الكروت</button>
+            </div>
+            <div class="code-list" id="generated-codes-box">الأكواد المستخرجة ستظهر هنا...</div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script>
+        const firebaseConfig = { databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/" }; // حط هنا الكونفيج الكامل بتاعك
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        function executeCharging() {
+            let code = document.getElementById('target-code').value.trim();
+            let amount = parseFloat(document.getElementById('charge-amount-input').value.trim());
+            if(!code || isNaN(amount)) return alert('بيانات غير صحيحة');
+            
+            database.ref('users/' + code).once('value', (s) => {
+                if(s.exists()) {
+                    let newB = (parseFloat(s.val().balance) || 0) + amount;
+                    database.ref('users/' + code).update({ balance: newB });
+                    // تسجيل العملية في السجل للـ history
+                    database.ref('history').push({
+                        studentCode: code, studentName: s.val().username, amount: amount, type: 'شحن مباشر', date: new Date().toLocaleString('ar-EG')
+                    });
+                    alert('تم الشحن الفوري بنجاح!');
+                } else { alert('الكود غير مسجل!'); }
+            });
+        }
+
+        function generateScratchCards() {
+            let amount = parseFloat(document.getElementById('card-amount').value);
+            let count = parseInt(document.getElementById('card-count').value);
+            if(isNaN(amount) || isNaN(count)) return alert('أدخل أرقام صحيحة');
+            
+            let box = document.getElementById('generated-codes-box');
+            box.innerHTML = '';
+            
+            for(let i=0; i<count; i++) {
+                let randomCode = '7L-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+                database.ref('scratch_cards/' + randomCode).set({ amount: amount, status: 'نشط' });
+                box.innerHTML += `<div class="code-item"><span>${randomCode}</span> <span>${amount} ج.م</span></div>`;
+            }
+            alert('تم توليد الكروت بنجاح وحفظها بالسيرفر!');
+        }
+    </script>
+</body>
+</html>
