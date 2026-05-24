@@ -3,189 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل دخول ل 7lbsaa </title>
+    <title>تسجيل الدخول | lbsaa7</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* إعدادات الخلفية والتصميم الزجاجي الفخم */
         body {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 0; padding: 0; box-sizing: border-box;
             background: radial-gradient(circle at center, #0e1630 0%, #050814 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 20px;
+            min-height: 100vh; display: flex; justify-content: center; align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px;
         }
-
         .login-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            padding: 40px 30px;
-            width: 100%;
-            max-width: 480px; /* الحفاظ على عرض الكارت */
-            backdrop-filter: blur(20px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-            text-align: center;
-            box-sizing: border-box; /* لضمان حساب الـ padding بشكل صحيح */
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px; padding: 40px 30px; width: 100%; max-width: 480px;
+            backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); text-align: center; box-sizing: border-box;
         }
-
-        /* اللوجو والعناوين - نقل الـ 7 لورا */
-        .logo-area {
-            font-size: 42px;
-            font-weight: 800;
-            color: #fff;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            direction: ltr; /* لضمان ترتيب الأحرفlbsaa7 */
-        }
-
-        .logo-area span {
-            color: #2563eb; /* اللون الأزرق للرقم 7 */
-        }
-
-        p.welcome-txt {
-            color: #fff;
-            font-size: 16px;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-
-        p.sub-txt {
-            color: #a5a1ca;
-            font-size: 13px;
-            margin-bottom: 30px;
-        }
-
-        /* خانات الإدخال - توسيع الـ Input */
-        .input-wrapper {
-            text-align: right;
-            margin-bottom: 25px;
-            width: 100%; /* ضمان تمدد الـ wrapper */
-        }
-
-        .input-wrapper label {
-            display: block;
-            color: #fff;
-            font-size: 14px;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .input-box {
-            position: relative;
-            width: 100%; /* الـ box يملأ الـ wrapper */
-        }
-
-        .input-box i {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #a5a1ca;
-            font-size: 16px;
-            z-index: 1; /* التأكد من أن الأيقونة فوق الخلفية */
-        }
-
-        .input-box input {
-            width: 100%; /* الـ input يملأ الـ box */
-            box-sizing: border-box; /* حساب الـ padding والـ border ضمن العرض */
-            padding: 14px 45px 14px 15px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: rgba(0, 0, 0, 0.2);
-            color: #fff;
-            font-size: 15px;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .input-box input:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 15px rgba(37, 99, 235, 0.25);
-        }
-
-        /* أزرار التحكم */
-        .login-btn {
-            width: 100%;
-            padding: 14px;
-            background: #2563eb;
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-            box-sizing: border-box; /* حساب الـ padding والـ border ضمن العرض */
-        }
-
-        .login-btn:hover {
-            background: #1d4ed8;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
-        }
-
+        .logo-area { font-size: 42px; font-weight: 800; color: #fff; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 5px; direction: ltr; }
+        .logo-area span { color: #2563eb; }
+        p.welcome-txt { color: #fff; font-size: 16px; margin-bottom: 5px; font-weight: 500; }
+        p.sub-txt { color: #a5a1ca; font-size: 13px; margin-bottom: 30px; }
+        .input-wrapper { text-align: right; margin-bottom: 25px; width: 100%; }
+        .input-wrapper label { display: block; color: #fff; font-size: 14px; margin-bottom: 8px; font-weight: 600; }
+        .input-box { position: relative; width: 100%; }
+        .input-box i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #a5a1ca; font-size: 16px; z-index: 1; }
+        .input-box input { width: 100%; box-sizing: border-box; padding: 14px 45px 14px 15px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(0, 0, 0, 0.2); color: #fff; font-size: 15px; outline: none; transition: all 0.3s ease; text-align: right; }
+        .input-box input:focus { border-color: #2563eb; box-shadow: 0 0 15px rgba(37, 99, 235, 0.25); }
+        .login-btn { width: 100%; padding: 14px; background: #2563eb; color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); box-sizing: border-box; }
+        .login-btn:hover { background: #1d4ed8; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5); }
+        .divider { margin: 25px 0; display: flex; align-items: center; color: #a5a1ca; font-size: 13px; }
+        .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1); }
+        .divider:not(:empty)::before { margin-left: .5em; } .divider:not(:empty)::after { margin-right: .5em; }
+        .signup-link { color: #a5a1ca; font-size: 14px; text-decoration: none; }
+        .signup-link a { color: #2563eb; text-decoration: none; font-weight: bold; margin-right: 5px; }
+        .signup-link a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
     <div class="login-card">
-        <div class="logo-area"><span>7lbsaa</span></div>
-        <p class="welcome-txt">مرحباً بك في 7lbsaa</p>
-        <p class="sub-txt">سجّل الدخول من خلال اسمك الثنائي للمتابعة</p>
+        <div class="logo-area">lbsaa<span>7</span></div>
+        <p class="welcome-txt">مرحباً بك في lbsaa7</p>
+        <p class="sub-txt">سجّل الدخول من خلال اسم حسابك للمتابعة</p>
 
         <div class="input-wrapper">
-            <label>الاسم الثنائي</label>
+            <label>اسم الحساب</label>
             <div class="input-box">
                 <i class="far fa-user"></i>
-                <input type="text" id="student-name-input" placeholder="أدخل اسمك الثنائي (مثال: محمد علي)">
+                <input type="text" id="student-name-input" placeholder="أدخل اسم حسابك المعتمد">
             </div>
         </div>
 
         <button class="login-btn" onclick="executeLogin()">تسجيل الدخول</button>
 
+        <div class="divider">أو</div>
+        <div class="signup-link">
+            ليس لديك حساب؟ <a href="register.html">إنشاء حساب جديد</a>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
-        // إعدادات الفايربيز الخاصة بقاعدة بيانات منصتك بالملي
         const firebaseConfig = { databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // دالة تسجيل الدخول والفحص التلقائي ضد الحظر
         function executeLogin() {
             let nameInput = document.getElementById('student-name-input').value.trim();
-            if(!nameInput) return alert('برجاء كتابة الاسم الثنائي أولاً لدخول المنصة!');
+            if(!nameInput) return alert('برجاء كتابة اسم الحساب أولاً لدخول المنصة!');
 
-            // تحويل الاسم لكود الطالب المعتمد في السيرفر
             let studentCode = "7L-" + nameInput;
 
-            // جلب وفحص بيانات الطالب من السيرفر لايف
             database.ref('users/' + studentCode).once('value', (snapshot) => {
                 if(snapshot.exists()) {
                     let userData = snapshot.val();
                     
-                    // 🚨 التشيك الأمني ضد الحظر
+                    // التشيك الأمني ضد الحظر
                     if(userData.isBlocked === true) {
-                        // لو محظور، اِقفل في وشه وحوله فوراً لصفحة المخالفة والسلوك
                         window.location.href = "blocked.html";
                     } else {
-                        // لو حسابه سليم، احفظ الكود كاش ودخله على الشاشة الرئيسية
                         localStorage.setItem('currentUserCode', studentCode);
                         window.location.href = "index.html";
                     }
                 } else {
-                    alert('هذا الحساب غير مسجل حالياً بالسيرفر، برجاء التواصل مع الإدارة.');
+                    alert('هذا الحساب غير مسجل حالياً بالسيرفر، تأكد من كتابة الاسم الصحيح أو قم بإنشاء حساب جديد.');
                 }
             }).catch((error) => {
                 alert("عذراً، حدث خطأ أثناء الاتصال بالسيرفر: " + error.message);
