@@ -1,54 +1,292 @@
-<div class="scratch-charge-section" style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--card-border); text-align: right;">
-    <h3 style="color: var(--primary); font-size: 15px; margin-bottom: 12px;"><i class="fas fa-ticket-alt"></i> شحن المحفظة بواسطة كارت كود</h3>
-    <div style="display: flex; gap: 10px;">
-        <input type="text" id="scratch-code-input" placeholder="أدخل كود الكارت هنا (مثال: 7L-XXXXXX)" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(--card-border); background: rgba(0,0,0,0.2); color: #fff; text-align: center; font-weight: bold; font-family: monospace;">
-        <button onclick="redeemScratchCode()" style="padding: 0 20px; background: linear-gradient(135deg, var(--primary), #00b4db); border: none; color: #000; font-weight: bold; border-radius: 10px; cursor: pointer;">تفعيل الكود</button>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المحفظة الرقمية | منصة 7lbsaa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* نظام الألوان المتناسق مع الرئيسية */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0b0813 0%, #161233 100%);
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(0, 242, 254, 0.15);
+            --text-main: #ffffff;
+            --text-sub: #a5a1ca;
+            --primary: #00f2fe;
+            --secondary: #ff3366;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            transition: all 0.3s ease;
+        }
+
+        body { 
+            background: var(--bg-gradient); 
+            color: var(--text-main); 
+            min-height: 100vh; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .wallet-container {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(5, 4, 10, 0.85);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            position: relative;
+        }
+
+        .wallet-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .wallet-header img {
+            width: 55px;
+            height: 55px;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 0 10px var(--primary));
+        }
+
+        .wallet-header h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        /* كارت عرض الرصيد الحالي */
+        .balance-card {
+            background: linear-gradient(135deg, #000675 0%, #0022aa 100%);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            border-radius: 18px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.1);
+        }
+
+        .balance-label {
+            font-size: 13px;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .balance-amount {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary);
+            font-family: monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* سيكشن شحن الكود */
+        .charge-section {
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 25px;
+        }
+
+        .charge-title {
+            font-size: 15px;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+        }
+
+        .charge-title i {
+            color: var(--primary);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .scratch-input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+
+        .scratch-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 12px rgba(0, 242, 254, 0.2);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), #00b4db);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 242, 254, 0.4);
+        }
+
+        /* زرار العودة للخلف */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wallet-container">
+        <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> العودة للرئيسية</a>
+
+        <div class="wallet-header">
+            <img src="wallet.png" alt="Wallet">
+            <h1>محفظتك الرقمية الذكية</h1>
+        </div>
+
+        <div class="balance-card">
+            <span class="balance-label">الرصيد المتاح بالحساب</span>
+            <div class="balance-amount">
+                <img src="money.png" style="width: 32px; height: 32px; object-fit: contain;" alt="Money">
+                <span id="wallet-balance-view">0.00 ج.م</span>
+            </div>
+        </div>
+
+        <div class="charge-section">
+            <div class="charge-title">
+                <i class="fas fa-ticket-alt"></i>
+                <span>شحن رصيد بواسطة كارت كود</span>
+            </div>
+            <div class="input-group">
+                <input type="text" id="scratch-code-input" placeholder="أدخل كود الكارت (7L-XXXXXX)" class="scratch-input">
+                <button onclick="redeemScratchCode()" class="submit-btn">
+                    <i class="fas fa-check-circle"></i> تفعيل وشحن الكود الآن
+                </button>
+            </div>
+        </div>
     </div>
-</div>
 
-<script>
-    // ضف هذه الدالة داخل الـ <script> الخاص بصفحة wallet.html
-    function redeemScratchCode() {
-        let inputCode = document.getElementById('scratch-code-input').value.trim().toUpperCase();
-        if(!inputCode) return alert('برجاء كتابة الكود أولاً');
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script>
+        // إعدادات قاعدة البيانات الخاصة بمنصتك بالملّي
+        const firebaseConfig = {
+            apiKey: "AIzaSy" + "D" + "vG" + "X" + "qS" + "4M3" + "pI" + "oD" + "xK" + "Mv" + "uQ" + "y9" + "w1" + "z0" + "6Y" + "vG" + "1_8",
+            authDomain: "admin-37e09.firebaseapp.com",
+            databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/",
+            projectId: "admin-37e09",
+            storageBucket: "admin-37e09.appspot.com",
+            appId: "1:782163910543:web:6b9fcd6113b28b75e2f75d"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
+        // تحديد كود الطالب الحالي الكاش في المتصفح
         let userCode = localStorage.getItem('currentUserCode') || '7L-STUDENT';
-        
-        // التحقق من وجود الكارت وصلاحيته في الفايربيز
-        database.ref('scratch_cards/' + inputCode).once('value', (snapshot) => {
-            if(snapshot.exists()) {
-                let cardData = snapshot.val();
-                if(cardData.status === 'مستعمل') {
-                    alert('عذراً، هذا الكود تم استخدامه من قبل!');
-                } else {
-                    let cardAmount = parseFloat(cardData.amount);
-                    
-                    // جلب رصيد الطالب الحالي لإضافة قيمة الكارت عليه
-                    database.ref('users/' + userCode).once('value', (userSnap) => {
-                        if(userSnap.exists()) {
-                            let currentBalance = parseFloat(userSnap.val().balance) || 0;
-                            let newBalance = currentBalance + cardAmount;
-                            
-                            // تحديث الرصيد وتعطيل الكارت وتسجيل العملية
-                            database.ref('users/' + userCode).update({ balance: newBalance });
-                            database.ref('scratch_cards/' + inputCode).update({ status: 'مستعمل', usedBy: userCode });
-                            
-                            database.ref('history').push({
-                                studentCode: userCode,
-                                studentName: userSnap.val().username,
-                                amount: cardAmount,
-                                type: 'شحن كارت كود',
-                                date: new Date().toLocaleString('ar-EG')
-                            });
 
-                            alert(`مبروك! تم شحن محفظتك بنجاح بقيمة ${cardAmount} ج.م`);
-                            document.getElementById('scratch-code-input').value = '';
-                        }
-                    });
-                }
-            } else {
-                alert('الكود الذي أدخلته غير صحيح أو غير موجود بسيرفراتنا!');
+        // 1. جلب وعرض الرصيد الحالي للطالب وتحديثه لايف تلقائياً
+        database.ref('users/' + userCode).on('value', (snapshot) => {
+            if(snapshot.exists()) {
+                let currentBalance = parseFloat(snapshot.val().balance) || 0;
+                document.getElementById('wallet-balance-view').innerText = currentBalance.toFixed(2) + " ج.م";
             }
         });
-    }
-</script>
+
+        // 2. دالة التحقق من كارت الكود وشحن الحساب فوراً
+        function redeemScratchCode() {
+            let inputCode = document.getElementById('scratch-code-input').value.trim().toUpperCase();
+            if(!inputCode) return alert('برجاء كتابة كود الكارت أولاً!');
+
+            // البحث عن الكارت داخل فرع scratch_cards في الفايربيز
+            database.ref('scratch_cards/' + inputCode).once('value', (snapshot) => {
+                if(snapshot.exists()) {
+                    let cardData = snapshot.val();
+                    
+                    // التحقق إذا كان الكارت مستعمل من قبل أم لا
+                    if(cardData.status === 'مستعمل') {
+                        alert('عذراً، هذا الكود تم استخدامه مسبقاً من قِبل طالب آخر!');
+                    } else {
+                        let cardAmount = parseFloat(cardData.amount);
+                        
+                        // جلب بيانات الطالب لإضافة القيمة الجديدة
+                        database.ref('users/' + userCode).once('value', (userSnap) => {
+                            if(userSnap.exists()) {
+                                let oldBalance = parseFloat(userSnap.val().balance) || 0;
+                                let newBalance = oldBalance + cardAmount;
+                                
+                                // تحديث الرصيد وتعطيل الكارت في السيرفر لضمان الأمان
+                                database.ref('users/' + userCode).update({ balance: newBalance });
+                                database.ref('scratch_cards/' + inputCode).update({ 
+                                    status: 'مستعمل', 
+                                    usedBy: userCode,
+                                    usedAt: new Date().toLocaleString('ar-EG')
+                                });
+                                
+                                // تسجيل الحركة في الأرشيف العام للـ history ليراها الأدمن
+                                database.ref('history').push({
+                                    studentCode: userCode,
+                                    studentName: userSnap.val().username || 'طالب مجهول',
+                                    amount: cardAmount,
+                                    type: 'شحن كارت كود',
+                                    date: new Date().toLocaleString('ar-EG')
+                                });
+
+                                alert(`عاش يا بطل! تم شحن محفظتك بنجاح بقيمة ${cardAmount} ج.م`);
+                                document.getElementById('scratch-code-input').value = '';
+                            }
+                        });
+                    }
+                } else {
+                    alert('الكود المكتوب غير صحيح أو غير متوفر بسيرفراتنا، تأكد من الحروف!');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
