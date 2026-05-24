@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بيانات الطلاب المسجلين | 7lbsaa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background: #000330; color: #fff; padding: 25px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h2 { color: #00a4ff; margin-bottom: 20px; font-size: 22px; }
+        .table-responsive { background: #000675; border-radius: 16px; border: 1px solid rgba(0, 164, 255, 0.2); overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; text-align: center; }
+        th { background: rgba(0, 164, 255, 0.1); color: #00a4ff; padding: 15px; font-weight: bold; border-bottom: 2px solid rgba(0, 164, 255, 0.2); }
+        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .student-avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 1px solid #00a4ff; vertical-align: middle; margin-left: 8px; }
+        .badge { background: rgba(0, 164, 255, 0.2); color: #00a4ff; padding: 4px 10px; border-radius: 8px; font-weight: bold; font-family: monospace; }
+        .video-badge { background: rgba(255, 51, 102, 0.15); color: #ff3366; font-size: 11px; padding: 2px 6px; border-radius: 5px; margin: 2px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2><i class="fas fa-user-graduate"></i> إدارة وبيانات الطلاب المسجلين بالمنصة</h2>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>الطالب</th>
+                        <th>كود الحساب</th>
+                        <th>الرصيد الحالي</th>
+                        <th>الفيديوهات المشتراة</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table-body">
+                    <tr><td colspan="4" style="color:#666;">جاري تحميل داتا الطلاب...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script>
+        const firebaseConfig = { databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        database.ref('users').on('value', (snapshot) => {
+            let tbody = document.getElementById('users-table-body');
+            tbody.innerHTML = '';
+            if(snapshot.exists()) {
+                snapshot.forEach((child) => {
+                    let user = child.val();
+                    let vList = '';
+                    if(user.purchased_videos) {
+                        Object.keys(user.purchased_videos).forEach(v => { vList += `<span class="video-badge">${v}</span>`; });
+                    } else { vList = '<span style="color:#555;">لا يوجد</span>'; }
+                    
+                    let userPic = user.profile_pic || 'person.png'; // لو مفيش صورة يحط الديفولت
+
+                    tbody.innerHTML += `<tr>
+                        <td style="text-align:right; padding-right:30px;"><img src="${userPic}" class="student-avatar"><b>${user.username}</b></td>
+                        <td style="font-family:monospace; color:#00a4ff; font-weight:bold;">${child.key}</td>
+                        <td><span class="badge">${(parseFloat(user.balance) || 0).toFixed(2)} ج.م</span></td>
+                        <td>${vList}</td>
+                    </tr>`;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
