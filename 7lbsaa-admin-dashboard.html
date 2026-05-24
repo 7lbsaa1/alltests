@@ -3,254 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة الإدارة الكاملة | 7lbsaa</title>
+    <title>لوحة التحكم المركزية | منصة 7lbsaa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* نظام ألوان متناسق وفخم لمنصة 7lbsaa */
-        :root {
-            --bg-main: #0b0813;
-            --bg-card: rgba(255, 255, 255, 0.03);
-            --border-color: rgba(0, 242, 254, 0.2);
-            --primary: #00f2fe;
-            --secondary: #ff3366;
-            --text-main: #ffffff;
-            --text-sub: #b1afcd;
-        }
-
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s ease; }
-        body { background: var(--bg-main); color: var(--text-main); padding: 30px 20px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; gap: 25px; }
+        body { background: #000330; color: #fff; min-height: 100vh; padding: 30px 20px; }
         
-        .dashboard-wrapper { width: 100%; max-width: 1050px; display: flex; flex-direction: column; gap: 25px; }
+        .container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 35px; }
         
-        /* بانل الشحن الفوري */
-        .admin-panel { background: var(--bg-card); border: 2px dashed var(--secondary); padding: 30px; border-radius: 24px; text-align: center; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(255, 51, 102, 0.05); }
-        .admin-panel h2 { color: var(--secondary); font-size: 24px; margin-bottom: 20px; font-weight: 800; }
-        .dash-input { width: 100%; max-width: 280px; padding: 13px; margin: 8px; border-radius: 12px; border: 1px solid var(--secondary); background: #05040a; color: #fff; text-align: center; font-weight: bold; font-size: 14px; }
-        .dash-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 10px rgba(0,242,254,0.2); }
-        .dash-btn { padding: 13px 35px; background: var(--secondary); border: none; border-radius: 12px; color: #fff; font-weight: bold; cursor: pointer; font-size: 14px; box-shadow: 0 4px 15px rgba(255, 51, 102, 0.3); }
-        .dash-btn:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 6px 20px rgba(255, 51, 102, 0.5); }
+        /* الهيدر العلوي */
+        .admin-header { text-align: center; border-bottom: 2px solid rgba(0, 164, 255, 0.15); padding-bottom: 25px; }
+        .admin-header h1 { font-size: 26px; color: #00a4ff; display: flex; align-items: center; justify-content: center; gap: 12px; font-weight: 800; }
+        .admin-header p { color: #a5a1ca; font-size: 14px; margin-top: 5px; }
 
-        /* حاويات السيكشنز */
-        .section-container { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); padding: 25px; border-radius: 24px; backdrop-filter: blur(10px); }
-        .section-container h3 { color: var(--primary); margin-bottom: 20px; border-right: 4px solid var(--primary); padding-right: 12px; font-size: 19px; text-align: right; font-weight: 700; }
+        /* كروت الإحصائيات السريعة لايف */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .stat-card { background: #000675; border: 1px solid rgba(0, 164, 255, 0.2); border-radius: 18px; padding: 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+        .stat-card:hover { border-color: #00a4ff; transform: translateY(-3px); box-shadow: 0 12px 25px rgba(0,164,255,0.15); }
+        .stat-info h3 { font-size: 13px; color: #a5a1ca; font-weight: 600; margin-bottom: 5px; }
+        .stat-info .stat-number { font-size: 22px; font-weight: bold; color: #fff; font-family: monospace; }
+        .stat-icon { width: 50px; height: 50px; background: rgba(0, 164, 255, 0.1); border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 22px; color: #00a4ff; }
 
-        /* شبكة نظام الشات المطور */
-        .chat-system-grid { display: flex; gap: 20px; height: 400px; }
-        .students-chat-list { width: 32%; background: rgba(0,0,0,0.4); border-radius: 16px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.05); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-        
-        .student-tab { padding: 12px 15px; background: rgba(255,255,255,0.03); border-radius: 12px; text-align: right; cursor: pointer; font-size: 13px; border-right: 3px solid #444; display: flex; align-items: center; gap: 10px; color: var(--text-sub); }
-        .student-tab:hover { background: rgba(255,255,255,0.06); color: #fff; }
-        .student-tab.active { background: rgba(0,242,254,0.08); border-color: var(--primary); color: var(--primary); font-weight: bold; }
-        
-        .chat-window-area { width: 68%; background: rgba(0,0,0,0.25); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; overflow: hidden; }
-        .chat-messages-display { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: rgba(0,0,0,0.1); }
-        
-        /* فقاعات رسايل الشات داخل الإدارة */
-        .adm-msg-in { background: rgba(0, 242, 254, 0.08); border: 1px solid rgba(0, 242, 254, 0.15); padding: 10px 14px; border-radius: 14px 14px 0 14px; align-self: flex-start; max-width: 80%; text-align: right; font-size: 13px; line-height: 1.5; color: #fff; }
-        .adm-msg-out { background: rgba(255, 51, 102, 0.08); border: 1px solid rgba(255, 51, 102, 0.15); padding: 10px 14px; border-radius: 14px 14px 14px 0; align-self: flex-end; max-width: 80%; text-align: right; font-size: 13px; line-height: 1.5; color: #fff; }
-        
-        .chat-reply-form { padding: 12px; background: rgba(5, 4, 10, 0.8); display: flex; gap: 10px; border-top: 1px solid rgba(255,255,255,0.05); }
-        .reply-input { flex: 1; padding: 12px 18px; background: #05040a; border: 1px solid var(--border-color); border-radius: 12px; color: #fff; font-size: 13px; }
-        .reply-input:focus { outline: none; border-color: var(--primary); }
-        .reply-btn { padding: 0 25px; background: linear-gradient(135deg, var(--primary), #00b4db); border: none; color: #000; font-weight: bold; border-radius: 12px; cursor: pointer; font-size: 13px; }
-        .reply-btn:hover { filter: brightness(1.1); }
+        /* عنوان شبكة الأقسام */
+        .section-title { font-size: 18px; color: #00a4ff; border-right: 4px solid #00a4ff; padding-right: 10px; margin-bottom: -15px; font-weight: 700; }
 
-        /* جداول الطلاب المسجلين */
-        .table-responsive { overflow-x: auto; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); }
-        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 14px; background: rgba(0,0,0,0.15); }
-        th { background: rgba(0, 242, 254, 0.06); color: var(--primary); padding: 15px; border-bottom: 2px solid rgba(0,242,254,0.15); font-weight: 700; }
-        td { padding: 14px; border-bottom: 1px solid rgba(255,255,255,0.03); color: #e0e0e0; }
-        tr:hover td { background: rgba(255,255,255,0.01); }
-        .balance-badge { background: rgba(0, 242, 254, 0.12); border: 1px solid rgba(0,242,254,0.2); color: var(--primary); padding: 4px 10px; border-radius: 8px; font-weight: bold; font-family: monospace; }
+        /* شبكة أزرار التحكم والتنقل */
+        .admin-menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; }
+        .menu-card { background: #000675; border: 1px solid rgba(0, 164, 255, 0.15); padding: 30px 20px; border-radius: 20px; text-align: center; text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); cursor: pointer; position: relative; overflow: hidden; }
+        .menu-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: transparent; }
+        
+        /* تأثيرات الـ Hover المخصصة للأقسام */
+        .menu-card:hover { transform: translateY(-6px); border-color: #00a4ff; box-shadow: 0 15px 30px rgba(0, 164, 255, 0.2); }
+        .menu-card:hover ::before { background: #00a4ff; }
+        .menu-card i { font-size: 36px; color: #00a4ff; filter: drop-shadow(0 0 8px rgba(0,164,255,0.2)); }
+        .menu-card span { font-weight: 700; font-size: 16px; letter-spacing: 0.3px; }
+        .menu-card p { font-size: 12px; color: #a5a1ca; line-height: 1.4; }
+
+        /* زرار العودة للمنصة */
+        .back-btn { align-self: center; margin-top: 15px; padding: 12px 30px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.1); color: #a5a1ca; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+        .back-btn:hover { background: #fff; color: #000; }
     </style>
 </head>
 <body>
 
-    <div class="dashboard-wrapper">
-        <div class="admin-panel">
-            <h2><i class="fas fa-bolt"></i> لوحة شحن الرصيد الفوري للأدمن عمر</h2>
-            <input type="text" id="target-code" class="dash-input" placeholder="أدخل كود حساب الطالب">
-            <input type="number" id="charge-amount-input" class="dash-input" placeholder="المبلغ المراد شحنه (ج.م)">
-            <button class="dash-btn" onclick="executeCharging()">تأكيد الشحن الفوري</button>
-        </div>
+    <div class="container">
+        
+        <header class="admin-header">
+            <h1><i class="fas fa-sliders-h"></i> لوحة التحكم المركزية للمنصة</h1>
+            <p>مرحباً بك يا عمر في غرفة القيادة لـ إدارة السيرفر والطلاب لايف</p>
+        </header>
 
-        <div class="section-container">
-            <h3><i class="fas fa-comments"></i> مركز دعم الطلاب والرد المباشر لايف</h3>
-            <div class="chat-system-grid">
-                <div class="students-chat-list" id="students-list-ui">
-                    <div style="color:#555; text-align:center; font-size:12px; padding:20px;">جاري تحميل غرف المحادثات...</div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>إجمالي الطلاب</h3>
+                    <div class="stat-number" id="total-students">0</div>
                 </div>
-                <div class="chat-window-area">
-                    <div class="chat-messages-display" id="admin-messages-box">
-                        <div style="color:#666; text-align:center; padding:50px; font-size:14px;">
-                            <i class="fas fa-arrow-right" style="margin-left: 8px; color: var(--primary);"></i> 
-                            اختر طالب من القائمة الجانبية لبدء الشات والرد عليه لايف
-                        </div>
-                    </div>
-                    <div class="chat-reply-form">
-                        <input type="text" id="admin-reply-input" class="reply-input" placeholder="اكتب رد الأدمن هنا..." onkeypress="handleReplyKeyPress(event)">
-                        <button class="reply-btn" onclick="sendAdminReply()">إرسال الرد <i class="fas fa-paper-plane" style="margin-right:5px;"></i></button>
-                    </div>
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>الغرف النشطة بالشات</h3>
+                    <div class="stat-number" id="active-chats">0</div>
                 </div>
+                <div class="stat-icon"><i class="fas fa-comments text-secondary"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>الكروت الجاهزة</h3>
+                    <div class="stat-number" id="active-cards">0</div>
+                </div>
+                <div class="stat-icon"><i class="fas fa-ticket-alt"></i></div>
             </div>
         </div>
 
-        <div class="section-container">
-            <h3><i class="fas fa-users"></i> قائمة طلاب المنصة المسجلين</h3>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>اسم الطالب الحقيقي</th>
-                            <th>كود الحساب (الكود السري)</th>
-                            <th>الرصيد الحالي بالمحفظة</th>
-                        </tr>
-                    </thead>
-                    <tbody id="users-table-body">
-                        <tr><td colspan="3" style="color: #666; padding: 25px;">جاري الاتصال بالسيرفر وجلب البيانات لايف...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <h2 class="section-title">أقسام إدارة المنصة</h2>
+
+        <main class="admin-menu-grid">
+            
+            <a href="charging.html" class="menu-card">
+                <i class="fas fa-bolt"></i>
+                <span>إدارة الشحن والكروت</span>
+                <p>شحن رصيد فوري للطلاب وتوليد كروت شحن مسبقة الدفع فئة 120 ج.م وغيرها.</p>
+            </a>
+
+            <a href="users.html" class="menu-card">
+                <i class="fas fa-user-graduate"></i>
+                <span>بيانات الطلاب والملفات</span>
+                <p>مراقبة حسابات الطلاب لايف، معرفة الأكواد، الأرصدة، والفيديوهات المفعلة لكل طالب.</p>
+            </a>
+
+            <a href="chats.html" class="menu-card">
+                <i class="fas fa-comment-dots"></i>
+                <span>غرف الدعم والشات المباشر</span>
+                <p>الرد الفوري على رسائل ومشاكل الطلاب تظهر لايف بصورة واسم الطالب.</p>
+            </a>
+
+            <a href="history.html" class="menu-card">
+                <i class="fas fa-history"></i>
+                <span>سجل الحسابات والأرشيف</span>
+                <p>مراجعة تقارير وتاريخ عمليات الشحن والتفعيل السابقة للحفاظ على الحسابات.</p>
+            </a>
+
+        </main>
+
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> العودة لواجهة الطلاب الرئيسية</a>
+
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSy" + "D" + "vG" + "X" + "qS" + "4M3" + "pI" + "oD" + "xK" + "Mv" + "uQ" + "y9" + "w1" + "z0" + "6Y" + "vG" + "1_8",
-            authDomain: "admin-37e09.firebaseapp.com",
-            databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/",
-            projectId: "admin-37e09",
-            storageBucket: "admin-37e09.appspot.com",
-            appId: "1:782163910543:web:6b9fcd6113b28b75e2f75d"
-        };
+        const firebaseConfig = { databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        let selectedStudentCode = '';
-        let allUsersData = {}; // لحفظ بيانات وأسماء الطلاب لتسهيل جلب الأسماء في الشات
+        // 1. مراقبة وجلب إجمالي عدد الطلاب
+        database.ref('users').on('value', (snapshot) => {
+            if(snapshot.exists()) {
+                document.getElementById('total-students').innerText = snapshot.numChildren();
+            } else { document.getElementById('total-students').innerText = "0"; }
+        });
 
-        window.onload = function() {
-            // 1. جلب ومراقبة قائمة الطلاب والتحكم في حفظ البيانات كاش محلياً
-            database.ref('users').on('value', (snapshot) => {
-                let tbody = document.getElementById('users-table-body');
-                tbody.innerHTML = '';
-                if(snapshot.exists()) {
-                    allUsersData = snapshot.val(); // حفظ نسخة من بيانات المستخدمين
-                    snapshot.forEach((child) => {
-                        let user = child.val();
-                        let displayBalance = (parseFloat(user.balance) || 0).toFixed(2);
-                        tbody.innerHTML += `<tr>
-                            <td style="font-weight:600; color:#fff;">${user.username || 'طالب بدون اسم'}</td>
-                            <td style="color:var(--primary); font-family:monospace; font-weight:bold;">${child.key}</td>
-                            <td><span class="balance-badge">${displayBalance} ج.م</span></td>
-                        </tr>`;
-                    });
-                } else {
-                    tbody.innerHTML = `<tr><td colspan="3" style="color: #666; padding: 25px;">لا يوجد طلاب مسجلين حالياً.</td></tr>`;
-                }
-            });
+        // 2. مراقبة غرف الشات المفتوحة
+        database.ref('chats').on('value', (snapshot) => {
+            if(snapshot.exists()) {
+                document.getElementById('active-chats').innerText = snapshot.numChildren();
+            } else { document.getElementById('active-chats').innerText = "0"; }
+        });
 
-            // 2. مراقبة غرف الشات وجلب اسم الطالب الحقيقي بدلاً من الكود الجامد
-            database.ref('chats').on('value', (snapshot) => {
-                let listUi = document.getElementById('students-list-ui');
-                listUi.innerHTML = '';
-                if(snapshot.exists()) {
-                    snapshot.forEach((child) => {
-                        let studentCode = child.key;
-                        // محاولة مطابقة الكود مع اسم الطالب الفعلي المسجل في الداتا بيز
-                        let studentName = allUsersData[studentCode] ? allUsersData[studentCode].username : studentCode;
-                        let activeClass = studentCode === selectedStudentCode ? 'active' : '';
-                        
-                        listUi.innerHTML += `
-                            <div class="student-tab ${activeClass}" id="tab-${studentCode}" onclick="openStudentChat('${studentCode}')">
-                                <i class="fas fa-user-graduate" style="font-size:14px;"></i>
-                                <span>${studentName}</span>
-                            </div>`;
-                    });
-                } else {
-                    listUi.innerHTML = `<div style="color:#555; text-align:center; font-size:12px; padding:20px;">لا يوجد محادثات نشطة حالياً.</div>`;
-                }
-            });
-        };
-
-        // فتح شات الطالب والاتصال بالغرفة لايف والـ Auto scroll لأسفل شاشة المحادثة
-        function openStudentChat(studentCode) {
-            // إغلاق الاستماع للغرفة السابقة لمنع التداخل والتعليق
-            if(selectedStudentCode) {
-                database.ref('chats/' + selectedStudentCode).off();
-            }
-            
-            selectedStudentCode = studentCode;
-            
-            // إدارة الـ Active class بصرياً في القائمة
-            let tabs = document.querySelectorAll('.student-tab');
-            tabs.forEach(t => t.classList.remove('active'));
-            let activeTab = document.getElementById('tab-' + studentCode);
-            if(activeTab) activeTab.classList.add('active');
-            
-            // فتح الاستماع الحي لرسائل الطالب المحدد
-            database.ref('chats/' + studentCode).on('value', (snapshot) => {
-                let msgBox = document.getElementById('admin-messages-box');
-                msgBox.innerHTML = '';
-                if(snapshot.exists()) {
-                    snapshot.forEach((child) => {
-                        let msg = child.val();
-                        let msgClass = msg.sender === 'student' ? 'adm-msg-in' : 'adm-msg-out';
-                        let senderName = msg.sender === 'student' ? 'الطالب' : 'أنا';
-                        
-                        msgBox.innerHTML += `<div class="${msgClass}"><b>${senderName}:</b> ${msg.text}</div>`;
-                    });
-                    msgBox.scrollTop = msgBox.scrollHeight; // النزول لآخر رسالة تلقائياً
-                } else {
-                    msgBox.innerHTML = `<div style="color:#555; text-align:center; padding:50px;">المحادثة فارغة تماماً.</div>`;
-                }
-            });
-        }
-
-        // إرسال رد الأدمن
-        function sendAdminReply() {
-            let input = document.getElementById('admin-reply-input');
-            let text = input.value.trim();
-            if (!text || !selectedStudentCode) return;
-
-            database.ref('chats/' + selectedStudentCode).push({
-                sender: 'admin',
-                text: text,
-                time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })
-            }).then(() => {
-                // عمل Scroll تلقائي بعد الإرسال لضمان تتابع الرؤية
-                let msgBox = document.getElementById('admin-messages-box');
-                msgBox.scrollTop = msgBox.scrollHeight;
-            });
-            input.value = '';
-        }
-
-        // تنفيذ عملية الشحن الفوري مع مراجعة الحساب الحالية
-        function executeCharging() {
-            let code = document.getElementById('target-code').value.trim();
-            let amount = parseFloat(document.getElementById('charge-amount-input').value.trim());
-            if(!code || isNaN(amount)) {
-                alert('الرجاء كتابة كود الطالب والمبلغ بشكل صحيح.');
-                return;
-            }
-            
-            database.ref('users/' + code).once('value', (s) => {
-                if(s.exists()) {
-                    let currentB = parseFloat(s.val().balance) || 0;
-                    let newB = currentB + amount;
-                    database.ref('users/' + code).update({ balance: newB }).then(() => {
-                        alert(`🚀 تم بنجاح شحن مبلغ ${amount} ج.م لحساب الطالب بنجاح! الرصيد الجديد: ${newB} ج.م`);
-                        document.getElementById('charge-amount-input').value = '';
-                    });
-                } else {
-                    alert('❌ خطأ: كود هذا الطالب غير مسجل في السيرفر أو غير صحيح، يرجى التثبت منه.');
-                }
-            });
-        }
-
-        function handleReplyKeyPress(e) { if(e.key === 'Enter') sendAdminReply(); }
+        // 3. مراقبة كروت الشحن غير المستعملة
+        database.ref('scratch_cards').on('value', (snapshot) => {
+            if(snapshot.exists()) {
+                document.getElementById('active-cards').innerText = snapshot.numChildren();
+            } else { document.getElementById('active-cards').innerText = "0"; }
+        });
     </script>
 </body>
 </html>
