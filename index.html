@@ -330,5 +330,19 @@
             document.getElementById('theme-text').innerText = 'الوضع الليلي';
         }
     </script>
+    <script>
+    // كود حماية وفحص الحظر الفوري لايف
+    (function checkUserStatus() {
+        let userCode = localStorage.getItem('currentUserCode') || '7L-STUDENT';
+        
+        // مراقبة حالة الحظر مباشرة من الفايربيز
+        database.ref('users/' + userCode + '/isBlocked').on('value', (snapshot) => {
+            if(snapshot.exists() && snapshot.val() === true) {
+                // تحويل فوري لصفحة الحظر وإغلاق الوصول للرئيسية
+                window.location.href = "blocked.html";
+            }
+        });
+    })();
+</script>
 </body>
 </html>
