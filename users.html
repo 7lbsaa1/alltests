@@ -3,25 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بيانات الطلاب المسجلين | 7lbsaa</title>
+    <title>بيانات الطلاب وإدارة الحظر | 7lbsaa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; transition: all 0.2s ease; }
         body { background: #000330; color: #fff; padding: 25px; }
-        .container { max-width: 1000px; margin: 0 auto; }
-        h2 { color: #00a4ff; margin-bottom: 20px; font-size: 22px; }
-        .table-responsive { background: #000675; border-radius: 16px; border: 1px solid rgba(0, 164, 255, 0.2); overflow: hidden; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        h2 { color: #00a4ff; margin-bottom: 20px; font-size: 22px; display: flex; align-items: center; gap: 10px; }
+        .table-responsive { background: #000675; border-radius: 16px; border: 1px solid rgba(0, 164, 255, 0.2); overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         table { width: 100%; border-collapse: collapse; text-align: center; }
-        th { background: rgba(0, 164, 255, 0.1); color: #00a4ff; padding: 15px; font-weight: bold; border-bottom: 2px solid rgba(0, 164, 255, 0.2); }
-        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        th { background: rgba(0, 164, 255, 0.1); color: #00a4ff; padding: 15px; font-weight: bold; border-bottom: 2px solid rgba(0, 164, 255, 0.2); font-size: 14px; }
+        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; vertical-align: middle; }
         .student-avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 1px solid #00a4ff; vertical-align: middle; margin-left: 8px; }
-        .badge { background: rgba(0, 164, 255, 0.2); color: #00a4ff; padding: 4px 10px; border-radius: 8px; font-weight: bold; font-family: monospace; }
-        .video-badge { background: rgba(255, 51, 102, 0.15); color: #ff3366; font-size: 11px; padding: 2px 6px; border-radius: 5px; margin: 2px; display: inline-block; }
+        .badge { background: rgba(0, 164, 255, 0.2); color: #00a4ff; padding: 6px 12px; border-radius: 8px; font-weight: bold; font-family: monospace; }
+        .video-badge { background: rgba(255, 51, 102, 0.15); color: #ff3366; font-size: 11px; padding: 3px 8px; border-radius: 5px; margin: 2px; display: inline-block; font-weight: 600; }
+        
+        /* استايلات أزرار التحكم */
+        .btn-action { padding: 8px 14px; border: none; font-weight: bold; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; }
+        .btn-block { background: #ff3366; color: #fff; box-shadow: 0 4px 10px rgba(255, 51, 102, 0.2); }
+        .btn-block:hover { background: #ff0044; transform: translateY(-2px); }
+        .btn-unblock { background: #22c55e; color: #000; box-shadow: 0 4px 10px rgba(34, 197, 94, 0.2); }
+        .btn-unblock:hover { background: #16a34a; transform: translateY(-2px); }
+        
+        .back-dash { display: inline-flex; align-items: center; gap: 8px; color: #00a4ff; text-decoration: none; margin-bottom: 20px; font-weight: bold; font-size: 14px; }
+        .back-dash:hover { color: #fff; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2><i class="fas fa-user-graduate"></i> إدارة وبيانات الطلاب المسجلين بالمنصة</h2>
+        <a href="admin.html" class="back-dash"><i class="fas fa-arrow-right"></i> العودة للوحة التحكم الرئيسية</a>
+        
+        <h2><i class="fas fa-user-graduate"></i> إدارة وبيانات الطلاب والتحكم في الحظر الفوري</h2>
+        
         <div class="table-responsive">
             <table>
                 <thead>
@@ -29,11 +42,11 @@
                         <th>الطالب</th>
                         <th>كود الحساب</th>
                         <th>الرصيد الحالي</th>
-                        <th>الفيديوهات المشتراة</th>
-                    </tr>
+                        <th>الفيديوهات المشتраة</th>
+                        <th>إجراءات الحساب (الحظر)</th> </tr>
                 </thead>
                 <tbody id="users-table-body">
-                    <tr><td colspan="4" style="color:#666;">جاري تحميل داتا الطلاب...</td></tr>
+                    <tr><td colspan="5" style="color:#a5a1ca; padding: 30px;">جاري سحب بيانات الطلاب من السيرفر لايف...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -46,28 +59,70 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        // مراقبة الطلاب وتحديث الجدول لايف
         database.ref('users').on('value', (snapshot) => {
             let tbody = document.getElementById('users-table-body');
             tbody.innerHTML = '';
+            
             if(snapshot.exists()) {
                 snapshot.forEach((child) => {
                     let user = child.val();
+                    let code = child.key;
+                    
+                    // تجميع الفيديوهات
                     let vList = '';
                     if(user.purchased_videos) {
                         Object.keys(user.purchased_videos).forEach(v => { vList += `<span class="video-badge">${v}</span>`; });
-                    } else { vList = '<span style="color:#555;">لا يوجد</span>'; }
+                    } else { 
+                        vList = '<span style="color:#5c636a;">لا يوجد</span>'; 
+                    }
                     
-                    let userPic = user.profile_pic || 'person.png'; // لو مفيش صورة يحط الديفولت
+                    let userPic = user.profile_pic || 'person.png';
+                    let isBlocked = user.isBlocked === true;
 
+                    // إنشاء الزرار بناءً على حالة الحظر
+                    let actionButton = '';
+                    if(isBlocked) {
+                        actionButton = `<button class="btn-action btn-unblock" onclick="toggleBlock('${code}', false)">
+                                            <i class="fas fa-user-check"></i> إلغاء الحظر
+                                        </button>`;
+                    } else {
+                        actionButton = `<button class="btn-action btn-block" onclick="toggleBlock('${code}', true)">
+                                            <i class="fas fa-user-slash"></i> حظر الحساب
+                                        </button>`;
+                    }
+
+                    // ضخ السطر في الجدول
                     tbody.innerHTML += `<tr>
-                        <td style="text-align:right; padding-right:30px;"><img src="${userPic}" class="student-avatar"><b>${user.username}</b></td>
-                        <td style="font-family:monospace; color:#00a4ff; font-weight:bold;">${child.key}</td>
+                        <td style="text-align:right; padding-right:25px;">
+                            <img src="${userPic}" class="student-avatar">
+                            <b>${user.username || 'بدون اسم'}</b>
+                        </td>
+                        <td style="font-family:monospace; color:#00a4ff; font-weight:bold;">${code}</td>
                         <td><span class="badge">${(parseFloat(user.balance) || 0).toFixed(2)} ج.م</span></td>
                         <td>${vList}</td>
+                        <td>${actionButton}</td>
                     </tr>`;
                 });
+            } else {
+                tbody.innerHTML = `<tr><td colspan="5" style="color:#5c636a; padding:30px;">لم يتم العثور على أي طلاب مسجلين بالسيرفر!</td></tr>`;
             }
         });
+
+        // دالة تنفيذ الحظر وفكه لايف
+        function toggleBlock(studentCode, status) {
+            let confirmMsg = status 
+                ? `هل أنت متأكد من حظر حساب الطالب (${studentCode})؟ سيتم طرده فوراً وتحويله لصفحة المحظورين.` 
+                : `هل تريد فك الحظر وإعادة الصلاحيات للطالب (${studentCode})؟`;
+                
+            if(confirm(confirmMsg)) {
+                database.ref('users/' + studentCode).update({ isBlocked: status }).then(() => {
+                    alert("تم تحديث السيرفر بنجاح!");
+                }).catch((error) => {
+                    alert("عذراً، حدث خطأ أثناء التحديث: " + error.message);
+                });
+            }
+        }
     </script>
 </body>
 </html>
