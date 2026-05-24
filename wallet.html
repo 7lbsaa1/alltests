@@ -1,82 +1,54 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شحن الرصيد | 7lbsaa</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s ease; }
-        body { background: #f4f6f9; color: #1c2434; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        
-        .wallet-card { background: #ffffff; padding: 40px 30px; border-radius: 24px; width: 100%; max-width: 500px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; }
-        
-        h2 { font-size: 26px; font-weight: 700; margin-bottom: 10px; color: #1e293b; }
-        .subtitle { color: #64748b; font-size: 15px; margin-bottom: 30px; font-weight: 500; }
-        
-        .input-wrapper { position: relative; width: 100%; margin-bottom: 20px; }
-        .input-wrapper i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #22c55e; font-size: 18px; }
-        
-        /* حقل إدخال مخصص للمبالغ المالية والفلوس */
-        input { width: 100%; padding: 15px 50px 15px 15px; border-radius: 12px; border: 1.5px solid #22c55e; background: #fff; color: #1e293b; font-size: 18px; font-weight: 700; text-align: center; }
-        input::placeholder { color: #94a3b8; font-weight: normal; font-size: 15px; }
-        input:focus { outline: none; border-color: #16a34a; box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15); }
-        
-        .whatsapp-btn { width: 100%; padding: 15px; background: #22c55e; border: none; border-radius: 12px; color: #fff; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2); margin-bottom: 25px; }
-        .whatsapp-btn:hover { background: #16a34a; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(34, 197, 94, 0.3); }
-        .whatsapp-btn i { font-size: 22px; }
-        
-        .footer-note-container { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 15px; }
-        .whatsapp-icon-large { font-size: 45px; color: #22c55e; }
-        .footer-note { font-size: 13px; color: #64748b; font-weight: 500; line-height: 1.6; padding: 0 10px; }
-        
-        .back-btn { display: inline-block; margin-top: 20px; color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 600; }
-        .back-btn:hover { color: #1e293b; }
-    </style>
-</head>
-<body>
-
-    <div class="wallet-card">
-        <h2>شحن الرصيد</h2>
-        <p class="subtitle">أدخل المبلغ المراد شحنه في الخانة أدناه</p>
-        
-        <div class="input-wrapper">
-            <i class="fas fa-money-bill-wave"></i>
-            <input type="number" id="charge-amount" placeholder="اكتب المبلغ بالجنيه (مثال: 100)" min="1">
-        </div>
-        
-        <a id="wa-link" href="#" onclick="openWhatsapp(event)" class="whatsapp-btn">
-            <i class="fab fa-whatsapp"></i>
-            <span>عن طريق واتساب</span>
-        </a>
-        
-        <div class="footer-note-container">
-            <i class="fab fa-whatsapp whatsapp-icon-large"></i>
-            <p class="footer-note">سيتم فتح محادثة واتساب مع خدمة العملاء لإتمام عملية الشحن الفوري</p>
-        </div>
-        
-        <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> العودة للمنصة الرئيسية</a>
+<div class="scratch-charge-section" style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--card-border); text-align: right;">
+    <h3 style="color: var(--primary); font-size: 15px; margin-bottom: 12px;"><i class="fas fa-ticket-alt"></i> شحن المحفظة بواسطة كارت كود</h3>
+    <div style="display: flex; gap: 10px;">
+        <input type="text" id="scratch-code-input" placeholder="أدخل كود الكارت هنا (مثال: 7L-XXXXXX)" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(--card-border); background: rgba(0,0,0,0.2); color: #fff; text-align: center; font-weight: bold; font-family: monospace;">
+        <button onclick="redeemScratchCode()" style="padding: 0 20px; background: linear-gradient(135deg, var(--primary), #00b4db); border: none; color: #000; font-weight: bold; border-radius: 10px; cursor: pointer;">تفعيل الكود</button>
     </div>
+</div>
 
-    <script>
-        function openWhatsapp(event) {
-            let amount = document.getElementById('charge-amount').value.trim();
-            let userCode = localStorage.getItem('currentUserCode') || 'غير معروف';
+<script>
+    // ضف هذه الدالة داخل الـ <script> الخاص بصفحة wallet.html
+    function redeemScratchCode() {
+        let inputCode = document.getElementById('scratch-code-input').value.trim().toUpperCase();
+        if(!inputCode) return alert('برجاء كتابة الكود أولاً');
 
-            if(!amount || isNaN(amount) || amount <= 0) {
-                alert('برجاء إدخال قيمة المبلغ المراد شحنه بشكل صحيح أولاً!');
-                event.preventDefault();
-                return;
+        let userCode = localStorage.getItem('currentUserCode') || '7L-STUDENT';
+        
+        // التحقق من وجود الكارت وصلاحيته في الفايربيز
+        database.ref('scratch_cards/' + inputCode).once('value', (snapshot) => {
+            if(snapshot.exists()) {
+                let cardData = snapshot.val();
+                if(cardData.status === 'مستعمل') {
+                    alert('عذراً، هذا الكود تم استخدامه من قبل!');
+                } else {
+                    let cardAmount = parseFloat(cardData.amount);
+                    
+                    // جلب رصيد الطالب الحالي لإضافة قيمة الكارت عليه
+                    database.ref('users/' + userCode).once('value', (userSnap) => {
+                        if(userSnap.exists()) {
+                            let currentBalance = parseFloat(userSnap.val().balance) || 0;
+                            let newBalance = currentBalance + cardAmount;
+                            
+                            // تحديث الرصيد وتعطيل الكارت وتسجيل العملية
+                            database.ref('users/' + userCode).update({ balance: newBalance });
+                            database.ref('scratch_cards/' + inputCode).update({ status: 'مستعمل', usedBy: userCode });
+                            
+                            database.ref('history').push({
+                                studentCode: userCode,
+                                studentName: userSnap.val().username,
+                                amount: cardAmount,
+                                type: 'شحن كارت كود',
+                                date: new Date().toLocaleString('ar-EG')
+                            });
+
+                            alert(`مبروك! تم شحن محفظتك بنجاح بقيمة ${cardAmount} ج.م`);
+                            document.getElementById('scratch-code-input').value = '';
+                        }
+                    });
+                }
+            } else {
+                alert('الكود الذي أدخلته غير صحيح أو غير موجود بسيرفراتنا!');
             }
-
-            // تجهيز نص الرسالة بالمبلغ المطلوب وكود الطالب
-            let message = encodeURIComponent(`مرحباً منصة 7lbsaa، أريد شحن رصيد لحسابي.\nكود حسابي: ${userCode}\nالمبلغ المراد شحنه: ${amount} ج.م`);
-            
-            // رقم الواتساب المخصص لاستقبال طلبات الشحن
-            let adminWhatsappNumber = "201274550579"; 
-            
-            document.getElementById('wa-link').href = `https://wa.me/${adminWhatsappNumber}?text=${message}`;
-        }
-    </script>
-</body>
-</html>
+        });
+    }
+</script>
