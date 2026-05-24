@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول | منصة 7lbsaa</title>
+    <title>تسجيل الدخول |lbsaa7 </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* إعدادات الخلفية والتصميم الزجاجي */
+        /* إعدادات الخلفية والتصميم الزجاجي الفخم */
         body {
             margin: 0;
             padding: 0;
@@ -26,13 +26,14 @@
             border-radius: 24px;
             padding: 40px 30px;
             width: 100%;
-            max-width: 480px;
+            max-width: 480px; /* الحفاظ على عرض الكارت */
             backdrop-filter: blur(20px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
             text-align: center;
+            box-sizing: border-box; /* لضمان حساب الـ padding بشكل صحيح */
         }
 
-        /* اللوجو والعناوين */
+        /* اللوجو والعناوين - نقل الـ 7 لورا */
         .logo-area {
             font-size: 42px;
             font-weight: 800;
@@ -42,6 +43,7 @@
             align-items: center;
             justify-content: center;
             gap: 5px;
+            direction: ltr; /* لضمان ترتيب الأحرفlbsaa7 */
         }
 
         .logo-area span {
@@ -61,10 +63,11 @@
             margin-bottom: 30px;
         }
 
-        /* خانات الإدخال */
+        /* خانات الإدخال - توسيع الـ Input */
         .input-wrapper {
             text-align: right;
             margin-bottom: 25px;
+            width: 100%; /* ضمان تمدد الـ wrapper */
         }
 
         .input-wrapper label {
@@ -77,7 +80,7 @@
 
         .input-box {
             position: relative;
-            width: 100%;
+            width: 100%; /* الـ box يملأ الـ wrapper */
         }
 
         .input-box i {
@@ -87,10 +90,12 @@
             transform: translateY(-50%);
             color: #a5a1ca;
             font-size: 16px;
+            z-index: 1; /* التأكد من أن الأيقونة فوق الخلفية */
         }
 
         .input-box input {
-            width: 100%;
+            width: 100%; /* الـ input يملأ الـ box */
+            box-sizing: border-box; /* حساب الـ padding والـ border ضمن العرض */
             padding: 14px 45px 14px 15px;
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -119,6 +124,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            box-sizing: border-box; /* حساب الـ padding والـ border ضمن العرض */
         }
 
         .login-btn:hover {
@@ -127,48 +133,13 @@
             box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
         }
 
-        /* الفواصل والروابط السفلى */
-        .divider {
-            margin: 25px 0;
-            display: flex;
-            align-items: center;
-            color: #a5a1ca;
-            font-size: 13px;
-        }
-
-        .divider::before, .divider::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .divider:not(:empty)::before { margin-left: .5em; }
-        .divider:not(:empty)::after { margin-right: .5em; }
-
-        .signup-link {
-            color: #a5a1ca;
-            font-size: 14px;
-            text-decoration: none;
-        }
-
-        .signup-link a {
-            color: #2563eb;
-            text-decoration: none;
-            font-weight: bold;
-            margin-right: 5px;
-        }
-
-        .signup-link a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
 
     <div class="login-card">
-        <div class="logo-area"><span>7</span>lbsaa</div>
-        <p class="welcome-txt">مرحباً بك في 7lbsaa</p>
+        <div class="logo-area">lbsaa<span>7</span></div>
+        <p class="welcome-txt">مرحباً بك في lbsaa7</p>
         <p class="sub-txt">سجّل الدخول من خلال اسمك الثنائي للمتابعة</p>
 
         <div class="input-wrapper">
@@ -181,11 +152,6 @@
 
         <button class="login-btn" onclick="executeLogin()">تسجيل الدخول</button>
 
-        <div class="divider">أو</div>
-
-        <div class="signup-link">
-            ليس لديك حساب؟ <a href="register.html">إنشاء حساب</a>
-        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -219,7 +185,7 @@
                         window.location.href = "index.html";
                     }
                 } else {
-                    alert('هذا الحساب غير مسجل حالياً بالسيرفر، برجاء الضغط على إنشاء حساب أولاً.');
+                    alert('هذا الحساب غير مسجل حالياً بالسيرفر، برجاء التواصل مع الإدارة.');
                 }
             }).catch((error) => {
                 alert("عذراً، حدث خطأ أثناء الاتصال بالسيرفر: " + error.message);
