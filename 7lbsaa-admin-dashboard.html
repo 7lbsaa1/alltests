@@ -6,138 +6,67 @@
     <title>لوحة التحكم المركزية | منصة 7lbsaa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s ease; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; transition: all 0.3s ease; }
         body { background: #000330; color: #fff; min-height: 100vh; padding: 30px 20px; }
-        
         .container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 35px; }
-        
-        /* الهيدر العلوي */
         .admin-header { text-align: center; border-bottom: 2px solid rgba(0, 164, 255, 0.15); padding-bottom: 25px; }
         .admin-header h1 { font-size: 26px; color: #00a4ff; display: flex; align-items: center; justify-content: center; gap: 12px; font-weight: 800; }
         .admin-header p { color: #a5a1ca; font-size: 14px; margin-top: 5px; }
-
-        /* كروت الإحصائيات السريعة لايف */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
         .stat-card { background: #000675; border: 1px solid rgba(0, 164, 255, 0.2); border-radius: 18px; padding: 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
-        .stat-card:hover { border-color: #00a4ff; transform: translateY(-3px); box-shadow: 0 12px 25px rgba(0,164,255,0.15); }
+        .stat-card:hover { border-color: #00a4ff; transform: translateY(-3px); }
         .stat-info h3 { font-size: 13px; color: #a5a1ca; font-weight: 600; margin-bottom: 5px; }
         .stat-info .stat-number { font-size: 22px; font-weight: bold; color: #fff; font-family: monospace; }
         .stat-icon { width: 50px; height: 50px; background: rgba(0, 164, 255, 0.1); border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 22px; color: #00a4ff; }
-
-        /* عنوان شبكة الأقسام */
         .section-title { font-size: 18px; color: #00a4ff; border-right: 4px solid #00a4ff; padding-right: 10px; margin-bottom: -15px; font-weight: 700; }
-
-        /* شبكة أزرار التحكم والتنقل */
-        .admin-menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; }
-        .menu-card { background: #000675; border: 1px solid rgba(0, 164, 255, 0.15); padding: 30px 20px; border-radius: 20px; text-align: center; text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); cursor: pointer; position: relative; overflow: hidden; }
-        .menu-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: transparent; }
-        
-        /* تأثيرات الـ Hover المخصصة للأقسام */
+        .admin-menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .menu-card { background: #000675; border: 1px solid rgba(0, 164, 255, 0.15); padding: 25px 20px; border-radius: 20px; text-align: center; text-decoration: none; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); cursor: pointer; }
         .menu-card:hover { transform: translateY(-6px); border-color: #00a4ff; box-shadow: 0 15px 30px rgba(0, 164, 255, 0.2); }
-        .menu-card:hover ::before { background: #00a4ff; }
-        .menu-card i { font-size: 36px; color: #00a4ff; filter: drop-shadow(0 0 8px rgba(0,164,255,0.2)); }
-        .menu-card span { font-weight: 700; font-size: 16px; letter-spacing: 0.3px; }
+        .menu-card i { font-size: 32px; color: #00a4ff; filter: drop-shadow(0 0 8px rgba(0,164,255,0.2)); }
+        .menu-card span { font-weight: 700; font-size: 16px; }
         .menu-card p { font-size: 12px; color: #a5a1ca; line-height: 1.4; }
-
-        /* زرار العودة للمنصة */
-        .back-btn { align-self: center; margin-top: 15px; padding: 12px 30px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.1); color: #a5a1ca; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+        .back-btn { align-self: center; margin-top: 15px; padding: 12px 30px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.1); color: #a5a1ca; text-decoration: none; border-radius: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
         .back-btn:hover { background: #fff; color: #000; }
     </style>
 </head>
 <body>
-
     <div class="container">
-        
         <header class="admin-header">
             <h1><i class="fas fa-sliders-h"></i> لوحة التحكم المركزية للمنصة</h1>
-            <p>مرحباً بك يا عمر في غرفة القيادة لـ إدارة السيرفر والطلاب لايف</p>
+            <p>غرفة القيادة لإدارة السيرفر والطلاب لايف</p>
         </header>
 
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>إجمالي الطلاب</h3>
-                    <div class="stat-number" id="total-students">0</div>
-                </div>
-                <div class="stat-icon"><i class="fas fa-users"></i></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>الغرف النشطة بالشات</h3>
-                    <div class="stat-number" id="active-chats">0</div>
-                </div>
-                <div class="stat-icon"><i class="fas fa-comments text-secondary"></i></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-info">
-                    <h3>الكروت الجاهزة</h3>
-                    <div class="stat-number" id="active-cards">0</div>
-                </div>
-                <div class="stat-icon"><i class="fas fa-ticket-alt"></i></div>
-            </div>
+            <div class="stat-card"><div class="stat-info"><h3>إجمالي الطلاب</h3><div class="stat-number" id="total-students">0</div></div><div class="stat-icon"><i class="fas fa-users"></i></div></div>
+            <div class="stat-card"><div class="stat-info"><h3>الغرف النشطة</h3><div class="stat-number" id="active-chats">0</div></div><div class="stat-icon"><i class="fas fa-comments"></i></div></div>
+            <div class="stat-card"><div class="stat-info"><h3>المحظورين</h3><div class="stat-number" id="blocked-count">0</div></div><div class="stat-icon" style="color:#ff3366;"><i class="fas fa-user-slash"></i></div></div>
         </div>
 
         <h2 class="section-title">أقسام إدارة المنصة</h2>
-
         <main class="admin-menu-grid">
-            
-            <a href="charging.html" class="menu-card">
-                <i class="fas fa-bolt"></i>
-                <span>إدارة الشحن والكروت</span>
-                <p>شحن رصيد فوري للطلاب وتوليد كروت شحن مسبقة الدفع فئة 120 ج.م وغيرها.</p>
-            </a>
-
-            <a href="users.html" class="menu-card">
-                <i class="fas fa-user-graduate"></i>
-                <span>بيانات الطلاب والملفات</span>
-                <p>مراقبة حسابات الطلاب لايف، معرفة الأكواد، الأرصدة، والفيديوهات المفعلة لكل طالب.</p>
-            </a>
-
-            <a href="chats.html" class="menu-card">
-                <i class="fas fa-comment-dots"></i>
-                <span>غرف الدعم والشات المباشر</span>
-                <p>الرد الفوري على رسائل ومشاكل الطلاب تظهر لايف بصورة واسم الطالب.</p>
-            </a>
-
-            <a href="history.html" class="menu-card">
-                <i class="fas fa-history"></i>
-                <span>سجل الحسابات والأرشيف</span>
-                <p>مراجعة تقارير وتاريخ عمليات الشحن والتفعيل السابقة للحفاظ على الحسابات.</p>
-            </a>
-
+            <a href="charging.html" class="menu-card"><i class="fas fa-bolt"></i><span>إدارة الشحن والكروت</span><p>شحن رصيد فوري وتوليد كروت شحن مسبقة الدفع.</p></a>
+            <a href="users.html" class="menu-card"><i class="fas fa-user-graduate"></i><span>بيانات وإدارة الحظر</span><p>مراقبة الطلاب، شحن الحسابات، وحظر/إلغاء حظر الطلاب.</p></a>
+            <a href="chats.html" class="menu-card"><i class="fas fa-comment-dots"></i><span>غرف الدعم والشات المباشر</span><p>الرد الفوري على رسائل الطلاب مع تنبيهات صوتية لايف.</p></a>
+            <a href="history.html" class="menu-card"><i class="fas fa-history"></i><span>سجل الحسابات والأرشيف</span><p>مراجعة تقارير وتاريخ عمليات الشحن والتفعيل السابقة.</p></a>
         </main>
-
-        <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> العودة لواجهة الطلاب الرئيسية</a>
-
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> العودة لواجهة الطلاب</a>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script>
         const firebaseConfig = { databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        firebase.initializeApp(firebaseConfig); const database = firebase.database();
 
-        // 1. مراقبة وجلب إجمالي عدد الطلاب
         database.ref('users').on('value', (snapshot) => {
             if(snapshot.exists()) {
                 document.getElementById('total-students').innerText = snapshot.numChildren();
-            } else { document.getElementById('total-students').innerText = "0"; }
+                let blocked = 0;
+                snapshot.forEach(c => { if(c.val().isBlocked === true) blocked++; });
+                document.getElementById('blocked-count').innerText = blocked;
+            }
         });
-
-        // 2. مراقبة غرف الشات المفتوحة
-        database.ref('chats').on('value', (snapshot) => {
-            if(snapshot.exists()) {
-                document.getElementById('active-chats').innerText = snapshot.numChildren();
-            } else { document.getElementById('active-chats').innerText = "0"; }
-        });
-
-        // 3. مراقبة كروت الشحن غير المستعملة
-        database.ref('scratch_cards').on('value', (snapshot) => {
-            if(snapshot.exists()) {
-                document.getElementById('active-cards').innerText = snapshot.numChildren();
-            } else { document.getElementById('active-cards').innerText = "0"; }
-        });
+        database.ref('chats').on('value', (s) => { document.getElementById('active-chats').innerText = s.exists() ? s.numChildren() : "0"; });
     </script>
 </body>
 </html>
