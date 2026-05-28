@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أنشودة ختمنا الطريق | 7lbsaa</title>
-    <link rel="icon" type="image/jpeg" href="logox.jpg">
+    <title>لباب الأول: الدعامة والحركة - Vector Biology</title>
+    <link rel="icon" type="image/jpeg" href="https://yt3.ggpht.com/97m8znd6AbHXxbpdPQpvv5Uo9u4Uw9Qsw_dW9GGvx95_JdSYybDCW2O4_ubxG-usaBSdvPzMXg=s160-c-k-c0x00ffffff-no-rj">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --bg-gradient: linear-gradient(135deg, #0f0c1b, #201a30, #0f0c1b); --panel-bg: rgba(255, 255, 255, 0.06); --panel-border: rgba(255, 255, 255, 0.1); --text-main: #ffffff; --accent-color: #00f2fe; --accent-glow: rgba(0, 242, 254, 0.4); --control-btn-bg: rgba(255, 255, 255, 0.1); }
@@ -37,7 +37,7 @@
 </head>
 <body>
     <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> العودة للمكتبة</a>
-    <div class="video-title">أنشودة ختمنا الطريق (إهداء لطلاب ثانوية عامة ٢٠٢٥)</div>
+    <div class="video-title">أالباب الأول: مراجعة الدعامة والحركة بالكامل</div>
     <div class="player-container" id="main-player-container">
         <div class="custom-poster-cover" id="custom-poster"><img src="play.png" alt="Play" class="play-image-trigger" id="img-start-trigger" /></div>
         <div class="video-overlay" id="vid-mask"></div>
@@ -55,23 +55,9 @@
         </div>                
     </div>
 <script>
-        // 1. جلب بيانات المستخدم الحالية
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        let userCode = localStorage.getItem('currentUserCode') || '7L-STUDENT';
-        
-        // 2. تحديد اسم الفيديو الحالي بناءً على اسم الملف تلقائياً
-        const videoId = window.location.pathname.split('/').pop().replace('-player.html', '');
-        const isAllowedLocally = sessionStorage.getItem('allow_' + videoId);
-
-        // 3. فحص الحماية الشامل (المحلي والـ LocalStorage)
-        // لو الطالب مش معاه التوكن المؤقت، ومش متسجل في المتصفح إنه شاري الفيديو.. اطرده فوراً
-        if (!isAllowedLocally && (!currentUser || !currentUser.purchasedVideos || !currentUser.purchasedVideos.includes(videoId))) { 
-            alert('❌ عذراً! لم تقم بشراء هذا المقطع بعد أو غير مسموح لك بالفتح المباشر!'); 
-            window.location.href = 'index.html'; 
-        }
 
         // معرف فيديو اليوتيوب الخاص بك
-        const currentVideoId = 'hHPCis9GV0o';
+        const currentVideoId = '92y8T3aFKSU';
     </script>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
