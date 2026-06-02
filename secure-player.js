@@ -1,22 +1,9 @@
-let player;
 let isMuted = false;
 let controlsTimeout;
 let lastTap = 0; 
 
-// تهيئة مشغل YouTube بناءً على الـ ID الممرر من صفحة الـ HTML المفتوحة حالياً
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('youtube-player', {
-        videoId: currentVideoId,
-        playerVars: {
-            'autoplay': 0, 'controls': 0, 'rel': 0, 'showinfo': 0,
-            'modestbranding': 1, 'iv_load_policy': 3, 'disablekb': 1, 'fs': 0, 'playsinline': 1
-        },
-        events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
-        }
-    });
-}
+// 1. جلب عنصر الفيديو الـ HTML5 المباشر (بديل يوتيوب)
+const html5Player = document.getElementById('my-html5-player'); 
 
 const mainContainer = document.getElementById('main-player-container');
 const customPoster = document.getElementById('custom-poster');
@@ -32,7 +19,20 @@ const volumeTimeline = document.getElementById('volume-timeline');
 const volumeCurrent = document.getElementById('volume-current');
 const controlsLeft = document.querySelector('.controls-left');
 
-// إنشاء أزرار السرعة والجودة ديناميكياً
+// 2. تحديث دالة تشغيل الفيديو عند استقبال الرابط من الفايربيز ديناميكياً
+// يمكنك مناداة هذه الدالة وتمرير رابط الفايربيز المباشر لها
+function loadFirebaseVideo(firebaseVideoUrl) {
+    const videoSource = document.getElementById('video-source');
+    videoSource.src = firebaseVideoUrl;
+    html5Player.load(); // إعادة تحميل المشغل بالرابط الجديد
+}
+
+// تشغيل العداد لتحديث الشريط بمجرد جاهزية الفيديو
+html5Player.addEventListener('loadedmetadata', () => {
+    setInterval(updateProgress, 200);
+});
+
+// إنشاء أزرار السرعة ديناميكياً (قائمتك الاحترافية كما هي)
 const speedBtn = document.createElement('button');
 speedBtn.className = 'control-btn';
 speedBtn.innerHTML = '<i class="fas fa-gauge-high"></i>';
@@ -42,42 +42,29 @@ speedMenu.className = 'dropdown-menu-panel';
 [0.5, 1, 1.5, 2].forEach(speed => {
     const opt = document.createElement('button');
     opt.innerText = speed === 1 ? 'عادي' : speed + 'x';
-    opt.onclick = (e) => { e.stopPropagation(); player.setPlaybackRate(speed); speedMenu.style.display = 'none'; };
+    opt.onclick = (e) => { 
+        e.stopPropagation(); 
+        html5Player.playbackRate = speed; // تغيير السرعة مباشرة في الـ HTML5
+        speedMenu.style.display = 'none'; 
+    };
     speedMenu.appendChild(opt);
 });
 speedBtn.appendChild(speedMenu);
-speedBtn.onclick = (e) => { e.stopPropagation(); qualityMenu.style.display = 'none'; speedMenu.style.display = speedMenu.style.display === 'flex' ? 'none' : 'flex'; };
+speedBtn.onclick = (e) => { 
+    e.stopPropagation(); 
+    speedMenu.style.display = speedMenu.style.display === 'flex' ? 'none' : 'flex'; 
+};
 controlsLeft.insertBefore(speedBtn, fullscreenBtn);
 
-const qualityBtn = document.createElement('button');
-qualityBtn.className = 'control-btn';
-qualityBtn.innerHTML = '<i class="fas fa-sliders"></i>';
-qualityBtn.style.position = 'relative';
-const qualityMenu = document.createElement('div');
-qualityMenu.className = 'dropdown-menu-panel';
-qualityBtn.appendChild(qualityMenu);
-qualityBtn.onclick = (e) => { e.stopPropagation(); speedMenu.style.display = 'none'; if(qualityMenu.style.display === 'flex') { qualityMenu.style.display = 'none'; } else { buildQualityMenu(); qualityMenu.style.display = 'flex'; } };
-controlsLeft.insertBefore(qualityBtn, fullscreenBtn);
+// ملحوظة: في الـ HTML5 الفيديو الأصلي بيعرض الجودة المرفوعة تلقائياً (مثل 720p أو 1080p)، 
+// تم الاستغناء عن زر الجودة الخاص بـ يوتيوب لأن الفايربيز يشغل الملف المباشر الأصلي بأعلى جودة.
 
-function buildQualityMenu() {
-    qualityMenu.innerHTML = '';
-    const levels = player.getAvailableQualityLevels();
-    if(levels && levels.length > 0) {
-        levels.forEach(level => {
-            const opt = document.createElement('button');
-            opt.innerText = level === 'default' ? 'تلقائي' : level;
-            opt.onclick = (e) => { e.stopPropagation(); player.setPlaybackQuality(level); qualityMenu.style.display = 'none'; };
-            qualityMenu.appendChild(opt);
-        });
-    } else { qualityMenu.innerHTML = '<button style="color:#aaa;">تلقائي</button>'; }
-}
+document.addEventListener('click', () => { speedMenu.style.display = 'none'; });
 
-document.addEventListener('click', () => { speedMenu.style.display = 'none'; qualityMenu.style.display = 'none'; });
-function onPlayerReady() { setInterval(updateProgress, 200); }
-
+// تشغيل الفيديو عند الضغط على البوستر الإعلاني
 document.getElementById('img-start-trigger').addEventListener('click', () => {
     customPoster.classList.add('video-started');
-    player.playVideo();
+    html5Player.play();
     playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
 });
 
@@ -85,56 +72,84 @@ playPauseBtn.addEventListener('click', togglePlay);
 vidMask.addEventListener('click', togglePlay);
 
 function togglePlay() {
-    const state = player.getPlayerState();
-    if (state === YT.PlayerState.PLAYING) { player.pauseVideo(); } else { customPoster.classList.add('video-started'); player.playVideo(); }
-}
-
-function onPlayerStateChange(event) {
-    if (event.data === YT.PlayerState.PLAYING) { playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>'; } 
-    else if (event.data === YT.PlayerState.PAUSED) { playPauseBtn.innerHTML = '<i class="fas fa-play"></i>'; }
-}
-
-function updateProgress() {
-    if (player && player.getDuration) {
-        const duration = player.getDuration();
-        const currentTime = player.getCurrentTime();
-        if (duration > 0) { progressCurrent.style.width = ((currentTime / duration) * 100) + '%'; }
+    if (html5Player.paused) { 
+        customPoster.classList.add('video-started'); 
+        html5Player.play(); 
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    } else { 
+        html5Player.pause(); 
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
     }
 }
 
+// تحديث شريط التقدم بناءً على وقت الفيديو الحالي
+function updateProgress() {
+    if (html5Player.duration > 0) {
+        const duration = html5Player.duration;
+        const currentTime = html5Player.currentTime;
+        progressCurrent.style.width = ((currentTime / duration) * 100) + '%';
+    }
+}
+
+// تقديم وتأخير الفيديو عند الضغط على الـ Timeline
 progressTimeline.addEventListener('click', (e) => {
     const rect = progressTimeline.getBoundingClientRect();
-    const duration = player.getDuration();
-    if (duration > 0) { player.seekTo(duration * ((e.clientX - rect.left) / rect.width), true); }
+    const duration = html5Player.duration;
+    if (duration > 0) { 
+        html5Player.currentTime = duration * ((e.clientX - rect.left) / rect.width); 
+    }
 });
 
+// كتم الصوت وتفعيله
 muteBtn.addEventListener('click', () => {
-    if (isMuted) { player.unMute(); muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>'; volumeCurrent.style.width = '100%'; } 
-    else { player.mute(); muteBtn.innerHTML = '<i class="fas fa-volume-xmark"></i>'; volumeCurrent.style.width = '0%'; }
+    if (isMuted) { 
+        html5Player.muted = false; 
+        muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>'; 
+        volumeCurrent.style.width = '100%'; 
+    } else { 
+        html5Player.muted = true; 
+        muteBtn.innerHTML = '<i class="fas fa-volume-xmark"></i>'; 
+        volumeCurrent.style.width = '0%'; 
+    }
     isMuted = !isMuted;
 });
 
+// التحكم بمستوى الصوت من الشريط
 function setVolumeFromEvent(e) {
     const rect = volumeTimeline.getBoundingClientRect();
     let percentage = (e.clientX - rect.left) / rect.width;
     percentage = Math.max(0, Math.min(1, percentage));
-    player.setVolume(Math.round(percentage * 100));
+    html5Player.volume = percentage; // المتصفح يقبل القيمة من 0 إلى 1
     volumeCurrent.style.width = (percentage * 100) + '%';
 }
 volumeTimeline.addEventListener('click', setVolumeFromEvent);
 
+// الدبل كليك لتفعيل الشاشة الكاملة على الـ Mask
 vidMask.addEventListener('click', (e) => {
     const currentTime = new Date().getTime();
     if ((currentTime - lastTap) < 300 && (currentTime - lastTap) > 0) { toggleFullscreen(); e.preventDefault(); }
     lastTap = currentTime;
 });
 fullscreenBtn.addEventListener('click', toggleFullscreen);
-function toggleFullscreen() { if (!document.fullscreenElement) { mainContainer.requestFullscreen(); } else { document.exitFullscreen(); } }
 
+function toggleFullscreen() { 
+    if (!document.fullscreenElement) { 
+        mainContainer.requestFullscreen(); 
+    } else { 
+        document.exitFullscreen(); 
+    } 
+}
+
+// إخفاء وإظهار لوحة التحكم تلقائياً
 function showControls() {
     mainContainer.classList.remove('hide-controls');
     clearTimeout(controlsTimeout);
-    controlsTimeout = setTimeout(() => { if (player.getPlayerState() === YT.PlayerState.PLAYING) mainContainer.classList.add('hide-controls'); }, 3000); 
+    controlsTimeout = setTimeout(() => { 
+        if (!html5Player.paused) mainContainer.classList.add('hide-controls'); 
+    }, 3000); 
 }
 mainContainer.addEventListener('mousemove', showControls);
 mainContainer.addEventListener('touchstart', showControls);
+
+// منع كليك يمين نهائياً على حاوية الفيديو بالكامل لزيادة الحماية
+mainContainer.addEventListener('contextmenu', e => e.preventDefault());
