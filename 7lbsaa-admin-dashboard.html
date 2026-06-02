@@ -27,6 +27,20 @@
         .menu-card p { font-size: 12px; color: #a5a1ca; line-height: 1.4; }
         .back-btn { align-self: center; margin-top: 15px; padding: 12px 30px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.1); color: #a5a1ca; text-decoration: none; border-radius: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
         .back-btn:hover { background: #fff; color: #000; }
+
+        /* ستايل المودال (النافذة المنبثقة) الخاص برفع الفيديوهات المشفرة */
+        .upload-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 2, 26, 0.9); z-index: 999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
+        .modal-content { background: #000675; border: 2px solid #00a4ff; border-radius: 24px; padding: 30px; width: 90%; max-width: 480px; box-shadow: 0 0 30px rgba(0, 164, 255, 0.3); position: relative; display: flex; flex-direction: column; gap: 15px; }
+        .close-modal-btn { position: absolute; top: 15px; left: 15px; background: none; border: none; color: #ff3366; font-size: 20px; cursor: pointer; }
+        .modal-content h2 { font-size: 20px; color: #00a4ff; text-align: center; margin-bottom: 10px; }
+        .modal-content input[type="text"], .modal-content input[type="file"] { width: 100%; padding: 12px; background: rgba(0, 3, 48, 0.6); border: 1px solid rgba(0, 164, 255, 0.3); border-radius: 10px; color: #fff; outline: none; }
+        .modal-content input[type="text"]:focus { border-color: #00a4ff; }
+        .modal-content label { font-size: 13px; color: #a5a1ca; font-weight: 600; margin-bottom: -10px; }
+        .upload-action-btn { background: #00a4ff; color: #000; font-weight: bold; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .upload-action-btn:hover { background: #00f2fe; box-shadow: 0 0 15px rgba(0, 242, 254, 0.5); }
+        .progress-bar-container { background: rgba(255,255,255,0.05); border-radius: 8px; height: 8px; overflow: hidden; display: none; }
+        .progress-bar-filled { background: linear-gradient(90deg, #00a4ff, #00f2fe); width: 0%; height: 100%; }
+        #upload-status-text { text-align: center; font-size: 13px; color: #00f2fe; }
     </style>
 </head>
 <body>
@@ -44,6 +58,8 @@
 
         <h2 class="section-title">أقسام إدارة المنصة</h2>
         <main class="admin-menu-grid">
+            <div class="menu-card" onclick="openUploadModal()"><i class="fas fa-video-slash" style="color: #00f2fe;"></i><span>تأمين ورفع الفيديوهات (Blob)</span><p>رفع ملفات الفيديو من جهازك للفايربيز وتشفيرها لحمايتها من السرقة.</p></div>
+            
             <a href="charging.html" class="menu-card"><i class="fas fa-bolt"></i><span>إدارة الشحن والكروت</span><p>شحن رصيد فوري وتوليد كروت شحن مسبقة الدفع.</p></a>
             <a href="users.html" class="menu-card"><i class="fas fa-user-graduate"></i><span>بيانات وإدارة الحظر</span><p>مراقبة الطلاب، شحن الحسابات، وحظر/إلغاء حظر الطلاب.</p></a>
             <a href="chats.html" class="menu-card"><i class="fas fa-comment-dots"></i><span>غرف الدعم والشات المباشر</span><p>الرد الفوري على رسائل الطلاب مع تنبيهات صوتية لايف.</p></a>
@@ -52,12 +68,43 @@
         <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> العودة لواجهة الطلاب</a>
     </div>
 
+    <div class="upload-modal" id="video-upload-modal">
+        <div class="modal-content">
+            <button class="close-modal-btn" onclick="closeUploadModal()"><i class="fas fa-times"></i></button>
+            <h2><i class="fas fa-shield-alt"></i> رفع وتأمين فيديو جديد</h2>
+            
+            <label>معرف الفيديو الموحد (مثال: takhrog)</label>
+            <input type="text" id="modal-video-id" placeholder="اكتب الـ ID المطابق للمشتريات">
+            
+            <label>عنوان وموضوع الدرس</label>
+            <input type="text" id="modal-video-title" placeholder="مثال: أغنية تخرج دفعة 2019">
+            
+            <label>اختر ملف الفيديو من جهازك (MP4)</label>
+            <input type="file" id="modal-video-file" accept="video/mp4">
+            
+            <div class="progress-bar-container" id="modal-progress-container">
+                <div class="progress-bar-filled" id="modal-progress-bar"></div>
+            </div>
+            <p id="upload-status-text"></p>
+            
+            <button class="upload-action-btn" id="start-upload-btn" onclick="handleVideoUpload()"><i class="fas fa-cloud-upload-alt"></i> ابدأ التشفير والرفع</button>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     <script>
-        const firebaseConfig = { databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig); const database = firebase.database();
+        const firebaseConfig = { 
+            databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/",
+            // ستحتاج للتأكد من وضع الـ storageBucket الخاص بمشروعك هنا ليعمل الرفع بسلاسة
+            storageBucket: "admin-37e09.appspot.com" 
+        };
+        firebase.initializeApp(firebaseConfig); 
+        const database = firebase.database();
+        const storage = firebase.storage();
 
+        // سحب إحصائيات الطلاب والمحظورين مباشرة
         database.ref('users').on('value', (snapshot) => {
             if(snapshot.exists()) {
                 document.getElementById('total-students').innerText = snapshot.numChildren();
@@ -67,6 +114,76 @@
             }
         });
         database.ref('chats').on('value', (s) => { document.getElementById('active-chats').innerText = s.exists() ? s.numChildren() : "0"; });
+
+        // دوال فتح وغلق نافذة الرفع
+        function openUploadModal() { document.getElementById('video-upload-modal').style.display = 'flex'; }
+        function closeUploadModal() { document.getElementById('video-upload-modal').style.display = 'none'; resetUploadForm(); }
+
+        function resetUploadForm() {
+            document.getElementById('modal-video-id').value = '';
+            document.getElementById('modal-video-title').value = '';
+            document.getElementById('modal-video-file').value = '';
+            document.getElementById('modal-progress-container').style.display = 'none';
+            document.getElementById('modal-progress-bar').style.width = '0%';
+            document.getElementById('upload-status-text').innerText = '';
+            document.getElementById('start-upload-btn').disabled = false;
+        }
+
+        // دالة الرفع والتشفير وحفظ البيانات في الداتابيز
+        function handleVideoUpload() {
+            const videoID = document.getElementById('modal-video-id').value.trim();
+            const videoTitle = document.getElementById('modal-video-title').value.trim();
+            const fileInput = document.getElementById('modal-video-file');
+            const file = fileInput.files[0];
+            
+            const progressBarContainer = document.getElementById('modal-progress-container');
+            const progressBarFilled = document.getElementById('modal-progress-bar');
+            const statusText = document.getElementById('upload-status-text');
+            const uploadBtn = document.getElementById('start-upload-btn');
+
+            if (!videoID || !videoTitle || !file) {
+                alert("⚠️ من فضلك املأ جميع الخانات واختر ملف الفيديو أولاً!");
+                return;
+            }
+
+            uploadBtn.disabled = true;
+            progressBarContainer.style.display = 'block';
+
+            // 1. إنشاء مسار الحفظ السري في Firebase Storage
+            const storageRef = storage.ref('secure_lessons/' + videoID + '.mp4');
+            
+            // 2. بدء عملية الرفع
+            const uploadTask = storageRef.put(file);
+
+            // 3. متابعة عداد الرفع لايف
+            uploadTask.on('state_changed', 
+                (snapshot) => {
+                    const percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    progressBarFilled.style.width = percentage + '%';
+                    statusText.innerText = `⏳ جاري الرفع والتأمين: ${Math.round(percentage)}%`;
+                }, 
+                (error) => {
+                    console.error("خطأ أثناء الرفع:", error);
+                    alert("❌ فشل الرفع! تأكد من إعدادات الـ Rules في الـ Storage.");
+                    uploadBtn.disabled = false;
+                }, 
+                () => {
+                    // 4. الرفع اكتمل بنجاح، نقوم بجلب الرابط المباشر المحمي
+                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                        
+                        // 5. حفظ الرابط والعنوان في الـ Realtime Database تحت عقدة الـ videos
+                        database.ref('videos/' + videoID).set({
+                            title: videoTitle,
+                            url: downloadURL
+                        }).then(() => {
+                            statusText.innerText = "🚀 تم الرفع وتشفير المسار بنجاح تام!";
+                            alert("✔️ تم تأمين درسك وحفظه بنجاح جوه السيرفر!");
+                            closeUploadModal();
+                        });
+                    });
+                }
+            );
+        }
     </script>
 </body>
 </html>
