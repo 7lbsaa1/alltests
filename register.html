@@ -62,38 +62,33 @@
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <script>
-        const firebaseConfig = { databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+<script>
+    const API_BASE_URL = "http://localhost:5000/api"; 
 
-        function executeRegister() {
-            let userInput = document.getElementById('student-reg-input').value.trim();
-            if(!userInput) return alert('برجاء كتابة الاسم المطلوب أولاً!');
+    function executeRegister() {
+        let userInput = document.getElementById('student-reg-input').value.trim();
+        if(!userInput) return alert('برجاء كتابة الاسم المطلوب أولاً!');
 
-            // تنظيف الحروف وضمان دمج البادئة الاحترافية الخاصة بك
-            let studentCode = "7L-" + userInput;
+        fetch(`${API_BASE_URL}/auth/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username: userInput }),
+            credentials: 'include'
+        })
+        .then(async (response) => {
+            const data = await response.json();
 
-            // التأكد أولاً إن الاسم مش متكرر على السيرفر
-            database.ref('users/' + studentCode).once('value', (snapshot) => {
-                if(snapshot.exists()) {
-                    alert('عذراً، هذا الاسم مسجل مسبقاً بطالب آخر، اختر اسماً مختلفاً أو أضف أرقاماً!');
-                } else {
-                    // إنشاء الحساب الجديد بالداتا الأساسية
-                    database.ref('users/' + studentCode).set({
-                        username: userInput,
-                        balance: 0,
-                        isBlocked: false,
-                        profile_pic: 'person.png',
-                        createdAt: new Date().toLocaleString('ar-EG')
-                    }).then(() => {
-                        localStorage.setItem('currentUserCode', studentCode);
-                        alert('تم إنشاء حسابك بنجاح يا بطل! جارٍ توجيهك للمنصة...');
-                        window.location.href = "index.html";
-                    }).catch(err => alert('حدث خطأ: ' + err.message));
-                }
-            });
-        }
-    </script>
+            if (response.ok) {
+                alert('تم إنشاء حسابك بنجاح يا بطل! جارٍ توجيهك للمنصة...');
+                window.location.href = "index.html";
+            } else {
+                alert(data.message || 'حدث خطأ أثناء إنشاء الحساب');
+            }
+        })
+        .catch(err => alert('حدث خطأ أثناء الاتصال بالسيرفر.'));
+    }
+</script>
 </body>
 </html>
