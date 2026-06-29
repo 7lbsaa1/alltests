@@ -62,35 +62,44 @@
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <script>
-        const firebaseConfig = { databaseURL: "https://admin-37e09-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+<script>
+    // رابط الباك إيند الخاص بك (قم بتغييره عند رفع السيرفر أونلاين)
+    const API_BASE_URL = "http://localhost:5000/api"; 
 
-        function executeLogin() {
-            let nameInput = document.getElementById('student-name-input').value.trim();
-            if(!nameInput) return alert('برجاء كتابة اسم الحساب أولاً لدخول المنصة!');
+    function executeLogin() {
+        let nameInput = document.getElementById('student-name-input').value.trim();
+        if(!nameInput) return alert('برجاء كتابة اسم الحساب أولاً لدخول المنصة!');
 
-            let studentCode = "7L-" + nameInput;
-
-            database.ref('users/' + studentCode).once('value', (snapshot) => {
-                if(snapshot.exists()) {
-                    let userData = snapshot.val();
-                    
-                    // التشيك الأمني ضد الحظر
-                    if(userData.isBlocked === true) {
-                        window.location.href = "blocked.html";
-                    } else {
-                        localStorage.setItem('currentUserCode', studentCode);
-                        window.location.href = "index.html";
-                    }
+        // إرسال الطلب للباك إيند بشكل آمن
+        fetch(`${API_BASE_URL}/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username: nameInput }),
+            // هامة جداً لإرسال واستقبال الـ Cookies المؤمنة تلقائياً
+            credentials: 'include' 
+        })
+        .then(async (response) => {
+            const data = await response.json();
+            
+            if (response.ok) {
+                // لم نعد بحاجة لتخزين كود المستخدم في localStorage لأنه مخزن داخل الـ Cookie المحمية بالسيرفر
+                alert('تم تسجيل الدخول بنجاح! جارٍ توجيهك...');
+                window.location.href = "index.html";
+            } else {
+                // التعامل مع حالات الحظر أو الحساب غير الموجود
+                if (data.isBlocked) {
+                    window.location.href = "blocked.html";
                 } else {
-                    alert('هذا الحساب غير مسجل حالياً بالسيرفر، تأكد من كتابة الاسم الصحيح أو قم بإنشاء حساب جديد.');
+                    alert(data.message || 'حدث خطأ أثناء تسجيل الدخول');
                 }
-            }).catch((error) => {
-                alert("عذراً، حدث خطأ أثناء الاتصال بالسيرفر: " + error.message);
-            });
-        }
-    </script>
+            }
+        })
+        .catch((error) => {
+            alert("عذراً، حدث خطأ أثناء الاتصال بالسيرفر. تأكد من عمل الباك إيند.");
+        });
+    }
+</script>
 </body>
 </html>
