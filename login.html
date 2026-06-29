@@ -60,45 +60,80 @@
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <script>
-    // رابط الباك إيند الخاص بك (قم بتغييره عند رفع السيرفر أونلاين)
-    const API_BASE_URL = "http://localhost:5000/api"; 
+    /*
+      استبدل الرابط بعد رفع السيرفر.
+      مثال:
+      https://your-api.onrender.com/api
+    */
+    const API_BASE_URL = "https://YOUR_BACKEND_URL/api";
 
-    function executeLogin() {
-        let nameInput = document.getElementById('student-name-input').value.trim();
-        if(!nameInput) return alert('برجاء كتابة اسم الحساب أولاً لدخول المنصة!');
+    const input = document.getElementById("student-name-input");
+    const loginButton = document.querySelector(".login-btn");
 
-        // إرسال الطلب للباك إيند بشكل آمن
-        fetch(`${API_BASE_URL}/auth/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username: nameInput }),
-            // هامة جداً لإرسال واستقبال الـ Cookies المؤمنة تلقائياً
-            credentials: 'include' 
-        })
-        .then(async (response) => {
+    input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            executeLogin();
+        }
+    });
+
+    async function executeLogin() {
+
+        const username = input.value.trim();
+
+        if (!username) {
+            alert("برجاء إدخال اسم الحساب.");
+            input.focus();
+            return;
+        }
+
+        loginButton.disabled = true;
+        loginButton.innerHTML =
+            '<i class="fas fa-spinner fa-spin"></i> جارٍ تسجيل الدخول...';
+
+        try {
+
+            const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    username
+                })
+            });
+
             const data = await response.json();
-            
+
             if (response.ok) {
-                // لم نعد بحاجة لتخزين كود المستخدم في localStorage لأنه مخزن داخل الـ Cookie المحمية بالسيرفر
-                alert('تم تسجيل الدخول بنجاح! جارٍ توجيهك...');
-                window.location.href = "index.html";
-            } else {
-                // التعامل مع حالات الحظر أو الحساب غير الموجود
-                if (data.isBlocked) {
-                    window.location.href = "blocked.html";
-                } else {
-                    alert(data.message || 'حدث خطأ أثناء تسجيل الدخول');
-                }
+
+                window.location.replace("index.html");
+                return;
+
             }
-        })
-        .catch((error) => {
-            alert("عذراً، حدث خطأ أثناء الاتصال بالسيرفر. تأكد من عمل الباك إيند.");
-        });
+
+            if (data.isBlocked) {
+
+                window.location.replace("blocked.html");
+                return;
+
+            }
+
+            alert(data.message || "فشل تسجيل الدخول.");
+
+        } catch (err) {
+
+            console.error(err);
+
+            alert("تعذر الاتصال بالسيرفر.\nتأكد من أن السيرفر يعمل وأن رابط API صحيح.");
+
+        } finally {
+
+            loginButton.disabled = false;
+            loginButton.innerHTML = "تسجيل الدخول";
+
+        }
     }
 </script>
 </body>
